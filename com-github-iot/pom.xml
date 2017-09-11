@@ -17,6 +17,7 @@
         <module>com-github-iot-cache</module>
         <module>com-github-iot-api</module>
         <module>com-github-iot-plugin</module>
+        <module>com-github-iot-common</module>
     </modules>
 
 
