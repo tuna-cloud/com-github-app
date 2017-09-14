@@ -9,7 +9,6 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>com-github-iot-msg</module>
         <module>com-github-iot-gateway</module>
         <module>com-github-iot-scheduler</module>
         <module>com-github-iot-utils</module>
