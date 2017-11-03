@@ -1,0 +1,14 @@
+{
+  "api.bind.port": 8080,
+  "https.option" : {
+    "enable" : false,
+    "keyCert" : {
+      "path" : "iot-keystore.jks",
+      "password" : "123456"
+    }
+  },
+  "jwt.keystore": {
+    "path": "keystore.jceks",
+    "password": "secret"
+  }
+}
