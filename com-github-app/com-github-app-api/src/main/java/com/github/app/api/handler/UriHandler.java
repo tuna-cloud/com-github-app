@@ -1,8 +1,11 @@
 package com.github.app.api.handler;
 
+import io.vertx.core.buffer.Buffer;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * json format
@@ -13,6 +16,7 @@ import io.vertx.ext.web.RoutingContext;
  * }
  */
 public interface UriHandler {
+    Logger logger = LoggerFactory.getLogger(UriHandler.class);
     /**
      * api operation success
      */
@@ -80,6 +84,8 @@ public interface UriHandler {
         if (data != null) {
             jsonObject.put("data", data);
         }
+        Buffer buffer = jsonObject.toBuffer();
+        logger.info(routingContext.request().path() + "-->" + buffer.toString());
         routingContext.response().end(jsonObject.toBuffer());
     }
 

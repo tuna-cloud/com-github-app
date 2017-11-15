@@ -16,12 +16,12 @@ public class UserHandler implements UriHandler {
 
     @Override
     public void registeUriHandler(Router router) {
-        router.post().path("/users").produces("application/json;charset=UTF-8").handler(this::add);
-        router.delete().path("/users/:number").produces("application/json;charset=UTF-8").handler(this::delete);
-        router.put().path("/users/:number").produces("application/json;charset=UTF-8").handler(this::edit);
-        router.get().path("/users").produces("application/json;charset=UTF-8").handler(this::query);
-        router.get().path("/users/:number").produces("application/json;charset=UTF-8").handler(this::queryOne);
-        router.get().path("/users/current/login").produces("application/json;charset=UTF-8").handler(this::currentUserInfo);
+        router.post().path("/users").produces("application/json;charset=UTF-8").blockingHandler(this::add, false);
+        router.delete().path("/users/:number").produces("application/json;charset=UTF-8").blockingHandler(this::delete, false);
+        router.put().path("/users/:number").produces("application/json;charset=UTF-8").blockingHandler(this::edit, false);
+        router.get().path("/users").produces("application/json;charset=UTF-8").blockingHandler(this::query, false);
+        router.get().path("/users/:number").produces("application/json;charset=UTF-8").blockingHandler(this::queryOne, false);
+        router.get().path("/users/current/login").produces("application/json;charset=UTF-8").blockingHandler(this::currentUserInfo, false);
     }
 
     public void add(RoutingContext routingContext) {
@@ -45,16 +45,12 @@ public class UserHandler implements UriHandler {
     }
 
     public void currentUserInfo(RoutingContext routingContext) {
-        routingContext.vertx().executeBlocking(future -> {
+        try {
             JsonObject user = userService.selectUserInfoByAccount(routingContext.get("account"));
-            future.complete(user);
-        }, result -> {
-            if(result.succeeded()) {
-                responseSuccess(routingContext, result.result());
-            } else {
-                responseFailure(routingContext, result.cause().getLocalizedMessage());
-            }
-        });
+            responseSuccess(routingContext, user);
+        } catch (Exception e) {
+            responseFailure(routingContext, e.getLocalizedMessage());
+        }
     }
 
 }

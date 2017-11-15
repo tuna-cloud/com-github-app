@@ -10,10 +10,11 @@ public class WelcomHandler implements UriHandler {
 
     @Override
     public void registeUriHandler(Router router) {
-        router.route("/").produces("application/json;charset=UTF-8").handler(this::welcome);
+        router.route("/").produces("application/json;charset=UTF-8").blockingHandler(this::welcome, false);
     }
 
     public void welcome(RoutingContext routingContext) {
-        responseSuccess(routingContext, "welcome to iot api service, version v1.0.0");
+        responseSuccess(routingContext, "welcome to app service api, version v1.0.0");
     }
+
 }

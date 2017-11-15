@@ -11,8 +11,17 @@
     <modules>
         <module>com-github-app-utils</module>
         <module>com-github-app-api</module>
-        <module>com-github-app-ui</module>
+        <module>com-github-app-runner</module>
+        <module>com-github-app-agent</module>
+        <module>com-github-app-deploy</module>
+        <module>distribution</module>
+        <module>com-github-app-tools</module>
     </modules>
+
+    <properties>
+        <vertx.version>3.5.0</vertx.version>
+    </properties>
+
 
     <build>
         <pluginManagement>

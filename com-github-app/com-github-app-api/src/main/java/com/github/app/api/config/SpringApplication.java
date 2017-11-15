@@ -1,8 +1,9 @@
 package com.github.app.api.config;
 
-import com.github.pagehelper.PageHelper;
+import com.github.app.api.utils.CmdParase;
 import com.github.pagehelper.PageInterceptor;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import io.vertx.core.json.JsonObject;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -19,26 +20,24 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
-@PropertySource(value = {"classpath:spring-application.properties"})
-@ComponentScan("com.github.iot.api")
+@ComponentScan("com.github.app.api")
 @EnableTransactionManagement
-@MapperScan("com.github.iot.api.dal.dao")
+@MapperScan("com.github.app.api.dal.dao")
 public class SpringApplication {
 
-    @Autowired
-    private org.springframework.core.env.Environment env;
 
     @Bean(name = "dataSource")
     public DataSource dataSource() {
         ComboPooledDataSource dataSource = new ComboPooledDataSource();
+        JsonObject config = CmdParase.getInstance().getServerCfg().getJsonObject("datasource");
         try {
-            dataSource.setDriverClass(env.getProperty("spring.datasource.driverClassName"));
+            dataSource.setDriverClass(config.getString("driverClassName"));
         } catch (Exception e) {
             throw new RuntimeException(e.getLocalizedMessage());
         }
-        dataSource.setJdbcUrl(this.env.getProperty("spring.datasource.url"));
-        dataSource.setUser(this.env.getProperty("spring.datasource.username"));
-        dataSource.setPassword(this.env.getProperty("spring.datasource.password"));
+        dataSource.setJdbcUrl(config.getString("url"));
+        dataSource.setUser(config.getString("username"));
+        dataSource.setPassword(config.getString("password"));
         return dataSource;
     }
 

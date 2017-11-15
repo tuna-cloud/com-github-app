@@ -1,0 +1,23 @@
+{
+  "api.bind.port": 8080,
+  "https.option" : {
+    "enable" : false,
+    "keyCert" : {
+      "path" : "${APPLICATION_HOME}/config/http-keystore.jks",
+      "password" : "123456"
+    }
+  },
+  "jwt.keystore": {
+    "path": "${APPLICATION_HOME}/config/token-keystore.jceks",
+    "password": "secret"
+  },
+  "datasource" : {
+    "driverClassName" : "com.mysql.jdbc.Driver",
+    "url" : "jdbc:mysql://mysql1.net.com:3306/iot?useSSL=false&useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=true",
+    "username" : "root",
+    "password" : "870712"
+  },
+  "vertx" : {
+    "cacheDirBase" : "${APPLICATION_HOME}/data/cache"
+  }
+}

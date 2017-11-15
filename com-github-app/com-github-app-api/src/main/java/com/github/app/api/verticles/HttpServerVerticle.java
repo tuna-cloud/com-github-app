@@ -1,7 +1,8 @@
 package com.github.app.api.verticles;
 
 import com.github.app.api.handler.UriHandler;
-import com.github.iot.utils.ClassUtil;
+import com.github.app.utils.ClassUtil;
+import com.github.app.utils.ServerConstant;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServer;
@@ -92,8 +93,10 @@ public class HttpServerVerticle extends AbstractVerticle implements ApplicationC
         router.route("/*").handler(ResponseTimeHandler.create());
         router.route("/*").handler(ResponseContentTypeHandler.create());
         router.route("/*").handler(BodyHandler.create());
-        loadHandlers(router, "com.github.iot.api.handler.common");
-//        router.route("/static/*").handler(StaticHandler.create().setAllowRootFileSystemAccess(true).setWebRoot("/home/xsy/github/vue/vueAdmin-template/dist"));
+        loadHandlers(router, "com.github.app.api.handler.common");
+        router.route("/static/*").handler(StaticHandler.create()
+                .setAllowRootFileSystemAccess(true)
+                .setWebRoot(System.getenv(ServerConstant.APP_HOME) + "/web"));
 
         /**
          * apiRouter will validate the token in the global interceptor
@@ -107,7 +110,7 @@ public class HttpServerVerticle extends AbstractVerticle implements ApplicationC
          * openRouter is fully opened api, have no interceptor to validate token and other user info
          */
         Router openRouter = Router.router(vertx);
-        loadHandlers(openRouter, "com.github.iot.api.handler.open");
+        loadHandlers(openRouter, "com.github.app.api.handler.open");
         router.mountSubRouter("/open", openRouter);
     }
 
