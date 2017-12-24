@@ -19,17 +19,19 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.util.List;
 
-import static org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_PROTOTYPE;
+import static org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_SINGLETON;
 
 @Component
-@Scope(SCOPE_PROTOTYPE)
+@Scope(SCOPE_SINGLETON)
 public class HttpServerVerticle extends AbstractVerticle implements ApplicationContextAware {
     private static final Logger logger = LoggerFactory.getLogger(HttpServerVerticle.class);
 
     private ApplicationContext applicationContext;
     private HttpServer server;
+    private Router router;
 
     @Override
     public void start() throws Exception {
@@ -51,7 +53,7 @@ public class HttpServerVerticle extends AbstractVerticle implements ApplicationC
 
         server = vertx.createHttpServer(options);
 
-        Router router = Router.router(vertx);
+        router = Router.router(vertx);
 
         vertx.executeBlocking(future -> {
             server.requestHandler(router::accept).listen(jsonObject.getInteger("api.bind.port", 8080), ar -> {
@@ -78,8 +80,8 @@ public class HttpServerVerticle extends AbstractVerticle implements ApplicationC
         super.stop();
     }
 
-    private void bindUri(Router router) {
-        router.route().handler(CorsHandler.create("*")
+    private void bindUri(Router rootRouter) {
+        rootRouter.route().handler(CorsHandler.create("*")
                 .allowedMethod(HttpMethod.GET)
                 .allowedMethod(HttpMethod.POST)
                 .allowedMethod(HttpMethod.DELETE)
@@ -88,30 +90,30 @@ public class HttpServerVerticle extends AbstractVerticle implements ApplicationC
                 .allowedHeader("X-Token")
                 .allowedHeader("Content-Type"));
 
-        router.route("/*").handler(LoggerHandler.create());
-        router.route("/*").handler(TimeoutHandler.create(10000));
-        router.route("/*").handler(ResponseTimeHandler.create());
-        router.route("/*").handler(ResponseContentTypeHandler.create());
-        router.route("/*").handler(BodyHandler.create());
-        loadHandlers(router, "com.github.app.api.handler.common");
-        router.route("/static/*").handler(StaticHandler.create()
+        rootRouter.route("/*").handler(LoggerHandler.create());
+        rootRouter.route("/*").handler(TimeoutHandler.create(10000));
+        rootRouter.route("/*").handler(ResponseTimeHandler.create());
+        rootRouter.route("/*").handler(ResponseContentTypeHandler.create());
+        rootRouter.route("/*").handler(BodyHandler.create());
+        loadHandlers(rootRouter, "com.github.app.api.handler.common");
+        rootRouter.route("/static/*").handler(StaticHandler.create()
                 .setAllowRootFileSystemAccess(true)
-                .setWebRoot(System.getenv(ServerConstant.APP_HOME) + "/web"));
+                .setWebRoot(System.getenv(ServerConstant.APP_HOME) + File.separator + "web"));
 
         /**
          * apiRouter will validate the token in the global interceptor
          */
         Router apiRouter = Router.router(vertx);
-        loadHandlers(apiRouter, "com.github.iot.api.handler.interceptor");
-        loadHandlers(apiRouter, "com.github.iot.api.handler.api");
-        router.mountSubRouter("/api", apiRouter);
+        loadHandlers(apiRouter, "com.github.app.api.handler.interceptor");
+        loadHandlers(apiRouter, "com.github.app.api.handler.api");
+        rootRouter.mountSubRouter("/api", apiRouter);
 
         /**
          * openRouter is fully opened api, have no interceptor to validate token and other user info
          */
         Router openRouter = Router.router(vertx);
         loadHandlers(openRouter, "com.github.app.api.handler.open");
-        router.mountSubRouter("/open", openRouter);
+        rootRouter.mountSubRouter("/open", openRouter);
     }
 
     private void loadHandlers(Router router, String packageName) {
@@ -125,5 +127,13 @@ public class HttpServerVerticle extends AbstractVerticle implements ApplicationC
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
+    }
+
+    /**
+     * 动态挂载handler
+     * @param uriHandler
+     */
+    public void addRoute(UriHandler uriHandler) {
+        uriHandler.registeUriHandler(router);
     }
 }

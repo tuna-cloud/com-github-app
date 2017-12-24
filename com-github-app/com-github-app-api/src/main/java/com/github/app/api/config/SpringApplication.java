@@ -22,7 +22,7 @@ import java.util.Properties;
 @Configuration
 @ComponentScan("com.github.app.api")
 @EnableTransactionManagement
-@MapperScan("com.github.app.api.dal.dao")
+@MapperScan("com.github.app.api.dao.mapper")
 public class SpringApplication {
 
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.github.app.api.dal.dao.OperationMapper">
-  <resultMap id="BaseResultMap" type="com.github.app.api.dal.domain.Operation">
+<mapper namespace="com.github.app.api.dao.mapper.OperationMapper">
+  <resultMap id="BaseResultMap" type="com.github.app.api.dao.domain.Operation">
     <id column="number" jdbcType="INTEGER" property="number" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="code" jdbcType="VARCHAR" property="code" />
@@ -69,7 +69,7 @@
   <sql id="Base_Column_List">
     number, name, code, filter_url, parent_number
   </sql>
-  <select id="selectByExample" parameterType="com.github.app.api.dal.domain.OperationExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.github.app.api.dao.domain.OperationExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
@@ -93,19 +93,19 @@
     delete from T_OPERATION
     where number = #{number,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.github.app.api.dal.domain.OperationExample">
+  <delete id="deleteByExample" parameterType="com.github.app.api.dao.domain.OperationExample">
     delete from T_OPERATION
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.github.app.api.dal.domain.Operation">
+  <insert id="insert" parameterType="com.github.app.api.dao.domain.Operation">
     insert into T_OPERATION (number, name, code, 
       filter_url, parent_number)
     values (#{number,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, 
       #{filterUrl,jdbcType=VARCHAR}, #{parentNumber,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.github.app.api.dal.domain.Operation">
+  <insert id="insertSelective" parameterType="com.github.app.api.dao.domain.Operation">
     insert into T_OPERATION
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="number != null">
@@ -142,7 +142,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.github.app.api.dal.domain.OperationExample" resultType="java.lang.Long">
+  <select id="countByExample" parameterType="com.github.app.api.dao.domain.OperationExample" resultType="java.lang.Long">
     select count(*) from T_OPERATION
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -182,7 +182,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.github.app.api.dal.domain.Operation">
+  <update id="updateByPrimaryKeySelective" parameterType="com.github.app.api.dao.domain.Operation">
     update T_OPERATION
     <set>
       <if test="name != null">
@@ -200,7 +200,7 @@
     </set>
     where number = #{number,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.github.app.api.dal.domain.Operation">
+  <update id="updateByPrimaryKey" parameterType="com.github.app.api.dao.domain.Operation">
     update T_OPERATION
     set name = #{name,jdbcType=VARCHAR},
       code = #{code,jdbcType=VARCHAR},

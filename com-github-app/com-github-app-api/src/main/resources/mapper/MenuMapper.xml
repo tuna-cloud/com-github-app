@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.github.app.api.dal.dao.MenuMapper">
-  <resultMap id="BaseResultMap" type="com.github.app.api.dal.domain.Menu">
+<mapper namespace="com.github.app.api.dao.mapper.MenuMapper">
+  <resultMap id="BaseResultMap" type="com.github.app.api.dao.domain.Menu">
     <id column="number" jdbcType="INTEGER" property="number" />
     <result column="url" jdbcType="VARCHAR" property="url" />
     <result column="name" jdbcType="VARCHAR" property="name" />
@@ -71,7 +71,7 @@
   <sql id="Base_Column_List">
     number, url, name, parent_number, order, icon, is_drop_down
   </sql>
-  <select id="selectByExample" parameterType="com.github.app.api.dal.domain.MenuExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.github.app.api.dao.domain.MenuExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
@@ -95,13 +95,13 @@
     delete from T_MENU
     where number = #{number,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.github.app.api.dal.domain.MenuExample">
+  <delete id="deleteByExample" parameterType="com.github.app.api.dao.domain.MenuExample">
     delete from T_MENU
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.github.app.api.dal.domain.Menu">
+  <insert id="insert" parameterType="com.github.app.api.dao.domain.Menu">
     insert into T_MENU (number, url, name, 
       parent_number, order, icon, 
       is_drop_down)
@@ -109,7 +109,7 @@
       #{parentNumber,jdbcType=INTEGER}, #{order,jdbcType=INTEGER}, #{icon,jdbcType=VARCHAR}, 
       #{isDropDown,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.github.app.api.dal.domain.Menu">
+  <insert id="insertSelective" parameterType="com.github.app.api.dao.domain.Menu">
     insert into T_MENU
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="number != null">
@@ -158,7 +158,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.github.app.api.dal.domain.MenuExample" resultType="java.lang.Long">
+  <select id="countByExample" parameterType="com.github.app.api.dao.domain.MenuExample" resultType="java.lang.Long">
     select count(*) from T_MENU
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -206,7 +206,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.github.app.api.dal.domain.Menu">
+  <update id="updateByPrimaryKeySelective" parameterType="com.github.app.api.dao.domain.Menu">
     update T_MENU
     <set>
       <if test="url != null">
@@ -230,7 +230,7 @@
     </set>
     where number = #{number,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.github.app.api.dal.domain.Menu">
+  <update id="updateByPrimaryKey" parameterType="com.github.app.api.dao.domain.Menu">
     update T_MENU
     set url = #{url,jdbcType=VARCHAR},
       name = #{name,jdbcType=VARCHAR},

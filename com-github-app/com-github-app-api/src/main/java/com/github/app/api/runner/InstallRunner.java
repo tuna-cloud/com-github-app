@@ -1,7 +1,7 @@
 package com.github.app.api.runner;
 
-import com.github.app.api.bll.SystemOperationService;
-import com.github.app.api.bll.impl.MySqlOperationServiceImpl;
+import com.github.app.api.services.SystemOperationService;
+import com.github.app.api.services.impl.MySqlOperationServiceImpl;
 import com.github.app.api.utils.CmdParase;
 import com.github.app.utils.LogbackLoaderUtils;
 import com.github.app.utils.Runner;

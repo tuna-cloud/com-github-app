@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.github.app.api.dal.dao.TopicMapper">
-  <resultMap id="BaseResultMap" type="com.github.app.api.dal.domain.Topic">
+<mapper namespace="com.github.app.api.dao.mapper.TopicMapper">
+  <resultMap id="BaseResultMap" type="com.github.app.api.dao.domain.Topic">
     <id column="number" jdbcType="INTEGER" property="number" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="popedom" jdbcType="INTEGER" property="popedom" />
@@ -69,7 +69,7 @@
   <sql id="Base_Column_List">
     number, name, popedom, remark, device_number
   </sql>
-  <select id="selectByExample" parameterType="com.github.app.api.dal.domain.TopicExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.github.app.api.dao.domain.TopicExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
@@ -93,19 +93,19 @@
     delete from T_TOPIC
     where number = #{number,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.github.app.api.dal.domain.TopicExample">
+  <delete id="deleteByExample" parameterType="com.github.app.api.dao.domain.TopicExample">
     delete from T_TOPIC
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.github.app.api.dal.domain.Topic">
+  <insert id="insert" parameterType="com.github.app.api.dao.domain.Topic">
     insert into T_TOPIC (number, name, popedom, 
       remark, device_number)
     values (#{number,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{popedom,jdbcType=INTEGER}, 
       #{remark,jdbcType=VARCHAR}, #{deviceNumber,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.github.app.api.dal.domain.Topic">
+  <insert id="insertSelective" parameterType="com.github.app.api.dao.domain.Topic">
     insert into T_TOPIC
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="number != null">
@@ -142,7 +142,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.github.app.api.dal.domain.TopicExample" resultType="java.lang.Long">
+  <select id="countByExample" parameterType="com.github.app.api.dao.domain.TopicExample" resultType="java.lang.Long">
     select count(*) from T_TOPIC
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -182,7 +182,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.github.app.api.dal.domain.Topic">
+  <update id="updateByPrimaryKeySelective" parameterType="com.github.app.api.dao.domain.Topic">
     update T_TOPIC
     <set>
       <if test="name != null">
@@ -200,7 +200,7 @@
     </set>
     where number = #{number,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.github.app.api.dal.domain.Topic">
+  <update id="updateByPrimaryKey" parameterType="com.github.app.api.dao.domain.Topic">
     update T_TOPIC
     set name = #{name,jdbcType=VARCHAR},
       popedom = #{popedom,jdbcType=INTEGER},

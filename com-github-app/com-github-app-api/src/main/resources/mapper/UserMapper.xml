@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.github.app.api.dal.dao.UserMapper">
-    <resultMap id="BaseResultMap" type="com.github.app.api.dal.domain.User">
+<mapper namespace="com.github.app.api.dao.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.github.app.api.dao.domain.User">
         <id column="number" property="number" jdbcType="INTEGER"/>
         <result column="account" property="account" jdbcType="VARCHAR"/>
         <result column="password" property="password" jdbcType="VARCHAR"/>
@@ -14,11 +14,11 @@
         <result column="photo_url" property="photoUrl" jdbcType="VARCHAR"/>
         <result column="parent_number" property="parentNumber" jdbcType="INTEGER"/>
     </resultMap>
-    <resultMap id="ResultMapWithBLOBs" type="com.github.app.api.dal.domain.User" extends="BaseResultMap">
+    <resultMap id="ResultMapWithBLOBs" type="com.github.app.api.dao.domain.User" extends="BaseResultMap">
         <result column="remark" property="remark" jdbcType="LONGVARCHAR"/>
     </resultMap>
-    <resultMap id="ResultMapWithRole" type="com.github.app.api.dal.domain.User" extends="BaseResultMap">
-        <association property="role" resultMap="com.github.app.api.dal.dao.RoleMapper.BaseResultMap" columnPrefix="role_"/>
+    <resultMap id="ResultMapWithRole" type="com.github.app.api.dao.domain.User" extends="BaseResultMap">
+        <association property="role" resultMap="com.github.app.api.dao.mapper.RoleMapper.BaseResultMap" columnPrefix="role_"/>
     </resultMap>
     <sql id="Example_Where_Clause">
         <where>
@@ -88,7 +88,7 @@
     remark
   </sql>
     <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs"
-            parameterType="com.github.app.api.dal.domain.UserExample">
+            parameterType="com.github.app.api.dao.domain.UserExample">
         select
         <if test="distinct">
             distinct
@@ -104,7 +104,7 @@
             order by ${orderByClause}
         </if>
     </select>
-    <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.github.app.api.dal.domain.UserExample">
+    <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.github.app.api.dao.domain.UserExample">
         select
         <if test="distinct">
             distinct
@@ -118,7 +118,7 @@
             order by ${orderByClause}
         </if>
     </select>
-    <select id="selectByExampleWithRole" resultMap="ResultMapWithRole" parameterType="com.github.app.api.dal.domain.UserExample">
+    <select id="selectByExampleWithRole" resultMap="ResultMapWithRole" parameterType="com.github.app.api.dao.domain.UserExample">
         select
         u.number as number,
         u.account as account,
@@ -150,13 +150,13 @@
     delete from T_USER
     where number = #{number,jdbcType=INTEGER}
   </delete>
-    <delete id="deleteByExample" parameterType="com.github.app.api.dal.domain.UserExample">
+    <delete id="deleteByExample" parameterType="com.github.app.api.dao.domain.UserExample">
         delete from T_USER
         <if test="_parameter != null">
             <include refid="Example_Where_Clause"/>
         </if>
     </delete>
-    <insert id="insert" parameterType="com.github.app.api.dal.domain.User">
+    <insert id="insert" parameterType="com.github.app.api.dao.domain.User">
     insert into T_USER (number, account, password, 
       name, sex, email, mobile, 
       is_enable, address, photo_url, 
@@ -166,7 +166,7 @@
       #{isEnable,jdbcType=SMALLINT}, #{address,jdbcType=VARCHAR}, #{photoUrl,jdbcType=VARCHAR}, 
       #{parentNumber,jdbcType=INTEGER}, #{remark,jdbcType=LONGVARCHAR})
   </insert>
-    <insert id="insertSelective" parameterType="com.github.app.api.dal.domain.User">
+    <insert id="insertSelective" parameterType="com.github.app.api.dao.domain.User">
         insert into T_USER
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="number != null">
@@ -245,7 +245,7 @@
             </if>
         </trim>
     </insert>
-    <select id="countByExample" parameterType="com.github.app.api.dal.domain.UserExample"
+    <select id="countByExample" parameterType="com.github.app.api.dao.domain.UserExample"
             resultType="java.lang.Integer">
         select count(*) from T_USER
         <if test="_parameter != null">
@@ -331,7 +331,7 @@
             <include refid="Update_By_Example_Where_Clause"/>
         </if>
     </update>
-    <update id="updateByPrimaryKeySelective" parameterType="com.github.app.api.dal.domain.User">
+    <update id="updateByPrimaryKeySelective" parameterType="com.github.app.api.dao.domain.User">
         update T_USER
         <set>
             <if test="account != null">
@@ -370,7 +370,7 @@
         </set>
         where number = #{number,jdbcType=INTEGER}
     </update>
-    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.github.app.api.dal.domain.User">
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.github.app.api.dao.domain.User">
     update T_USER
     set account = #{account,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
@@ -385,7 +385,7 @@
       remark = #{remark,jdbcType=LONGVARCHAR}
     where number = #{number,jdbcType=INTEGER}
   </update>
-    <update id="updateByPrimaryKey" parameterType="com.github.app.api.dal.domain.User">
+    <update id="updateByPrimaryKey" parameterType="com.github.app.api.dao.domain.User">
     update T_USER
     set account = #{account,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},

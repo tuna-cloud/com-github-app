@@ -7,6 +7,9 @@ import io.vertx.ext.web.RoutingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
 /**
  * json format
  * {
@@ -95,6 +98,18 @@ public interface UriHandler {
      */
     default void responseFailure(RoutingContext routingContext, String msg) {
         response(routingContext, CODE_API_OPERATION_FAILED, msg);
+    }
+
+    /**
+     *
+     * @param routingContext
+     * @param e
+     */
+    default void responseFailure(RoutingContext routingContext, Exception e) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        e.printStackTrace(new PrintStream(baos));
+        String exception = baos.toString();
+        responseFailure(routingContext, exception);
     }
 
     /**

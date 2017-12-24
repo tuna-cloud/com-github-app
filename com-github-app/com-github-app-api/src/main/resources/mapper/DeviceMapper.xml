@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.github.app.api.dal.dao.DeviceMapper">
-  <resultMap id="BaseResultMap" type="com.github.app.api.dal.domain.Device">
+<mapper namespace="com.github.app.api.dao.mapper.DeviceMapper">
+  <resultMap id="BaseResultMap" type="com.github.app.api.dao.domain.Device">
     <id column="number" jdbcType="INTEGER" property="number" />
     <result column="secret" jdbcType="VARCHAR" property="secret" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
@@ -68,7 +68,7 @@
   <sql id="Base_Column_List">
     number, secret, remark, product_number
   </sql>
-  <select id="selectByExample" parameterType="com.github.app.api.dal.domain.DeviceExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.github.app.api.dao.domain.DeviceExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
@@ -92,19 +92,19 @@
     delete from T_DEVICE
     where number = #{number,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.github.app.api.dal.domain.DeviceExample">
+  <delete id="deleteByExample" parameterType="com.github.app.api.dao.domain.DeviceExample">
     delete from T_DEVICE
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.github.app.api.dal.domain.Device">
+  <insert id="insert" parameterType="com.github.app.api.dao.domain.Device">
     insert into T_DEVICE (number, secret, remark, 
       product_number)
     values (#{number,jdbcType=INTEGER}, #{secret,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
       #{productNumber,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.github.app.api.dal.domain.Device">
+  <insert id="insertSelective" parameterType="com.github.app.api.dao.domain.Device">
     insert into T_DEVICE
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="number != null">
@@ -135,7 +135,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.github.app.api.dal.domain.DeviceExample" resultType="java.lang.Long">
+  <select id="countByExample" parameterType="com.github.app.api.dao.domain.DeviceExample" resultType="java.lang.Long">
     select count(*) from T_DEVICE
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -171,7 +171,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.github.app.api.dal.domain.Device">
+  <update id="updateByPrimaryKeySelective" parameterType="com.github.app.api.dao.domain.Device">
     update T_DEVICE
     <set>
       <if test="secret != null">
@@ -186,7 +186,7 @@
     </set>
     where number = #{number,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.github.app.api.dal.domain.Device">
+  <update id="updateByPrimaryKey" parameterType="com.github.app.api.dao.domain.Device">
     update T_DEVICE
     set secret = #{secret,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},

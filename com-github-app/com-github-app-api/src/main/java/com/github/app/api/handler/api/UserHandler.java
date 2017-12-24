@@ -1,6 +1,6 @@
 package com.github.app.api.handler.api;
 
-import com.github.app.api.bll.UserService;
+import com.github.app.api.services.UserService;
 import com.github.app.api.handler.UriHandler;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;

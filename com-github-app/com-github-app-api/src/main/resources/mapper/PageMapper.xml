@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.github.app.api.dal.dao.PageMapper">
-  <resultMap id="BaseResultMap" type="com.github.app.api.dal.domain.Page">
+<mapper namespace="com.github.app.api.dao.mapper.PageMapper">
+  <resultMap id="BaseResultMap" type="com.github.app.api.dao.domain.Page">
     <id column="number" jdbcType="INTEGER" property="number" />
     <result column="name" jdbcType="VARCHAR" property="name" />
   </resultMap>
@@ -66,7 +66,7 @@
   <sql id="Base_Column_List">
     number, name
   </sql>
-  <select id="selectByExample" parameterType="com.github.app.api.dal.domain.PageExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="com.github.app.api.dao.domain.PageExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
@@ -90,17 +90,17 @@
     delete from T_PAGE
     where number = #{number,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.github.app.api.dal.domain.PageExample">
+  <delete id="deleteByExample" parameterType="com.github.app.api.dao.domain.PageExample">
     delete from T_PAGE
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.github.app.api.dal.domain.Page">
+  <insert id="insert" parameterType="com.github.app.api.dao.domain.Page">
     insert into T_PAGE (number, name)
     values (#{number,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.github.app.api.dal.domain.Page">
+  <insert id="insertSelective" parameterType="com.github.app.api.dao.domain.Page">
     insert into T_PAGE
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="number != null">
@@ -119,7 +119,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.github.app.api.dal.domain.PageExample" resultType="java.lang.Long">
+  <select id="countByExample" parameterType="com.github.app.api.dao.domain.PageExample" resultType="java.lang.Long">
     select count(*) from T_PAGE
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -147,7 +147,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.github.app.api.dal.domain.Page">
+  <update id="updateByPrimaryKeySelective" parameterType="com.github.app.api.dao.domain.Page">
     update T_PAGE
     <set>
       <if test="name != null">
@@ -156,7 +156,7 @@
     </set>
     where number = #{number,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.github.app.api.dal.domain.Page">
+  <update id="updateByPrimaryKey" parameterType="com.github.app.api.dao.domain.Page">
     update T_PAGE
     set name = #{name,jdbcType=VARCHAR}
     where number = #{number,jdbcType=INTEGER}

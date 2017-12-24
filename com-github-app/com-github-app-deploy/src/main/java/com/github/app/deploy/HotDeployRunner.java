@@ -78,8 +78,7 @@ public class HotDeployRunner implements Runner {
 
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("export mysql data failed");
-            logger.error(e.getLocalizedMessage());
+            logger.error("deploy err", e);
         }
 
         return null;
