@@ -5,6 +5,7 @@ import com.github.app.api.runner.InstallRunner;
 import com.github.app.api.runner.RestoreRunner;
 import com.github.app.api.runner.ServerRunner;
 import com.github.app.deploy.HotDeployRunner;
+import com.github.app.deploy.RunnerTest;
 import com.github.app.utils.Runner;
 import io.vertx.core.cli.*;
 
@@ -44,6 +45,7 @@ public class ApplicationBoot {
         runnerMap.put("backup", new DatabaseBackupRunner());
         runnerMap.put("restore", new RestoreRunner());
         runnerMap.put("redeploy", new HotDeployRunner());
+        runnerMap.put("test", new RunnerTest());
     }
 
     public static void main(String[] args) {

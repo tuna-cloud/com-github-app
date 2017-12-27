@@ -26,7 +26,8 @@ pushd %~dp0..\..
 set BASE_DIR=%CD%
 popd
 set CLASSPATH=
-
+rem the com-github-app-api use the evn of APPLICATION_HOME
+set APPLICATION_HOME=%BASE_DIR%
 rem Classpath addition for release
 for %%i in (%BASE_DIR%\libs\*.jar) do (
 	call :concat %%i

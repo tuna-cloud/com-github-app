@@ -19,6 +19,8 @@ public class HotDeployRunner implements Runner {
     @Override
     public void start(String[] args) {
         try {
+            Thread.sleep(3000);
+            logger.info("APPLICATION_HOME:" + System.getenv(ServerConstant.APP_HOME));
             LogbackLoaderUtils.loadConfig(System.getenv(ServerConstant.APP_HOME)
                     + File.separator + "config" + File.separator + "logback.xml");
 
@@ -33,6 +35,8 @@ public class HotDeployRunner implements Runner {
                     vm.detach();
                 }
             }
+
+            Thread.sleep(3000);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("HotDeploy error happen", e);

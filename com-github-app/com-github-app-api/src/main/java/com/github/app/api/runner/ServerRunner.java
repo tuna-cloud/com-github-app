@@ -49,9 +49,9 @@ public class ServerRunner implements Runner {
             vertx.deployVerticle(verticleFactory.prefix() + ":" + HttpServerVerticle.class.getName(),
                     deploymentOptions, ar -> {
                 if(ar.succeeded()) {
-                    logger.info(" deploy success");
+                    logger.info(" http verticle deploy success");
                 } else {
-                    logger.error("deploy err", ar.cause());
+                    logger.error("http verticle deploy err", ar.cause());
                     vertx.close();
                     System.exit(-3);
                 }
