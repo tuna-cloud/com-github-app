@@ -26,7 +26,7 @@ public class RestoreRunner implements Runner{
                 .addOption(new Option()
                         .setLongName("sql")
                         .setShortName("sql")
-                        .setDescription("the backup sql file to restore")
+                        .setDescription("the sql file name but not include path")
                         .setRequired(true)
                 );
 

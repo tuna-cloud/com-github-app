@@ -21,12 +21,13 @@ public class MySqlOperationServiceImpl implements SystemOperationService {
 
         String url = datasource.getString("url");
 
-        String host = url.substring(13, url.indexOf(ServerConstant.DATABASE_NAME) - 1);
-        host = host.substring(0, host.indexOf(":"));
-        String port = url.substring(url.indexOf(":") + 1, url.indexOf(ServerConstant.DATABASE_NAME) - 1);
-        port = port.substring(port.lastIndexOf(":") + 1);
+        String host = parseHost(url);
+        String port = parsePort(url);
+        String databaseName = parseDatabaseName(url);
+
         String sqlFile = System.getenv(ServerConstant.APP_HOME)
-                + File.separator + "data" + File.separator + ServerConstant.DATABASE_NAME + ".sql";
+                + File.separator + "data"
+                + File.separator + databaseName + ".sql";
 
         CommandLine commandLine = new CommandLine("mysql");
         commandLine.addArgument("--host=" + host);
@@ -44,11 +45,10 @@ public class MySqlOperationServiceImpl implements SystemOperationService {
         JsonObject datasource = jsonObject.getJsonObject("datasource");
 
         String url = datasource.getString("url");
+        String host = parseHost(url);
+        String port = parsePort(url);
+        String databaseName = parseDatabaseName(url);
 
-        String host = url.substring(13, url.indexOf(ServerConstant.DATABASE_NAME) - 1);
-        host = host.substring(0, host.indexOf(":"));
-        String port = url.substring(url.indexOf(":") + 1, url.indexOf(ServerConstant.DATABASE_NAME) - 1);
-        port = port.substring(port.lastIndexOf(":") + 1);
         String outputFileName = System.getenv(ServerConstant.APP_HOME)
                 + File.separator + "data"
                 + File.separator + "backup"
@@ -60,7 +60,7 @@ public class MySqlOperationServiceImpl implements SystemOperationService {
         commandLine.addArgument("-P" + port);
         commandLine.addArgument("-u" + datasource.getString("username"));
         commandLine.addArgument("-p" + datasource.getString("password"));
-        commandLine.addArgument(ServerConstant.DATABASE_NAME, false);
+        commandLine.addArgument(databaseName, false);
 
         Executor executor = new DefaultExecutor();
         executor.setExitValue(0);
@@ -91,10 +91,9 @@ public class MySqlOperationServiceImpl implements SystemOperationService {
 
         String url = datasource.getString("url");
 
-        String host = url.substring(13, url.indexOf(ServerConstant.DATABASE_NAME) - 1);
-        host = host.substring(0, host.indexOf(":"));
-        String port = url.substring(url.indexOf(":") + 1, url.indexOf(ServerConstant.DATABASE_NAME) - 1);
-        port = port.substring(port.lastIndexOf(":") + 1);
+        String host = parseHost(url);
+        String port = parsePort(url);
+        String databaseName = parseDatabaseName(url);
 
         String sqlFileName = System.getenv(ServerConstant.APP_HOME)
                 + File.separator + "data"
@@ -106,7 +105,7 @@ public class MySqlOperationServiceImpl implements SystemOperationService {
         commandLine.addArgument("-P" + port);
         commandLine.addArgument("-u" + datasource.getString("username"));
         commandLine.addArgument("-p" + datasource.getString("password"));
-        commandLine.addArgument("-D" + ServerConstant.DATABASE_NAME);
+        commandLine.addArgument("-D" + databaseName);
 
         exeMysqlImport(sqlFileName, commandLine);
     }
@@ -139,5 +138,25 @@ public class MySqlOperationServiceImpl implements SystemOperationService {
             logger.error(e.getLocalizedMessage());
             logger.error(errorStream.toString());
         }
+    }
+
+    private String parseHost(String uri) {
+        String tmp = uri.substring(13);
+        tmp = tmp.substring(0, tmp.indexOf(":"));
+        return tmp;
+    }
+
+    private String parsePort(String uri) {
+        String host = parseHost(uri);
+        String tmp = uri.substring(uri.indexOf(host) + host.length() + 1);
+        tmp = tmp.substring(0, tmp.indexOf("/"));
+        return tmp;
+    }
+
+    private String parseDatabaseName(String uri) {
+        String port = parsePort(uri);
+        String tmp = uri.substring(uri.indexOf(port) + port.length() + 1);
+        tmp = tmp.substring(0, tmp.indexOf("?"));
+        return tmp;
     }
 }
