@@ -9,8 +9,19 @@ import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DatabaseBackupRunner implements Runner {
-    private static Logger logger = LoggerFactory.getLogger(InstallRunner.class);
+public class BackupMySqlDatabaseRunner implements Runner {
+    private static Logger logger = LoggerFactory.getLogger(InitMySqlDataBaseRunner.class);
+
+    @Override
+    public String name() {
+        return "backupmysql";
+    }
+
+    @Override
+    public void usage(StringBuilder builder) {
+        builder.append("\t-name backupmysql").append("\n");
+        builder.append("\t\tbackup mysql database schema and data").append("\n");
+    }
 
     @Override
     public void start(String[] args) {

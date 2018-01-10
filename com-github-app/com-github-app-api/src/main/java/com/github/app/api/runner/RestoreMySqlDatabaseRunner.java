@@ -17,8 +17,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class RestoreRunner implements Runner{
-    private static Logger logger = LoggerFactory.getLogger(InstallRunner.class);
+public class RestoreMySqlDatabaseRunner implements Runner{
+    private static Logger logger = LoggerFactory.getLogger(InitMySqlDataBaseRunner.class);
 
     static Optional<CommandLine> cli(String[] args) {
         CLI cli = CLI.create("MySql restore")
@@ -43,6 +43,17 @@ public class RestoreRunner implements Runner{
             System.exit(-5);
         }
         return Optional.ofNullable(commandLine);
+    }
+
+    @Override
+    public String name() {
+        return "restoremysql";
+    }
+
+    @Override
+    public void usage(StringBuilder builder) {
+        builder.append("\t-name restoremysql -sql [the sql file to restore]").append("\n");
+        builder.append("\t\t restore the back sql file to mysql database").append("\n");
     }
 
     @Override

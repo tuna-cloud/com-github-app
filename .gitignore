@@ -6,3 +6,4 @@ target
 *.tar.gz
 com-github-app-ui/node_modules/*
 node_modules
+*.jar

@@ -19,6 +19,17 @@ public class ServerRunner implements Runner {
     private static Logger logger = LoggerFactory.getLogger(ServerRunner.class);
 
     @Override
+    public String name() {
+        return "server";
+    }
+
+    @Override
+    public void usage(StringBuilder builder) {
+        builder.append("\t -name server").append("\n");
+        builder.append("\t\t the web server and statiic resources server").append("\n");
+    }
+
+    @Override
     public void start(String[] args) {
         try {
             CmdParase.build(args);

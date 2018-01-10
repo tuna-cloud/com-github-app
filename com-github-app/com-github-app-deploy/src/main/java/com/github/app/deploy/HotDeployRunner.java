@@ -17,6 +17,17 @@ public class HotDeployRunner implements Runner {
     private static final Logger logger = LoggerFactory.getLogger(HotDeployRunner.class);
 
     @Override
+    public String name() {
+        return "deploy";
+    }
+
+    @Override
+    public void usage(StringBuilder builder) {
+        builder.append("\t-name deploy\n");
+        builder.append("\t\tdeploy the jar and class dynamic,is developing ... \n");
+    }
+
+    @Override
     public void start(String[] args) {
         try {
             Thread.sleep(3000);

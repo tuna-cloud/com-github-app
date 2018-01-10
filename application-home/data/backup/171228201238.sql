@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.7.20, for Linux (x86_64)
+-- MySQL dump 10.16  Distrib 10.2.11-MariaDB, for Win64 (AMD64)
 --
 -- Host: mysql1.net.com    Database: iot
 -- ------------------------------------------------------
--- Server version	5.7.19
+-- Server version	10.2.11-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,40 +16,40 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `T_DEVICE`
+-- Table structure for table `t_device`
 --
 
-DROP TABLE IF EXISTS `T_DEVICE`;
+DROP TABLE IF EXISTS `t_device`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `T_DEVICE` (
+CREATE TABLE `t_device` (
   `number` int(11) NOT NULL AUTO_INCREMENT,
   `secret` varchar(50) COLLATE utf8_bin DEFAULT NULL,
   `remark` varchar(60) COLLATE utf8_bin DEFAULT NULL,
   `product_number` int(11) DEFAULT NULL,
   PRIMARY KEY (`number`),
   KEY `FK_Reference_18` (`product_number`),
-  CONSTRAINT `FK_Reference_18` FOREIGN KEY (`product_number`) REFERENCES `T_PRODUCT` (`number`)
+  CONSTRAINT `FK_Reference_18` FOREIGN KEY (`product_number`) REFERENCES `t_product` (`number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `T_DEVICE`
+-- Dumping data for table `t_device`
 --
 
-LOCK TABLES `T_DEVICE` WRITE;
-/*!40000 ALTER TABLE `T_DEVICE` DISABLE KEYS */;
-/*!40000 ALTER TABLE `T_DEVICE` ENABLE KEYS */;
+LOCK TABLES `t_device` WRITE;
+/*!40000 ALTER TABLE `t_device` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_device` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `T_FILE`
+-- Table structure for table `t_file`
 --
 
-DROP TABLE IF EXISTS `T_FILE`;
+DROP TABLE IF EXISTS `t_file`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `T_FILE` (
+CREATE TABLE `t_file` (
   `number` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) COLLATE utf8_bin DEFAULT NULL,
   `path` varchar(80) COLLATE utf8_bin DEFAULT NULL,
@@ -58,28 +58,28 @@ CREATE TABLE `T_FILE` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `T_FILE`
+-- Dumping data for table `t_file`
 --
 
-LOCK TABLES `T_FILE` WRITE;
-/*!40000 ALTER TABLE `T_FILE` DISABLE KEYS */;
-INSERT INTO `T_FILE` VALUES (1,'123','123');
-/*!40000 ALTER TABLE `T_FILE` ENABLE KEYS */;
+LOCK TABLES `t_file` WRITE;
+/*!40000 ALTER TABLE `t_file` DISABLE KEYS */;
+INSERT INTO `t_file` VALUES (1,'123','123');
+/*!40000 ALTER TABLE `t_file` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `T_MENU`
+-- Table structure for table `t_menu`
 --
 
-DROP TABLE IF EXISTS `T_MENU`;
+DROP TABLE IF EXISTS `t_menu`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `T_MENU` (
+CREATE TABLE `t_menu` (
   `number` int(11) NOT NULL AUTO_INCREMENT,
   `url` varchar(100) COLLATE utf8_bin DEFAULT NULL,
   `name` varchar(50) COLLATE utf8_bin DEFAULT NULL,
   `parent_number` int(11) DEFAULT NULL,
-  `order` int(11) DEFAULT '0',
+  `order` int(11) DEFAULT 0,
   `icon` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
   `is_drop_down` int(2) DEFAULT NULL,
   PRIMARY KEY (`number`)
@@ -87,22 +87,22 @@ CREATE TABLE `T_MENU` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `T_MENU`
+-- Dumping data for table `t_menu`
 --
 
-LOCK TABLES `T_MENU` WRITE;
-/*!40000 ALTER TABLE `T_MENU` DISABLE KEYS */;
-/*!40000 ALTER TABLE `T_MENU` ENABLE KEYS */;
+LOCK TABLES `t_menu` WRITE;
+/*!40000 ALTER TABLE `t_menu` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_menu` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `T_OPERATION`
+-- Table structure for table `t_operation`
 --
 
-DROP TABLE IF EXISTS `T_OPERATION`;
+DROP TABLE IF EXISTS `t_operation`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `T_OPERATION` (
+CREATE TABLE `t_operation` (
   `number` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) COLLATE utf8_bin DEFAULT NULL,
   `code` varchar(50) COLLATE utf8_bin DEFAULT NULL,
@@ -113,22 +113,22 @@ CREATE TABLE `T_OPERATION` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `T_OPERATION`
+-- Dumping data for table `t_operation`
 --
 
-LOCK TABLES `T_OPERATION` WRITE;
-/*!40000 ALTER TABLE `T_OPERATION` DISABLE KEYS */;
-/*!40000 ALTER TABLE `T_OPERATION` ENABLE KEYS */;
+LOCK TABLES `t_operation` WRITE;
+/*!40000 ALTER TABLE `t_operation` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_operation` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `T_PAGE`
+-- Table structure for table `t_page`
 --
 
-DROP TABLE IF EXISTS `T_PAGE`;
+DROP TABLE IF EXISTS `t_page`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `T_PAGE` (
+CREATE TABLE `t_page` (
   `number` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`number`)
@@ -136,22 +136,22 @@ CREATE TABLE `T_PAGE` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `T_PAGE`
+-- Dumping data for table `t_page`
 --
 
-LOCK TABLES `T_PAGE` WRITE;
-/*!40000 ALTER TABLE `T_PAGE` DISABLE KEYS */;
-/*!40000 ALTER TABLE `T_PAGE` ENABLE KEYS */;
+LOCK TABLES `t_page` WRITE;
+/*!40000 ALTER TABLE `t_page` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_page` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `T_POPEDOM`
+-- Table structure for table `t_popedom`
 --
 
-DROP TABLE IF EXISTS `T_POPEDOM`;
+DROP TABLE IF EXISTS `t_popedom`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `T_POPEDOM` (
+CREATE TABLE `t_popedom` (
   `number` int(11) NOT NULL AUTO_INCREMENT,
   `type` varchar(30) COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`number`)
@@ -159,22 +159,22 @@ CREATE TABLE `T_POPEDOM` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `T_POPEDOM`
+-- Dumping data for table `t_popedom`
 --
 
-LOCK TABLES `T_POPEDOM` WRITE;
-/*!40000 ALTER TABLE `T_POPEDOM` DISABLE KEYS */;
-/*!40000 ALTER TABLE `T_POPEDOM` ENABLE KEYS */;
+LOCK TABLES `t_popedom` WRITE;
+/*!40000 ALTER TABLE `t_popedom` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_popedom` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `T_PRODUCT`
+-- Table structure for table `t_product`
 --
 
-DROP TABLE IF EXISTS `T_PRODUCT`;
+DROP TABLE IF EXISTS `t_product`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `T_PRODUCT` (
+CREATE TABLE `t_product` (
   `number` int(11) NOT NULL AUTO_INCREMENT,
   `code` varchar(50) COLLATE utf8_bin DEFAULT NULL,
   `name` varchar(50) COLLATE utf8_bin DEFAULT NULL,
@@ -183,231 +183,231 @@ CREATE TABLE `T_PRODUCT` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `T_PRODUCT`
+-- Dumping data for table `t_product`
 --
 
-LOCK TABLES `T_PRODUCT` WRITE;
-/*!40000 ALTER TABLE `T_PRODUCT` DISABLE KEYS */;
-/*!40000 ALTER TABLE `T_PRODUCT` ENABLE KEYS */;
+LOCK TABLES `t_product` WRITE;
+/*!40000 ALTER TABLE `t_product` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_product` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `T_REL_DEVICE_USER`
+-- Table structure for table `t_rel_device_user`
 --
 
-DROP TABLE IF EXISTS `T_REL_DEVICE_USER`;
+DROP TABLE IF EXISTS `t_rel_device_user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `T_REL_DEVICE_USER` (
+CREATE TABLE `t_rel_device_user` (
   `device_number` int(11) DEFAULT NULL,
   `user_number` int(11) DEFAULT NULL,
   KEY `FK_Reference_20` (`device_number`),
   KEY `FK_Reference_21` (`user_number`),
-  CONSTRAINT `FK_Reference_20` FOREIGN KEY (`device_number`) REFERENCES `T_DEVICE` (`number`),
-  CONSTRAINT `FK_Reference_21` FOREIGN KEY (`user_number`) REFERENCES `T_USER` (`number`)
+  CONSTRAINT `FK_Reference_20` FOREIGN KEY (`device_number`) REFERENCES `t_device` (`number`),
+  CONSTRAINT `FK_Reference_21` FOREIGN KEY (`user_number`) REFERENCES `t_user` (`number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `T_REL_DEVICE_USER`
+-- Dumping data for table `t_rel_device_user`
 --
 
-LOCK TABLES `T_REL_DEVICE_USER` WRITE;
-/*!40000 ALTER TABLE `T_REL_DEVICE_USER` DISABLE KEYS */;
-/*!40000 ALTER TABLE `T_REL_DEVICE_USER` ENABLE KEYS */;
+LOCK TABLES `t_rel_device_user` WRITE;
+/*!40000 ALTER TABLE `t_rel_device_user` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_rel_device_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `T_REL_POPEDOM_FILE`
+-- Table structure for table `t_rel_popedom_file`
 --
 
-DROP TABLE IF EXISTS `T_REL_POPEDOM_FILE`;
+DROP TABLE IF EXISTS `t_rel_popedom_file`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `T_REL_POPEDOM_FILE` (
+CREATE TABLE `t_rel_popedom_file` (
   `popedom_number` int(11) DEFAULT NULL,
   `file_number` int(11) DEFAULT NULL,
   KEY `FK_Reference_14` (`file_number`),
   KEY `FK_Reference_15` (`popedom_number`),
-  CONSTRAINT `FK_Reference_14` FOREIGN KEY (`file_number`) REFERENCES `T_FILE` (`number`),
-  CONSTRAINT `FK_Reference_15` FOREIGN KEY (`popedom_number`) REFERENCES `T_POPEDOM` (`number`)
+  CONSTRAINT `FK_Reference_14` FOREIGN KEY (`file_number`) REFERENCES `t_file` (`number`),
+  CONSTRAINT `FK_Reference_15` FOREIGN KEY (`popedom_number`) REFERENCES `t_popedom` (`number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `T_REL_POPEDOM_FILE`
+-- Dumping data for table `t_rel_popedom_file`
 --
 
-LOCK TABLES `T_REL_POPEDOM_FILE` WRITE;
-/*!40000 ALTER TABLE `T_REL_POPEDOM_FILE` DISABLE KEYS */;
-/*!40000 ALTER TABLE `T_REL_POPEDOM_FILE` ENABLE KEYS */;
+LOCK TABLES `t_rel_popedom_file` WRITE;
+/*!40000 ALTER TABLE `t_rel_popedom_file` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_rel_popedom_file` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `T_REL_POPEDOM_MENU`
+-- Table structure for table `t_rel_popedom_menu`
 --
 
-DROP TABLE IF EXISTS `T_REL_POPEDOM_MENU`;
+DROP TABLE IF EXISTS `t_rel_popedom_menu`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `T_REL_POPEDOM_MENU` (
+CREATE TABLE `t_rel_popedom_menu` (
   `popedom_number` int(11) DEFAULT NULL,
   `menu_number` int(11) DEFAULT NULL,
   KEY `FK_Reference_10` (`menu_number`),
   KEY `FK_Reference_11` (`popedom_number`),
-  CONSTRAINT `FK_Reference_10` FOREIGN KEY (`menu_number`) REFERENCES `T_MENU` (`number`),
-  CONSTRAINT `FK_Reference_11` FOREIGN KEY (`popedom_number`) REFERENCES `T_POPEDOM` (`number`)
+  CONSTRAINT `FK_Reference_10` FOREIGN KEY (`menu_number`) REFERENCES `t_menu` (`number`),
+  CONSTRAINT `FK_Reference_11` FOREIGN KEY (`popedom_number`) REFERENCES `t_popedom` (`number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `T_REL_POPEDOM_MENU`
+-- Dumping data for table `t_rel_popedom_menu`
 --
 
-LOCK TABLES `T_REL_POPEDOM_MENU` WRITE;
-/*!40000 ALTER TABLE `T_REL_POPEDOM_MENU` DISABLE KEYS */;
-/*!40000 ALTER TABLE `T_REL_POPEDOM_MENU` ENABLE KEYS */;
+LOCK TABLES `t_rel_popedom_menu` WRITE;
+/*!40000 ALTER TABLE `t_rel_popedom_menu` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_rel_popedom_menu` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `T_REL_POPEDOM_OPERATION`
+-- Table structure for table `t_rel_popedom_operation`
 --
 
-DROP TABLE IF EXISTS `T_REL_POPEDOM_OPERATION`;
+DROP TABLE IF EXISTS `t_rel_popedom_operation`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `T_REL_POPEDOM_OPERATION` (
+CREATE TABLE `t_rel_popedom_operation` (
   `popedom_number` int(11) DEFAULT NULL,
   `op_number` int(11) DEFAULT NULL,
   KEY `FK_Reference_16` (`op_number`),
   KEY `FK_Reference_17` (`popedom_number`),
-  CONSTRAINT `FK_Reference_16` FOREIGN KEY (`op_number`) REFERENCES `T_OPERATION` (`number`),
-  CONSTRAINT `FK_Reference_17` FOREIGN KEY (`popedom_number`) REFERENCES `T_POPEDOM` (`number`)
+  CONSTRAINT `FK_Reference_16` FOREIGN KEY (`op_number`) REFERENCES `t_operation` (`number`),
+  CONSTRAINT `FK_Reference_17` FOREIGN KEY (`popedom_number`) REFERENCES `t_popedom` (`number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `T_REL_POPEDOM_OPERATION`
+-- Dumping data for table `t_rel_popedom_operation`
 --
 
-LOCK TABLES `T_REL_POPEDOM_OPERATION` WRITE;
-/*!40000 ALTER TABLE `T_REL_POPEDOM_OPERATION` DISABLE KEYS */;
-/*!40000 ALTER TABLE `T_REL_POPEDOM_OPERATION` ENABLE KEYS */;
+LOCK TABLES `t_rel_popedom_operation` WRITE;
+/*!40000 ALTER TABLE `t_rel_popedom_operation` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_rel_popedom_operation` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `T_REL_POPEDOM_PAGE`
+-- Table structure for table `t_rel_popedom_page`
 --
 
-DROP TABLE IF EXISTS `T_REL_POPEDOM_PAGE`;
+DROP TABLE IF EXISTS `t_rel_popedom_page`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `T_REL_POPEDOM_PAGE` (
+CREATE TABLE `t_rel_popedom_page` (
   `popedom_number` int(11) DEFAULT NULL,
   `page_number` int(11) DEFAULT NULL,
   KEY `FK_Reference_12` (`page_number`),
   KEY `FK_Reference_13` (`popedom_number`),
-  CONSTRAINT `FK_Reference_12` FOREIGN KEY (`page_number`) REFERENCES `T_PAGE` (`number`),
-  CONSTRAINT `FK_Reference_13` FOREIGN KEY (`popedom_number`) REFERENCES `T_POPEDOM` (`number`)
+  CONSTRAINT `FK_Reference_12` FOREIGN KEY (`page_number`) REFERENCES `t_page` (`number`),
+  CONSTRAINT `FK_Reference_13` FOREIGN KEY (`popedom_number`) REFERENCES `t_popedom` (`number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `T_REL_POPEDOM_PAGE`
+-- Dumping data for table `t_rel_popedom_page`
 --
 
-LOCK TABLES `T_REL_POPEDOM_PAGE` WRITE;
-/*!40000 ALTER TABLE `T_REL_POPEDOM_PAGE` DISABLE KEYS */;
-/*!40000 ALTER TABLE `T_REL_POPEDOM_PAGE` ENABLE KEYS */;
+LOCK TABLES `t_rel_popedom_page` WRITE;
+/*!40000 ALTER TABLE `t_rel_popedom_page` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_rel_popedom_page` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `T_REL_PRODUCT_USER`
+-- Table structure for table `t_rel_product_user`
 --
 
-DROP TABLE IF EXISTS `T_REL_PRODUCT_USER`;
+DROP TABLE IF EXISTS `t_rel_product_user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `T_REL_PRODUCT_USER` (
+CREATE TABLE `t_rel_product_user` (
   `product_number` int(11) DEFAULT NULL,
   `user_number` int(11) DEFAULT NULL,
   KEY `FK_Reference_22` (`product_number`),
   KEY `FK_Reference_23` (`user_number`),
-  CONSTRAINT `FK_Reference_22` FOREIGN KEY (`product_number`) REFERENCES `T_PRODUCT` (`number`),
-  CONSTRAINT `FK_Reference_23` FOREIGN KEY (`user_number`) REFERENCES `T_USER` (`number`)
+  CONSTRAINT `FK_Reference_22` FOREIGN KEY (`product_number`) REFERENCES `t_product` (`number`),
+  CONSTRAINT `FK_Reference_23` FOREIGN KEY (`user_number`) REFERENCES `t_user` (`number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `T_REL_PRODUCT_USER`
+-- Dumping data for table `t_rel_product_user`
 --
 
-LOCK TABLES `T_REL_PRODUCT_USER` WRITE;
-/*!40000 ALTER TABLE `T_REL_PRODUCT_USER` DISABLE KEYS */;
-/*!40000 ALTER TABLE `T_REL_PRODUCT_USER` ENABLE KEYS */;
+LOCK TABLES `t_rel_product_user` WRITE;
+/*!40000 ALTER TABLE `t_rel_product_user` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_rel_product_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `T_REL_ROLE_POPEDOM`
+-- Table structure for table `t_rel_role_popedom`
 --
 
-DROP TABLE IF EXISTS `T_REL_ROLE_POPEDOM`;
+DROP TABLE IF EXISTS `t_rel_role_popedom`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `T_REL_ROLE_POPEDOM` (
+CREATE TABLE `t_rel_role_popedom` (
   `role_number` int(11) DEFAULT NULL,
   `popedom_number` int(11) DEFAULT NULL,
   KEY `FK_Reference_8` (`role_number`),
   KEY `FK_Reference_9` (`popedom_number`),
-  CONSTRAINT `FK_Reference_8` FOREIGN KEY (`role_number`) REFERENCES `T_ROLE` (`number`),
-  CONSTRAINT `FK_Reference_9` FOREIGN KEY (`popedom_number`) REFERENCES `T_POPEDOM` (`number`)
+  CONSTRAINT `FK_Reference_8` FOREIGN KEY (`role_number`) REFERENCES `t_role` (`number`),
+  CONSTRAINT `FK_Reference_9` FOREIGN KEY (`popedom_number`) REFERENCES `t_popedom` (`number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `T_REL_ROLE_POPEDOM`
+-- Dumping data for table `t_rel_role_popedom`
 --
 
-LOCK TABLES `T_REL_ROLE_POPEDOM` WRITE;
-/*!40000 ALTER TABLE `T_REL_ROLE_POPEDOM` DISABLE KEYS */;
-/*!40000 ALTER TABLE `T_REL_ROLE_POPEDOM` ENABLE KEYS */;
+LOCK TABLES `t_rel_role_popedom` WRITE;
+/*!40000 ALTER TABLE `t_rel_role_popedom` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_rel_role_popedom` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `T_REL_ROLE_USER`
+-- Table structure for table `t_rel_role_user`
 --
 
-DROP TABLE IF EXISTS `T_REL_ROLE_USER`;
+DROP TABLE IF EXISTS `t_rel_role_user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `T_REL_ROLE_USER` (
+CREATE TABLE `t_rel_role_user` (
   `role_number` int(11) DEFAULT NULL,
   `user_number` int(11) DEFAULT NULL,
   UNIQUE KEY `user_number` (`user_number`),
   KEY `FK_Reference_7` (`role_number`),
-  CONSTRAINT `FK_Reference_6` FOREIGN KEY (`user_number`) REFERENCES `T_USER` (`number`),
-  CONSTRAINT `FK_Reference_7` FOREIGN KEY (`role_number`) REFERENCES `T_ROLE` (`number`)
+  CONSTRAINT `FK_Reference_6` FOREIGN KEY (`user_number`) REFERENCES `t_user` (`number`),
+  CONSTRAINT `FK_Reference_7` FOREIGN KEY (`role_number`) REFERENCES `t_role` (`number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `T_REL_ROLE_USER`
+-- Dumping data for table `t_rel_role_user`
 --
 
-LOCK TABLES `T_REL_ROLE_USER` WRITE;
-/*!40000 ALTER TABLE `T_REL_ROLE_USER` DISABLE KEYS */;
-INSERT INTO `T_REL_ROLE_USER` VALUES (1,1);
-/*!40000 ALTER TABLE `T_REL_ROLE_USER` ENABLE KEYS */;
+LOCK TABLES `t_rel_role_user` WRITE;
+/*!40000 ALTER TABLE `t_rel_role_user` DISABLE KEYS */;
+INSERT INTO `t_rel_role_user` VALUES (1,1);
+/*!40000 ALTER TABLE `t_rel_role_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `T_ROLE`
+-- Table structure for table `t_role`
 --
 
-DROP TABLE IF EXISTS `T_ROLE`;
+DROP TABLE IF EXISTS `t_role`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `T_ROLE` (
+CREATE TABLE `t_role` (
   `number` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`number`)
@@ -415,23 +415,23 @@ CREATE TABLE `T_ROLE` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `T_ROLE`
+-- Dumping data for table `t_role`
 --
 
-LOCK TABLES `T_ROLE` WRITE;
-/*!40000 ALTER TABLE `T_ROLE` DISABLE KEYS */;
-INSERT INTO `T_ROLE` VALUES (1,'系统管理员');
-/*!40000 ALTER TABLE `T_ROLE` ENABLE KEYS */;
+LOCK TABLES `t_role` WRITE;
+/*!40000 ALTER TABLE `t_role` DISABLE KEYS */;
+INSERT INTO `t_role` VALUES (1,'系统管理员');
+/*!40000 ALTER TABLE `t_role` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `T_TOPIC`
+-- Table structure for table `t_topic`
 --
 
-DROP TABLE IF EXISTS `T_TOPIC`;
+DROP TABLE IF EXISTS `t_topic`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `T_TOPIC` (
+CREATE TABLE `t_topic` (
   `number` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(60) COLLATE utf8_bin DEFAULT NULL,
   `popedom` int(11) DEFAULT NULL,
@@ -439,27 +439,27 @@ CREATE TABLE `T_TOPIC` (
   `device_number` int(11) DEFAULT NULL,
   PRIMARY KEY (`number`),
   KEY `FK_Reference_19` (`device_number`),
-  CONSTRAINT `FK_Reference_19` FOREIGN KEY (`device_number`) REFERENCES `T_DEVICE` (`number`)
+  CONSTRAINT `FK_Reference_19` FOREIGN KEY (`device_number`) REFERENCES `t_device` (`number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `T_TOPIC`
+-- Dumping data for table `t_topic`
 --
 
-LOCK TABLES `T_TOPIC` WRITE;
-/*!40000 ALTER TABLE `T_TOPIC` DISABLE KEYS */;
-/*!40000 ALTER TABLE `T_TOPIC` ENABLE KEYS */;
+LOCK TABLES `t_topic` WRITE;
+/*!40000 ALTER TABLE `t_topic` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_topic` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `T_USER`
+-- Table structure for table `t_user`
 --
 
-DROP TABLE IF EXISTS `T_USER`;
+DROP TABLE IF EXISTS `t_user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `T_USER` (
+CREATE TABLE `t_user` (
   `number` int(11) NOT NULL AUTO_INCREMENT,
   `account` varchar(50) COLLATE utf8_bin DEFAULT NULL,
   `password` varchar(80) CHARACTER SET utf8 DEFAULT NULL,
@@ -467,10 +467,10 @@ CREATE TABLE `T_USER` (
   `sex` varchar(20) COLLATE utf8_bin DEFAULT NULL,
   `email` varchar(50) COLLATE utf8_bin DEFAULT NULL,
   `mobile` varchar(30) COLLATE utf8_bin DEFAULT NULL,
-  `is_enable` smallint(6) DEFAULT '0',
+  `is_enable` smallint(6) DEFAULT 0,
   `address` varchar(100) COLLATE utf8_bin DEFAULT NULL,
   `photo_url` varchar(100) COLLATE utf8_bin DEFAULT NULL,
-  `remark` text COLLATE utf8_bin,
+  `remark` text COLLATE utf8_bin DEFAULT NULL,
   `parent_number` int(11) DEFAULT NULL,
   PRIMARY KEY (`number`),
   KEY `AK_MOBILE` (`mobile`),
@@ -480,13 +480,13 @@ CREATE TABLE `T_USER` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `T_USER`
+-- Dumping data for table `t_user`
 --
 
-LOCK TABLES `T_USER` WRITE;
-/*!40000 ALTER TABLE `T_USER` DISABLE KEYS */;
-INSERT INTO `T_USER` VALUES (1,'admin','A2EDD016141AC2E4CF1773A088239F230FB416E1335BCCDEBCCA0369','管理员','男','admin@163.com','15315086265',1,'china',NULL,NULL,NULL);
-/*!40000 ALTER TABLE `T_USER` ENABLE KEYS */;
+LOCK TABLES `t_user` WRITE;
+/*!40000 ALTER TABLE `t_user` DISABLE KEYS */;
+INSERT INTO `t_user` VALUES (1,'admin','A2EDD016141AC2E4CF1773A088239F230FB416E1335BCCDEBCCA0369','管理员','男','admin@163.com','15315086265',1,'china',NULL,NULL,NULL);
+/*!40000 ALTER TABLE `t_user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -498,4 +498,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-11-09 20:51:38
+-- Dump completed on 2017-12-28 20:12:38

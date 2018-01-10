@@ -9,8 +9,19 @@ import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class InstallRunner implements Runner {
-    private static Logger logger = LoggerFactory.getLogger(InstallRunner.class);
+public class InitMySqlDataBaseRunner implements Runner {
+    private static Logger logger = LoggerFactory.getLogger(InitMySqlDataBaseRunner.class);
+
+    @Override
+    public String name() {
+        return "initmysql";
+    }
+
+    @Override
+    public void usage(StringBuilder builder) {
+        builder.append("\t-name initmysql").append("\n");
+        builder.append("\t\t install mysql database schemas").append("\n");
+    }
 
     @Override
     public void start(String[] args) {

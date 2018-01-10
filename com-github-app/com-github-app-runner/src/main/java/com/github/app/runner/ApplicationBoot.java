@@ -1,8 +1,8 @@
 package com.github.app.runner;
 
-import com.github.app.api.runner.DatabaseBackupRunner;
-import com.github.app.api.runner.InstallRunner;
-import com.github.app.api.runner.RestoreRunner;
+import com.github.app.api.runner.BackupMySqlDatabaseRunner;
+import com.github.app.api.runner.InitMySqlDataBaseRunner;
+import com.github.app.api.runner.RestoreMySqlDatabaseRunner;
 import com.github.app.api.runner.ServerRunner;
 import com.github.app.deploy.HotDeployRunner;
 import com.github.app.deploy.RunnerTest;
@@ -18,7 +18,6 @@ public class ApplicationBoot {
                 .addOption(new Option()
                         .setLongName("name")
                         .setShortName("name")
-                        .setDefaultValue("server")
                         .setDescription("vert.x config file (in json format)")
                         .setRequired(false)
                 );
@@ -40,28 +39,41 @@ public class ApplicationBoot {
 
     static Map<String, Runner> runnerMap = new HashMap<>();
     static {
-        runnerMap.put("server", new ServerRunner());
-        runnerMap.put("install", new InstallRunner());
-        runnerMap.put("backup", new DatabaseBackupRunner());
-        runnerMap.put("restore", new RestoreRunner());
-        runnerMap.put("redeploy", new HotDeployRunner());
-        runnerMap.put("test", new RunnerTest());
+        addRunner(new ServerRunner());
+        addRunner(new InitMySqlDataBaseRunner());
+        addRunner(new BackupMySqlDatabaseRunner());
+        addRunner(new RestoreMySqlDatabaseRunner());
+        addRunner(new HotDeployRunner());
+        addRunner(new RunnerTest());
+    }
+
+    private static void addRunner(Runner runner) {
+        runnerMap.put(runner.name(), runner);
     }
 
     public static void main(String[] args) {
         System.setProperty("vertx.logger-delegate-factory-class-name", "io.vertx.core.logging.SLF4JLogDelegateFactory");
         Optional<CommandLine> commandLine = cli(args);
         if(commandLine.isPresent()) {
-            Arrays.asList(commandLine.get().getRawValueForOption(
-                    commandLine.get().cli().getOption("name")).split(","))
-                    .stream().forEach(svr -> {
-                        if(runnerMap.containsKey(svr)) {
-                            runnerMap.get(svr).start(args);
-                        } else {
-                            System.out.println("un know service:" + svr);
-                            System.exit(-1);
-                        }
-            });
+            String name = commandLine.get().getRawValueForOption(commandLine.get().cli().getOption("name"));
+            if(name != null && runnerMap.containsKey(name)) {
+                runnerMap.get(name).start(args);
+            } else {
+                System.out.println(buildUsage());
+                System.exit(-1);
+            }
+        } else {
+            System.out.println(buildUsage());
+            System.exit(-1);
         }
+    }
+
+    private static String buildUsage() {
+        StringBuilder builder = new StringBuilder();
+        runnerMap.forEach((name, runner) -> {
+            runner.usage(builder);
+            builder.append("\n");
+        });
+        return builder.toString();
     }
 }
