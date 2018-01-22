@@ -7,3 +7,5 @@ target
 com-github-app-ui/node_modules/*
 node_modules
 *.jar
+application-home/libs/*.jar
+application-home/plugins/*.jar

@@ -72,14 +72,17 @@ public class CmdParase {
         try {
 
             String confFileContent = FileUtils.readFileToString(new File(path), "UTF-8");
-            confFileContent = confFileContent.replaceAll("\\$\\{" + ServerConstant.APP_HOME + "}", System.getenv(ServerConstant.APP_HOME));
+            String rep = System.getenv(ServerConstant.APP_HOME);
+            if(System.getProperty("os.name").toLowerCase().startsWith("win")) {
+                rep = rep.replace("\\", File.separator + File.separator + File.separator + File.separator);
+            }
+            confFileContent = confFileContent.replaceAll("\\$\\{" + ServerConstant.APP_HOME + "}", rep);
             logger.info("server.json:" + confFileContent);
             return new JsonObject(confFileContent);
         }  catch (Exception e) {
-            logger.error("server.json file missing");
+            logger.error("server.json file missing", e);
         }
         System.exit(-1);
         return null;
     }
-
 }

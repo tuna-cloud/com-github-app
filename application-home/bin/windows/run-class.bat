@@ -14,6 +14,11 @@ rem WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 rem See the License for the specific language governing permissions and
 rem limitations under the License.
 
+rem system env
+rem **************************************
+rem APPLICATION_HOME=
+rem **************************************
+
 setlocal enabledelayedexpansion
 
 IF [%1] EQU [] (
@@ -27,7 +32,10 @@ set BASE_DIR=%CD%
 popd
 set CLASSPATH=
 rem the com-github-app-api use the evn of APPLICATION_HOME
-set APPLICATION_HOME=%BASE_DIR%
+IF ["%APPLICATION_HOME%"] EQU [""] (
+	set APPLICATION_HOME=%BASE_DIR%
+)
+echo "env:APPLICATION_HOME:="%APPLICATION_HOME%
 rem Classpath addition for release
 for %%i in (%BASE_DIR%\libs\*.jar) do (
 	call :concat %%i
