@@ -9,3 +9,4 @@ node_modules
 *.jar
 application-home/libs/*.jar
 application-home/plugins/*.jar
+application-home/data/cache/*
