@@ -42,7 +42,7 @@ public class HttpServerVerticle extends AbstractVerticle implements ApplicationC
         JsonObject httpsOption = jsonObject.getJsonObject("https.option");
 
         HttpServerOptions options = new HttpServerOptions().setSsl(false);
-        if(httpsOption.getBoolean("enable")) {
+        if (httpsOption.getBoolean("enable")) {
             options.setSsl(true);
             options.setKeyCertOptions(new JksOptions()
                     .setPath(httpsOption.getJsonObject("keyCert").getString("path"))
@@ -131,6 +131,7 @@ public class HttpServerVerticle extends AbstractVerticle implements ApplicationC
 
     /**
      * 动态挂载handler
+     *
      * @param uriHandler
      */
     public void addRoute(UriHandler uriHandler) {
