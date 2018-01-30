@@ -5,46 +5,29 @@
 
 <generatorConfiguration>
     <!--<properties resource="jdbc.properties"></properties>-->
-    <!--mysql 连接数据库jar 这里选择自己本地位置-->
-    <classPathEntry location="D:\mavenRepository\mysql\mysql-connector-java\5.1.39\mysql-connector-java-5.1.39.jar" />
+    <classPathEntry location="D:\mysql-connector-java-5.1.39.jar" />
     <context id="testTables" targetRuntime="MyBatis3">
-        <commentGenerator>
-            <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
-            <property name="suppressAllComments" value="true" />
-        </commentGenerator>
-        <!--数据库连接的信息：驱动类、连接地址、用户名、密码 -->
+        <property name="suppressAllComments" value="true" />
+        <property name="useActualColumnNames" value="false" />
+        <plugin type="com.rock.dal.mybatis.MysqlPaginationPlugin" />
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
                         connectionURL="jdbc:mysql://127.0.0.1:3306/mis" userId="root"
                         password="870712">
         </jdbcConnection>
-        <!-- 默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer，为 true时把JDBC DECIMAL 和 NUMERIC 类型解析为java.math.BigDecimal -->
         <javaTypeResolver>
             <property name="forceBigDecimals" value="false" />
         </javaTypeResolver>
 
-        <!-- targetProject:生成PO类的位置 -->
         <javaModelGenerator targetPackage="com.github.app.api.dao.domain" targetProject="src/main/java">
-            <!-- enableSubPackages:是否让schema作为包的后缀 -->
-            <property name="enableSubPackages" value="false" />
-            <!-- 从数据库返回的值被清理前后的空格 -->
+            <property name="enableSubPackages" value="true" />
             <property name="trimStrings" value="true" />
         </javaModelGenerator>
-        <!-- targetProject:mapper映射文件生成的位置
-           如果maven工程只是单独的一个工程，targetProject="src/main/java"
-           若果maven工程是分模块的工程，targetProject="所属模块的名称"，例如：
-           targetProject="ecps-manager-mapper"，下同-->
-        <sqlMapGenerator targetPackage="resources.mapper"
-                         targetProject="src/main">
-            <!-- enableSubPackages:是否让schema作为包的后缀 -->
-            <property name="enableSubPackages" value="false" />
+        <sqlMapGenerator targetPackage="com.github.app.api.dao.mapper" targetProject="src/main">
+            <property name="enableSubPackages" value="true" />
         </sqlMapGenerator>
-        <!-- targetPackage：mapper接口生成的位置 -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.github.app.api.dao.mapper"
-                             targetProject="src/main/java">
-            <!-- enableSubPackages:是否让schema作为包的后缀 -->
-            <property name="enableSubPackages" value="false" />
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.github.app.api.dao.mapper" targetProject="src/main/java">
+            <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
-        <!-- 指定数据库表 -->
         <table schema="mis" tableName="account" domainObjectName="Account"></table>
         <table schema="mis" tableName="menu"></table>
         <table schema="mis" tableName="role"></table>
