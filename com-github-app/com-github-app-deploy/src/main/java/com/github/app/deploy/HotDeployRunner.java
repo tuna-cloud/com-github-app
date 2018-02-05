@@ -2,7 +2,7 @@ package com.github.app.deploy;
 
 import com.github.app.utils.LogbackLoaderUtils;
 import com.github.app.utils.Runner;
-import com.github.app.utils.ServerConstant;
+import com.github.app.utils.ServerEnvConstant;
 import com.sun.tools.attach.VirtualMachine;
 import org.apache.commons.exec.*;
 import org.slf4j.Logger;
@@ -31,8 +31,8 @@ public class HotDeployRunner implements Runner {
     public void start(String[] args) {
         try {
             Thread.sleep(3000);
-            logger.info("APPLICATION_HOME:" + System.getenv(ServerConstant.APP_HOME));
-            LogbackLoaderUtils.loadConfig(System.getenv(ServerConstant.APP_HOME)
+            logger.info("APPLICATION_HOME:" + System.getenv(ServerEnvConstant.APP_HOME));
+            LogbackLoaderUtils.loadConfig(System.getenv(ServerEnvConstant.APP_HOME)
                     + File.separator + "config" + File.separator + "logback.xml");
 
             String[] pids = findApplicationPID();
@@ -41,7 +41,7 @@ public class HotDeployRunner implements Runner {
                 for (String pid : pids) {
                     VirtualMachine vm = VirtualMachine.attach(pid);
 
-                    vm.loadAgent(System.getenv(ServerConstant.APP_HOME) + File.separator + "plugins"
+                    vm.loadAgent(System.getenv(ServerEnvConstant.APP_HOME) + File.separator + "plugins"
                             + File.separator + "java-agent.jar" , "this param can pass to java agent agentmain args");
                     vm.detach();
                 }

@@ -1,6 +1,6 @@
 package com.github.app.api.utils;
 
-import com.github.app.utils.ServerConstant;
+import com.github.app.utils.ServerEnvConstant;
 import io.vertx.core.cli.CLI;
 import io.vertx.core.cli.CLIException;
 import io.vertx.core.cli.CommandLine;
@@ -58,7 +58,7 @@ public class CmdParase {
     public String getLogbackCfg() {
         String path = commandLine.getRawValueForOption(commandLine.cli().getOption("logback"));
         if(path == null) {
-            path = System.getenv(ServerConstant.APP_HOME) + File.separator + "config" + File.separator + "logback.xml";
+            path = System.getenv(ServerEnvConstant.APP_HOME) + File.separator + "config" + File.separator + "logback.xml";
         }
         return path;
     }
@@ -66,17 +66,17 @@ public class CmdParase {
     public JsonObject getServerCfg() {
         String path = commandLine.getRawValueForOption(commandLine.cli().getOption("cfg"));
         if(path == null) {
-            path = System.getenv(ServerConstant.APP_HOME) + File.separator + "config" + File.separator + "server.json";
+            path = System.getenv(ServerEnvConstant.APP_HOME) + File.separator + "config" + File.separator + "server.json";
         }
 
         try {
 
             String confFileContent = FileUtils.readFileToString(new File(path), "UTF-8");
-            String rep = System.getenv(ServerConstant.APP_HOME);
+            String rep = System.getenv(ServerEnvConstant.APP_HOME);
             if(System.getProperty("os.name").toLowerCase().startsWith("win")) {
                 rep = rep.replace("\\", File.separator + File.separator + File.separator + File.separator);
             }
-            confFileContent = confFileContent.replaceAll("\\$\\{" + ServerConstant.APP_HOME + "}", rep);
+            confFileContent = confFileContent.replaceAll("\\$\\{" + ServerEnvConstant.APP_HOME + "}", rep);
             logger.info("server.json:" + confFileContent);
             return new JsonObject(confFileContent);
         }  catch (Exception e) {

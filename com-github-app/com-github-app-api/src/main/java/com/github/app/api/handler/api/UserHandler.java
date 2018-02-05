@@ -1,6 +1,6 @@
 package com.github.app.api.handler.api;
 
-import com.github.app.api.services.UserService;
+//import com.github.app.api.services.UserService;
 import com.github.app.api.handler.UriHandler;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserHandler implements UriHandler {
 
-    @Autowired
-    private UserService userService;
+//    @Autowired
+//    private UserService userService;
 
     @Override
     public void registeUriHandler(Router router) {
@@ -46,8 +46,8 @@ public class UserHandler implements UriHandler {
 
     public void currentUserInfo(RoutingContext routingContext) {
         try {
-            JsonObject user = userService.selectUserInfoByAccount(routingContext.get("account"));
-            responseSuccess(routingContext, user);
+//            JsonObject user = userService.selectUserInfoByAccount(routingContext.get("account"));
+//            responseSuccess(routingContext, user);
         } catch (Exception e) {
             responseFailure(routingContext, e.getLocalizedMessage());
         }

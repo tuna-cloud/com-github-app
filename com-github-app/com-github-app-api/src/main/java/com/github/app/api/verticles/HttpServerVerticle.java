@@ -2,7 +2,7 @@ package com.github.app.api.verticles;
 
 import com.github.app.api.handler.UriHandler;
 import com.github.app.utils.ClassUtil;
-import com.github.app.utils.ServerConstant;
+import com.github.app.utils.ServerEnvConstant;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServer;
@@ -98,7 +98,7 @@ public class HttpServerVerticle extends AbstractVerticle implements ApplicationC
         loadHandlers(rootRouter, "com.github.app.api.handler.common");
         rootRouter.route("/static/*").handler(StaticHandler.create()
                 .setAllowRootFileSystemAccess(true)
-                .setWebRoot(System.getenv(ServerConstant.APP_HOME) + File.separator + "web"));
+                .setWebRoot(System.getenv(ServerEnvConstant.APP_HOME) + File.separator + "web"));
 
         /**
          * apiRouter will validate the token in the global interceptor

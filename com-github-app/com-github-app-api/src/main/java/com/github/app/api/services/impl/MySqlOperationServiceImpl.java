@@ -1,7 +1,7 @@
 package com.github.app.api.services.impl;
 
 import com.github.app.api.services.SystemOperationService;
-import com.github.app.utils.ServerConstant;
+import com.github.app.utils.ServerEnvConstant;
 import io.vertx.core.json.JsonObject;
 import org.apache.commons.exec.*;
 import org.slf4j.Logger;
@@ -25,7 +25,7 @@ public class MySqlOperationServiceImpl implements SystemOperationService {
         String port = parsePort(url);
         String databaseName = parseDatabaseName(url);
 
-        String sqlFile = System.getenv(ServerConstant.APP_HOME)
+        String sqlFile = System.getenv(ServerEnvConstant.APP_HOME)
                 + File.separator + "data"
                 + File.separator + databaseName + ".sql";
 
@@ -49,7 +49,7 @@ public class MySqlOperationServiceImpl implements SystemOperationService {
         String port = parsePort(url);
         String databaseName = parseDatabaseName(url);
 
-        String outputFileName = System.getenv(ServerConstant.APP_HOME)
+        String outputFileName = System.getenv(ServerEnvConstant.APP_HOME)
                 + File.separator + "data"
                 + File.separator + "backup"
                 + File.separator + "" + LocalDateTime.now()
@@ -95,7 +95,7 @@ public class MySqlOperationServiceImpl implements SystemOperationService {
         String port = parsePort(url);
         String databaseName = parseDatabaseName(url);
 
-        String sqlFileName = System.getenv(ServerConstant.APP_HOME)
+        String sqlFileName = System.getenv(ServerEnvConstant.APP_HOME)
                 + File.separator + "data"
                 + File.separator + "backup"
                 + File.separator + fileName;

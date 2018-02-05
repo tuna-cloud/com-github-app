@@ -26,7 +26,7 @@ public class ServerRunner implements Runner {
     @Override
     public void usage(StringBuilder builder) {
         builder.append("\t -name server").append("\n");
-        builder.append("\t\t the web server and statiic resources server").append("\n");
+        builder.append("\t\t the web server and static resources server").append("\n");
     }
 
     @Override

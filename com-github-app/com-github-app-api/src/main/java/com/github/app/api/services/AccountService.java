@@ -6,6 +6,4 @@ import org.springframework.stereotype.Component;
 public interface AccountService {
 
     boolean authLogin(String account, String password);
-
-
 }

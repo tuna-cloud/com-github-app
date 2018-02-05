@@ -103,11 +103,33 @@ public interface UriHandler {
     /**
      *
      * @param routingContext
+     */
+    default void responseFailure(RoutingContext routingContext) {
+        if(routingContext.failed()) {
+            responseFailure(routingContext, routingContext.failure());
+        } else {
+            responseFailure(routingContext, "unknow server error");
+        }
+    }
+
+    /**
+     *
+     * @param routingContext
      * @param e
      */
     default void responseFailure(RoutingContext routingContext, Exception e) {
+        responseFailure(routingContext, e);
+    }
+
+    /**
+     *
+     * @param routingContext
+     * @param throwable
+     */
+    default void responseFailure(RoutingContext routingContext, Throwable throwable) {
+        throwable.printStackTrace();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        e.printStackTrace(new PrintStream(baos));
+        throwable.printStackTrace(new PrintStream(baos));
         String exception = baos.toString();
         responseFailure(routingContext, exception);
     }

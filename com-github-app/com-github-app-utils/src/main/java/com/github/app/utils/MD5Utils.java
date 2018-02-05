@@ -120,8 +120,8 @@ public class MD5Utils {
     }
 
     public static void main(String[] args) throws Exception {
-        String en = md5WithSalt("123456");
+        String en = md5WithSalt("admin");
         System.out.println(en);
-        System.out.println(validateMd5WithSalt("123456", en));
+        System.out.println(validateMd5WithSalt("admin", en));
     }
 }
