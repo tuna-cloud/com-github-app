@@ -1,12 +1,9 @@
 package com.github.app.deploy;
 
-import com.github.app.utils.LogbackLoaderUtils;
 import com.github.app.utils.Runner;
 import com.github.app.utils.ServerEnvConstant;
 import com.sun.tools.attach.VirtualMachine;
 import org.apache.commons.exec.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.lang.management.ManagementFactory;
@@ -14,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HotDeployRunner implements Runner {
-    private static final Logger logger = LoggerFactory.getLogger(HotDeployRunner.class);
 
     @Override
     public String name() {
@@ -31,10 +27,6 @@ public class HotDeployRunner implements Runner {
     public void start(String[] args) {
         try {
             Thread.sleep(3000);
-            logger.info("APPLICATION_HOME:" + System.getenv(ServerEnvConstant.APP_HOME));
-            LogbackLoaderUtils.loadConfig(System.getenv(ServerEnvConstant.APP_HOME)
-                    + File.separator + "config" + File.separator + "logback.xml");
-
             String[] pids = findApplicationPID();
             if (pids != null && pids.length > 0) {
 
@@ -50,7 +42,6 @@ public class HotDeployRunner implements Runner {
             Thread.sleep(3000);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("HotDeploy error happen", e);
         }
     }
 
@@ -74,7 +65,6 @@ public class HotDeployRunner implements Runner {
             executor.setStreamHandler(new PumpStreamHandler(outFileStream, errorStream));
 
             String error = errorStream.toString("utf-8");
-            logger.warn(error);
             int exitValue = executor.execute(commandLine);
 
             BufferedReader reader = new BufferedReader(new StringReader(outFileStream.toString("utf-8")));
@@ -88,12 +78,10 @@ public class HotDeployRunner implements Runner {
                 }
             }
 
-            logger.info("export executor finish, exit value is " + exitValue);
             return appPids.toArray(new String[appPids.size()]);
 
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("deploy err", e);
         }
 
         return null;

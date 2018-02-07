@@ -4,8 +4,8 @@ import io.vertx.core.buffer.Buffer;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -19,7 +19,7 @@ import java.io.PrintStream;
  * }
  */
 public interface UriHandler {
-    Logger logger = LoggerFactory.getLogger(UriHandler.class);
+    Logger logger = LogManager.getLogger(UriHandler.class);
     /**
      * api operation success
      */
@@ -132,6 +132,14 @@ public interface UriHandler {
         throwable.printStackTrace(new PrintStream(baos));
         String exception = baos.toString();
         responseFailure(routingContext, exception);
+    }
+
+    /**
+     *
+     * @param routingContext
+     */
+    default void responseSuccess(RoutingContext routingContext) {
+        response(routingContext, CODE_SUCCESS, "success");
     }
 
     /**

@@ -2,15 +2,14 @@ package com.github.app.api.runner;
 
 import com.github.app.api.services.SystemOperationService;
 import com.github.app.api.services.impl.MySqlOperationServiceImpl;
-import com.github.app.api.utils.CmdParase;
-import com.github.app.utils.LogbackLoaderUtils;
+import com.github.app.api.utils.ConfigLoader;
 import com.github.app.utils.Runner;
 import io.vertx.core.json.JsonObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class BackupMySqlDatabaseRunner implements Runner {
-    private static Logger logger = LoggerFactory.getLogger(InitMySqlDataBaseRunner.class);
+    private Logger logger = LogManager.getLogger(BackupMySqlDatabaseRunner.class);
 
     @Override
     public String name() {
@@ -26,13 +25,7 @@ public class BackupMySqlDatabaseRunner implements Runner {
     @Override
     public void start(String[] args) {
         try {
-            CmdParase.build(args);
-            /**
-             * set logback config to external config file
-             */
-            LogbackLoaderUtils.loadConfig(CmdParase.getInstance().getLogbackCfg());
-
-            JsonObject config = CmdParase.getInstance().getServerCfg();
+            JsonObject config = ConfigLoader.getServerCfg();
 
             SystemOperationService operationService = new MySqlOperationServiceImpl();
             operationService.backup(config);

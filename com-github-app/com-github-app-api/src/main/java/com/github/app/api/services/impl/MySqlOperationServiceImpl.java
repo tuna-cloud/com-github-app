@@ -4,15 +4,15 @@ import com.github.app.api.services.SystemOperationService;
 import com.github.app.utils.ServerEnvConstant;
 import io.vertx.core.json.JsonObject;
 import org.apache.commons.exec.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class MySqlOperationServiceImpl implements SystemOperationService {
-    private static final Logger logger = LoggerFactory.getLogger(MySqlOperationServiceImpl.class);
+    private Logger logger = LogManager.getLogger(MySqlOperationServiceImpl.class);
 
     @Override
     public void install(JsonObject jsonObject) {

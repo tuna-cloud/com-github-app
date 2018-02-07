@@ -2,7 +2,6 @@ package com.github.app.api.handler.open;
 
 import com.github.app.api.handler.UriHandler;
 import com.github.app.api.services.AccountService;
-import com.github.app.api.services.BaseCRUDService;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.KeyStoreOptions;
 import io.vertx.ext.auth.jwt.JWTAuth;
@@ -14,17 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.util.List;
-
 @Component
 public class JWTIssueHandler implements UriHandler {
     private JWTAuthOptions config;
 
     @Autowired
     private AccountService accountService;
-
-    @Autowired
-    private BaseCRUDService baseCRUDService;
 
     @Override
     public void registeUriHandler(Router router) {

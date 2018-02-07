@@ -221,4 +221,12 @@ public class Role {
             return this.column + " ASC";
         }
     }
+
+    @Override
+    public String toString() {
+        return "Role{" +
+                "roleId=" + roleId +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

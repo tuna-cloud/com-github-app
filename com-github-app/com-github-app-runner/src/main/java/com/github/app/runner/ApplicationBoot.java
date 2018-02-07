@@ -5,10 +5,13 @@ import com.github.app.api.runner.InitMySqlDataBaseRunner;
 import com.github.app.api.runner.RestoreMySqlDatabaseRunner;
 import com.github.app.api.runner.ServerRunner;
 import com.github.app.deploy.HotDeployRunner;
-import com.github.app.deploy.RunnerTest;
 import com.github.app.utils.Runner;
+import com.github.app.utils.ServerEnvConstant;
 import io.vertx.core.cli.*;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LoggerContext;
+import java.io.File;
+import java.net.URI;
 import java.util.*;
 
 public class ApplicationBoot {
@@ -44,15 +47,15 @@ public class ApplicationBoot {
         addRunner(new BackupMySqlDatabaseRunner());
         addRunner(new RestoreMySqlDatabaseRunner());
         addRunner(new HotDeployRunner());
-        addRunner(new RunnerTest());
     }
 
     private static void addRunner(Runner runner) {
         runnerMap.put(runner.name(), runner);
     }
 
-    public static void main(String[] args) {
-        System.setProperty("vertx.logger-delegate-factory-class-name", "io.vertx.core.logging.SLF4JLogDelegateFactory");
+    public static void main(String[] args) throws Exception {
+        setup();
+
         Optional<CommandLine> commandLine = cli(args);
         if(commandLine.isPresent()) {
             String name = commandLine.get().getRawValueForOption(commandLine.get().cli().getOption("name"));
@@ -75,5 +78,22 @@ public class ApplicationBoot {
             builder.append("\n");
         });
         return builder.toString();
+    }
+
+    public static void setup() throws Exception {
+        /**
+         * set log4j2 cfg
+         */
+        LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+        String path = ServerEnvConstant.getLog4j2CfgFilePath();
+
+        File file = new File(path);
+        URI configURI = file.toURI();
+        ctx.setConfigLocation(configURI);
+        ctx.reconfigure();
+        /**
+         * set vert.x log impl
+         */
+        System.setProperty("vertx.logger-delegate-factory-class-name", "io.vertx.core.logging.Log4j2LogDelegateFactory");
     }
 }

@@ -2,23 +2,22 @@ package com.github.app.api.runner;
 
 import com.github.app.api.services.SystemOperationService;
 import com.github.app.api.services.impl.MySqlOperationServiceImpl;
-import com.github.app.api.utils.CmdParase;
-import com.github.app.utils.LogbackLoaderUtils;
+import com.github.app.api.utils.ConfigLoader;
 import com.github.app.utils.Runner;
 import io.vertx.core.cli.CLI;
 import io.vertx.core.cli.CLIException;
 import io.vertx.core.cli.CommandLine;
 import io.vertx.core.cli.Option;
 import io.vertx.core.json.JsonObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 public class RestoreMySqlDatabaseRunner implements Runner{
-    private static Logger logger = LoggerFactory.getLogger(InitMySqlDataBaseRunner.class);
+    private Logger logger = LogManager.getLogger(RestoreMySqlDatabaseRunner.class);
 
     static Optional<CommandLine> cli(String[] args) {
         CLI cli = CLI.create("MySql restore")
@@ -59,13 +58,7 @@ public class RestoreMySqlDatabaseRunner implements Runner{
     @Override
     public void start(String[] args) {
         try {
-            CmdParase.build(args);
-            /**
-             * set logback config to external config file
-             */
-            LogbackLoaderUtils.loadConfig(CmdParase.getInstance().getLogbackCfg());
-
-            JsonObject config = CmdParase.getInstance().getServerCfg();
+            JsonObject config = ConfigLoader.getServerCfg();
 
             Optional<CommandLine> commandLine = cli(args);
 

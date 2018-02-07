@@ -1,7 +1,7 @@
 package com.github.app.api.handler.interceptor;
 
 import com.github.app.api.handler.UriHandler;
-import com.github.app.api.utils.CmdParase;
+import com.github.app.api.utils.ConfigLoader;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.KeyStoreOptions;
 import io.vertx.ext.auth.User;
@@ -9,17 +9,17 @@ import io.vertx.ext.auth.jwt.JWTAuth;
 import io.vertx.ext.auth.jwt.JWTAuthOptions;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 @Component
 public class AuthInterceptor implements UriHandler {
-    private static Logger logger = LoggerFactory.getLogger(AuthInterceptor.class);
+    private Logger logger = LogManager.getLogger(AuthInterceptor.class);
     private static JWTAuthOptions jwtAuthOptions;
     static {
-        JsonObject sysConfig = CmdParase.getInstance().getServerCfg().getJsonObject("jwt.keystore");
+        JsonObject sysConfig = ConfigLoader.getServerCfg().getJsonObject("jwt.keystore");
         jwtAuthOptions = new JWTAuthOptions()
                 .setKeyStore(new KeyStoreOptions()
                         .setPath(sysConfig.getString("path"))

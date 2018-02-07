@@ -11,8 +11,8 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.net.JksOptions;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -27,7 +27,7 @@ import static org.springframework.beans.factory.config.ConfigurableBeanFactory.S
 @Component
 @Scope(SCOPE_SINGLETON)
 public class HttpServerVerticle extends AbstractVerticle implements ApplicationContextAware {
-    private static final Logger logger = LoggerFactory.getLogger(HttpServerVerticle.class);
+    private Logger logger = LogManager.getLogger(HttpServerVerticle.class);
 
     private ApplicationContext applicationContext;
     private HttpServer server;
