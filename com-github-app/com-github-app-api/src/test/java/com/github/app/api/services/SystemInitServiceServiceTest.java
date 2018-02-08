@@ -4,7 +4,7 @@ import com.github.app.api.dao.domain.Account;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class DataInitServiceTest extends BaseTest{
+public class SystemInitServiceServiceTest extends BaseServiceTest {
 
     @Autowired
     private AccountService accountService;

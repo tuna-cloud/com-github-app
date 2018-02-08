@@ -20,7 +20,7 @@ import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = SpringApplication.class)
-public class BaseTest {
+public class BaseServiceTest {
 
     @ClassRule
     public static final EnvironmentVariables environmentVariables = new EnvironmentVariables();

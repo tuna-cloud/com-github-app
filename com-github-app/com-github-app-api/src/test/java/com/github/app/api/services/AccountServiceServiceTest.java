@@ -2,14 +2,13 @@ package com.github.app.api.services;
 
 import com.github.app.api.dao.domain.Account;
 import com.github.app.api.dao.domain.AccountTest;
-import com.github.app.utils.MD5Utils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-public class AccountServiceTest extends BaseTest {
+public class AccountServiceServiceTest extends BaseServiceTest {
 
     @Autowired
     private AccountService accountService;

@@ -54,9 +54,12 @@
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.github.app.api.dao.mapper" targetProject="src/main/java">
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
+        <!--
         <table schema="mis" tableName="account" domainObjectName="Account"></table>
         <table schema="mis" tableName="menu"></table>
         <table schema="mis" tableName="role"></table>
         <table schema="mis" tableName="role_popedom"></table>
+        -->
+        <table schema="mis" tableName="log"></table>
     </context>
 </generatorConfiguration>
