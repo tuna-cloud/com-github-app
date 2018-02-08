@@ -18,7 +18,7 @@ popd
 set APPLICATION_HOME=%BASE_DIR%
 
 pushd %APPLICATION_HOME%\..\com-github-app
-mvn clean package
+mvn clean package -Dmaven.test.skip=true
 popd
 
 pause

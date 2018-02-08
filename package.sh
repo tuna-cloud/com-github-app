@@ -14,7 +14,7 @@
 # See the License for the specific
 
 cd $APPLICATION_HOME/../com-github-app
-mvn clean package
+mvn clean package -Dmaven.test.skip=true
 
 # Remove all old jar
 rm -f $APPLICATION_HOME/libs/*.jar
