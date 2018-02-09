@@ -13,14 +13,14 @@ export function login(account, password) {
 
 export function getInfo() {
   return fetch({
-    url: '/api/users/current/login',
+    url: '/api/account/current/login',
     method: 'get'
   })
 }
 
 export function logout() {
   return fetch({
-    url: '/user/logout',
-    method: 'post'
+    url: '/api/account/logout',
+    method: 'put'
   })
 }

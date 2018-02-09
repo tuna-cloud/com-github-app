@@ -46,8 +46,9 @@ const user = {
       return new Promise((resolve, reject) => {
         getInfo().then(response => {
           const data = response.data
-          commit('SET_ROLES', data.role)
-          commit('SET_NAME', data.name)
+          console.log(response.data)
+          commit('SET_ROLES', data.account.role.name)
+          commit('SET_NAME', data.account.name)
           commit('SET_AVATAR', data.avatar)
           resolve(response)
         }).catch(error => {

@@ -3,8 +3,13 @@
  */
 
 export function isvalidUsername(str) {
-  const valid_map = ['admin', 'editor']
-  return valid_map.indexOf(str.trim()) >= 0
+  if (str.length < 6) {
+    return false
+  }
+  if (str.length > 20) {
+    return false
+  }
+  return true
 }
 
 /* 合法uri*/
@@ -29,5 +34,14 @@ export function validateUpperCase(str) {
 export function validatAlphabets(str) {
   const reg = /^[A-Za-z]+$/
   return reg.test(str)
+}
+
+/* 电话号码验证 */
+export function isMobileNum(obj) {
+  var reg = /^1[0-9]{10}/
+  if (!reg.test(obj.value)) {
+    return false
+  }
+  return true
 }
 
