@@ -5,14 +5,15 @@ import com.github.app.api.handler.UriHandler;
 import com.github.app.api.services.MenuService;
 import com.github.app.api.utils.RequestUtils;
 import io.vertx.core.MultiMap;
-import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class MenuHandler implements UriHandler{
@@ -73,10 +74,11 @@ public class MenuHandler implements UriHandler{
         List<Menu> list = menuService.find(RequestUtils.getInteger(params, "parentId"), RequestUtils.getInteger(params, "offset"), RequestUtils.getInteger(params, "rows"));
         long count = menuService.count(RequestUtils.getInteger(params, "parentId"));
 
-        JsonObject data = new JsonObject();
+        Map data = new HashMap();
         data.put("list", list);
         data.put("total", count);
 
         responseSuccess(routingContext, data);
     }
+
 }

@@ -3,6 +3,7 @@ package com.github.app.api;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.app.api.dao.domain.RolePopedom;
 import com.github.app.utils.JacksonUtils;
+import io.vertx.core.json.JsonObject;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -29,5 +30,9 @@ public class RolePodomListTest {
 
         List<RolePopedom> list1 = JacksonUtils.json2Object(msg, new TypeReference<List<RolePopedom>>(){});
         System.out.println(list1.size());
+
+        JsonObject object = new JsonObject();
+        object.put("list", list);
+        System.out.println(object.toString());
     }
 }

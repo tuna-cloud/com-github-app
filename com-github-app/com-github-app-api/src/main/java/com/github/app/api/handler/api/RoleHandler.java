@@ -8,14 +8,15 @@ import com.github.app.api.services.RoleService;
 import com.github.app.api.utils.RequestUtils;
 import com.github.app.utils.JacksonUtils;
 import io.vertx.core.MultiMap;
-import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class RoleHandler implements UriHandler {
@@ -72,7 +73,7 @@ public class RoleHandler implements UriHandler {
         List<Role> list = roleService.list(RequestUtils.getInteger(params, "offset"), RequestUtils.getInteger(params, "rows"));
         long count = roleService.count();
 
-        JsonObject data = new JsonObject();
+        Map data = new HashMap<>();
         data.put("list", list);
         data.put("total", count);
 

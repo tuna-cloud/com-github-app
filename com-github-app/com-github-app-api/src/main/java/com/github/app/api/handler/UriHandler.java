@@ -9,6 +9,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * json format
@@ -83,16 +85,17 @@ public interface UriHandler {
      * @param data
      */
     default void response(RoutingContext routingContext, Integer code, String msg, Object data) {
-        JsonObject jsonObject = new JsonObject().put("code", code);
+        Map map = new HashMap();
+        map.put("code", code);
         if (msg != null) {
-            jsonObject.put("msg", msg);
+            map.put("msg", msg);
         }
         if (data != null) {
-            jsonObject.put("data", data);
+            map.put("data", data);
         }
-        Buffer buffer = jsonObject.toBuffer();
+        Buffer buffer = JsonObject.mapFrom(map).toBuffer();
         logger.info(routingContext.request().path() + "-->" + buffer.toString());
-        routingContext.response().end(jsonObject.toBuffer());
+        routingContext.response().end(buffer);
     }
 
     /**

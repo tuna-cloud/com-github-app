@@ -1,12 +1,12 @@
 package com.github.app.api.handler.api;
 
 import com.github.app.api.dao.domain.Account;
+import com.github.app.api.dao.domain.Menu;
 import com.github.app.api.handler.UriHandler;
 import com.github.app.api.services.AccountService;
+import com.github.app.api.services.MenuService;
 import com.github.app.api.utils.RequestUtils;
 import io.vertx.core.MultiMap;
-import io.vertx.core.buffer.Buffer;
-import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +14,17 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class AccountHandler implements UriHandler {
 
 	@Autowired
 	private AccountService accountService;
+	@Autowired
+	private MenuService menuService;
 
 	@Override
 	public void registeUriHandler(Router router) {
@@ -72,11 +76,11 @@ public class AccountHandler implements UriHandler {
 		List<Account> list = accountService.findByKeyWord(RequestUtils.getInteger(params, "roleId"), params.get("keyword"), RequestUtils.getInteger(params, "offset"), RequestUtils.getInteger(params, "rows"));
 		long count = accountService.countByKeyWord(RequestUtils.getInteger(params, "roleId"), params.get("keyword"));
 
-		JsonObject data = new JsonObject();
-		data.put("list", list);
-		data.put("total", count);
+		Map map = new HashMap();
+		map.put("total", count);
+		map.put("list", list);
 
-		responseSuccess(routingContext, data);
+		responseSuccess(routingContext, map);
 	}
 
 	public void queryOne(RoutingContext routingContext) {
@@ -97,7 +101,13 @@ public class AccountHandler implements UriHandler {
 		}
 
 		Account account = accountService.getAccountByAccountOrMobileOrEmail(acc, null, null);
-		responseSuccess(routingContext, account);
+		List<Menu> list = menuService.findMenuByRoleId(account.getRoleId());
+
+		Map map = new HashMap();
+		map.put("account", account);
+		map.put("list", list);
+
+		responseSuccess(routingContext, map);
 	}
 
 	public void resetPassword(RoutingContext routingContext) {
