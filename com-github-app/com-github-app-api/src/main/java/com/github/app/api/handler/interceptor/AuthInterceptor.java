@@ -1,8 +1,10 @@
 package com.github.app.api.handler.interceptor;
 
+import com.github.app.api.dao.domain.Account;
 import com.github.app.api.handler.UriHandler;
 import com.github.app.api.services.AccountService;
 import com.github.app.api.services.LogService;
+import com.github.app.api.services.RoleService;
 import com.github.app.api.utils.AuthUtils;
 import com.github.app.api.utils.ConfigLoader;
 import io.vertx.core.json.JsonObject;
@@ -32,6 +34,8 @@ public class AuthInterceptor implements UriHandler {
 	private AccountService accountService;
 	@Autowired
 	private LogService logService;
+	@Autowired
+	private RoleService roleService;
 
 	@Override
 	public void registeUriHandler(Router router) {
@@ -78,13 +82,19 @@ public class AuthInterceptor implements UriHandler {
 	 * @param routingContext
 	 */
 	public void operationAuthentication(RoutingContext routingContext) {
-
-		String account = routingContext.get("account");
+		String accountStr = routingContext.get("account");
 		String authCode = AuthUtils.authCode(routingContext);
 		String remark = AuthUtils.buildRequestInfo(routingContext);
-		logService.addLog(accountService.getAccountByAccountOrMobileOrEmail(account, null, null), authCode, remark);
 
-		routingContext.next();
+		Account account = accountService.getAccountByAccountOrMobileOrEmail(accountStr, null, null);
+
+		if (roleService.isAuthOperation(authCode, account.getRoleId())) {
+			logService.addLog(account, authCode, "[Y]" + remark);
+			routingContext.next();
+		} else {
+			logService.addLog(account, authCode, "[N]" + remark);
+			responseOperationAuthFailure(routingContext, "you have no permit for this operation");
+		}
 	}
 
 }

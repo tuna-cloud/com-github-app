@@ -502,4 +502,8 @@
       )
     </foreach>
   </insert>
+
+  <delete id="truncate">
+    truncate table account
+  </delete>
 </mapper>

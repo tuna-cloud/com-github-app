@@ -10,7 +10,7 @@ public class WelcomHandler implements UriHandler {
 
     @Override
     public void registeUriHandler(Router router) {
-        router.route("/").produces("application/json;charset=UTF-8").blockingHandler(this::welcome, false);
+        router.route("/").produces(CONTENT_TYPE).blockingHandler(this::welcome, false);
     }
 
     public void welcome(RoutingContext routingContext) {

@@ -6,11 +6,13 @@ import io.vertx.core.json.JsonObject;
 import org.apache.commons.exec.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+@Component
 public class MySqlOperationServiceImpl implements SystemOperationService {
     private Logger logger = LogManager.getLogger(MySqlOperationServiceImpl.class);
 

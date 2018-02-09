@@ -120,4 +120,6 @@ public interface AccountMapper {
      * @project https://github.com/itfsw/mybatis-generator-plugin
      */
     int batchInsertSelective(@Param("list") List<Account> list, @Param("selective") Account.Column ... selective);
+
+    void truncate();
 }

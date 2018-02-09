@@ -255,4 +255,8 @@
       )
     </foreach>
   </insert>
+
+  <delete id="truncate">
+    truncate table role_popedom
+  </delete>
 </mapper>

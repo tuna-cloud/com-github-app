@@ -88,4 +88,6 @@ public interface RolePopedomMapper {
      * @project https://github.com/itfsw/mybatis-generator-plugin
      */
     int batchInsertSelective(@Param("list") List<RolePopedom> list, @Param("selective") RolePopedom.Column ... selective);
+
+    void truncate();
 }

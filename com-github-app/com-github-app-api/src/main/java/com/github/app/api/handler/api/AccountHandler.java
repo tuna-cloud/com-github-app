@@ -24,13 +24,13 @@ public class AccountHandler implements UriHandler {
 
 	@Override
 	public void registeUriHandler(Router router) {
-		router.post().path("/account").produces("application/json;charset=UTF-8").blockingHandler(this::saveOrUpdate, false);
-		router.delete().path("/account/:accountId").produces("application/json;charset=UTF-8").blockingHandler(this::delete, false);
-		router.put().path("/account").produces("application/json;charset=UTF-8").blockingHandler(this::saveOrUpdate, false);
-		router.get().path("/account/:accountId").produces("application/json;charset=UTF-8").blockingHandler(this::queryOne, false);
-		router.get().path("/account").produces("application/json;charset=UTF-8").blockingHandler(this::query, false);
-		router.get().path("/account/current/login").produces("application/json;charset=UTF-8").blockingHandler(this::currentLogin, false);
-		router.put().path("/account/resetpwd/:accountId").produces("application/json;charset=UTF-8").blockingHandler(this::resetPassword, false);
+		router.post().path("/account").produces(CONTENT_TYPE).blockingHandler(this::saveOrUpdate, false);
+		router.delete().path("/account/:accountId").produces(CONTENT_TYPE).blockingHandler(this::delete, false);
+		router.put().path("/account").produces(CONTENT_TYPE).blockingHandler(this::saveOrUpdate, false);
+		router.get().path("/account/:accountId").produces(CONTENT_TYPE).blockingHandler(this::queryOne, false);
+		router.get().path("/account").produces(CONTENT_TYPE).blockingHandler(this::query, false);
+		router.get().path("/account/current/login").produces(CONTENT_TYPE).blockingHandler(this::currentLogin, false);
+		router.put().path("/account/resetpwd/:accountId").produces(CONTENT_TYPE).blockingHandler(this::resetPassword, false);
 	}
 
 	public void saveOrUpdate(RoutingContext routingContext) {

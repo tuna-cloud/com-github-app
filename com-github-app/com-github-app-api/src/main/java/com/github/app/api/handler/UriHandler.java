@@ -20,6 +20,9 @@ import java.io.PrintStream;
  */
 public interface UriHandler {
     Logger logger = LogManager.getLogger(UriHandler.class);
+
+    String CONTENT_TYPE = "application/json;charset=UTF-8";
+
     /**
      * api operation success
      */
@@ -98,6 +101,14 @@ public interface UriHandler {
      */
     default void responseFailure(RoutingContext routingContext, String msg) {
         response(routingContext, CODE_API_OPERATION_FAILED, msg);
+    }
+
+    /**
+     * @param routingContext
+     * @param msg
+     */
+    default void responseOperationAuthFailure(RoutingContext routingContext, String msg) {
+        response(routingContext, CODE_API_AUTHENTICATION_FAILED, msg);
     }
 
     /**

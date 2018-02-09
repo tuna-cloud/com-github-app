@@ -22,7 +22,7 @@ public class JWTIssueHandler implements UriHandler {
 
     @Override
     public void registeUriHandler(Router router) {
-        router.post().path("/auth").produces("application/json;charset=UTF-8").blockingHandler(this::issueJWTToken, false);
+        router.post().path("/auth").produces(CONTENT_TYPE).blockingHandler(this::issueJWTToken, false);
     }
 
     public void issueJWTToken(RoutingContext routingContext) {

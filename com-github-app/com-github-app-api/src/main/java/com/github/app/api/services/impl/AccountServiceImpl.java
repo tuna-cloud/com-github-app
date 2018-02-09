@@ -151,4 +151,9 @@ public class AccountServiceImpl implements AccountService {
         return accountMapper.deleteByPrimaryKey(accountId);
     }
 
+    @Override
+    public void truncate() {
+        accountMapper.truncate();
+    }
+
 }

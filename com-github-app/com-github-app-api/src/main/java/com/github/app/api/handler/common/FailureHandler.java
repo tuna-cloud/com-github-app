@@ -14,7 +14,7 @@ public class FailureHandler implements UriHandler {
 
     @Override
     public void registeUriHandler(Router router) {
-        router.route("/*").produces("application/json;charset=UTF-8").failureHandler(this::failure);
+        router.route("/*").produces(CONTENT_TYPE).failureHandler(this::failure);
     }
 
     public void failure(RoutingContext routingContext) {

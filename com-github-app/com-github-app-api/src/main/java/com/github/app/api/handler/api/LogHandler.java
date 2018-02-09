@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Map;
 
 @Component
 public class LogHandler implements UriHandler {
@@ -22,8 +21,8 @@ public class LogHandler implements UriHandler {
 
 	@Override
 	public void registeUriHandler(Router router) {
-		router.get().path("/log").produces("application/json;charset=UTF-8").blockingHandler(this::list, false);
-		router.delete().path("/log").produces("application/json;charset=UTF-8").blockingHandler(this::truncate, false);
+		router.get().path("/log").produces(CONTENT_TYPE).blockingHandler(this::list, false);
+		router.delete().path("/log").produces(CONTENT_TYPE).blockingHandler(this::truncate, false);
 	}
 
 	public void list(RoutingContext routingContext) {

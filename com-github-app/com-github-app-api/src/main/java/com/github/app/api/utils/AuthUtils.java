@@ -45,7 +45,7 @@ public class AuthUtils {
 		}
 		String msg = builder.toString();
 		if(msg.length() > 500)
-			msg = msg.substring(0, 500);
+			msg = msg.substring(0, 490);
 		return msg;
 	}
 }

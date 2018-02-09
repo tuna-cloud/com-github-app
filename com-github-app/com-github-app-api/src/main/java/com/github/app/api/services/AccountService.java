@@ -21,4 +21,6 @@ public interface AccountService {
     void resetPassword(Integer accountId);
 
     int deleteByAccountId(Integer accountId);
+
+    void truncate();
 }
