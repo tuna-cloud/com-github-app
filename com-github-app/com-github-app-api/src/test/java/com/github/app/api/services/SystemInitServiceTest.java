@@ -32,7 +32,7 @@ public class SystemInitServiceTest extends BaseServiceTest {
 	@Autowired
 	private MenuService menuService;
 
-	@Test
+//	@Test
 	public void systemInit() {
 	    // 清表
 		clearDB();
