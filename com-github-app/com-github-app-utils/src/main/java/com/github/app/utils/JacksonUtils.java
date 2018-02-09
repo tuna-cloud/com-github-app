@@ -2,6 +2,7 @@ package com.github.app.utils;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -31,12 +32,29 @@ public final class JacksonUtils {
      * @return entity
      * @throws NullPointerException
      */
-    public static <T> T json2Object(String jsonStr, Class<T> valueType) throws Exception {
+    public static <T> T json2Object(String jsonStr, Class<T> valueType) {
 
         try {
             return objectMapper.readValue(jsonStr, valueType);
         } catch (Exception e) {
-            throw new Exception("Jackson.json2Object error.", e);
+            throw new RuntimeException("Jackson.json2Object error.", e);
+        }
+    }
+
+    /**
+     *
+     * @param jsonStr
+     * @param reference
+     * @param <T>
+     * @return
+     * @throws Exception
+     */
+    public static <T> T json2Object(String jsonStr, TypeReference<T> reference) {
+
+        try {
+            return objectMapper.readValue(jsonStr, reference);
+        } catch (Exception e) {
+            throw new RuntimeException("Jackson.json2Object error.", e);
         }
     }
 
@@ -47,11 +65,11 @@ public final class JacksonUtils {
      * @return
      * @throws Exception
      */
-    public static <T> T json2Object(byte[] json, Class<T> valueType) throws Exception {
+    public static <T> T json2Object(byte[] json, Class<T> valueType) {
         try {
             return objectMapper.readValue(json, valueType);
         } catch (Exception e) {
-            throw new Exception("Jackson.json2Object error.", e);
+            throw new RuntimeException("Jackson.json2Object error.", e);
         }
     }
 
@@ -62,11 +80,11 @@ public final class JacksonUtils {
      * @return jsonStr
      * @throws NullPointerException
      */
-    public static String object2JsonStr(Object obj) throws Exception {
+    public static String object2JsonStr(Object obj) {
         try {
             return objectMapper.writeValueAsString(obj);
         } catch (Exception e) {
-            throw new Exception("Jackson.object2JsonStr error.", e);
+            throw new RuntimeException("Jackson.object2JsonStr error.", e);
         }
     }
 
@@ -75,11 +93,11 @@ public final class JacksonUtils {
      * @return
      * @throws Exception
      */
-    public static byte[] object2JsonBuf(Object obj) throws Exception {
+    public static byte[] object2JsonBuf(Object obj) {
         try {
             return objectMapper.writeValueAsBytes(obj);
         } catch (Exception e) {
-            throw new Exception("Jackson.object2JsonStr error.", e);
+            throw new RuntimeException("Jackson.object2JsonStr error.", e);
         }
     }
 }

@@ -119,8 +119,15 @@ public class HttpServerVerticle extends AbstractVerticle implements ApplicationC
     private void loadHandlers(Router router, String packageName) {
         List<Class<?>> uriHandlers = ClassUtil.getClasses(packageName);
         for (Class<?> cls : uriHandlers) {
-            UriHandler uriHandler = (UriHandler) applicationContext.getBean(cls);
-            uriHandler.registeUriHandler(router);
+            try {
+                Object bean = applicationContext.getBean(cls);
+                if (bean instanceof UriHandler) {
+                    UriHandler uriHandler = (UriHandler) bean;
+                    uriHandler.registeUriHandler(router);
+                }
+            } catch (Exception e) {
+                logger.warn(e.getLocalizedMessage());
+            }
         }
     }
 

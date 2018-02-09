@@ -454,7 +454,7 @@
     -->
     select t.menu_id, t.url, t.name, t.code, t.parent_id, t.show_order, t.icon, t.is_drop_down, t.is_show
     from menu t left outer join role_popedom r on r.menu_id = t.menu_id
-    where r.role_id = #{roleId,jdbcType=INTEGER} and t.parent_id is null
+    where r.role_id = #{roleId,jdbcType=INTEGER} and t.parent_id = 0
     order by t.show_order asc
   </select>
 
@@ -470,7 +470,6 @@
     where parent_id = #{menuId,jdbcType=INTEGER}
     order by show_order asc
   </select>
-
 
   <delete id="truncate">
     truncate table menu
