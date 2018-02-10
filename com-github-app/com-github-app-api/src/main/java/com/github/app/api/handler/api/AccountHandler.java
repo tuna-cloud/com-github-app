@@ -1,12 +1,13 @@
 package com.github.app.api.handler.api;
 
 import com.github.app.api.dao.domain.Account;
-import com.github.app.api.dao.domain.Menu;
+import com.github.app.api.dao.domain.Popedom;
 import com.github.app.api.handler.UriHandler;
 import com.github.app.api.services.AccountService;
-import com.github.app.api.services.MenuService;
+import com.github.app.api.services.RolePodomService;
 import com.github.app.api.utils.RequestUtils;
 import io.vertx.core.MultiMap;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class AccountHandler implements UriHandler {
 	@Autowired
 	private AccountService accountService;
 	@Autowired
-	private MenuService menuService;
+    private RolePodomService rolePodomService;
 
 	@Override
 	public void registeUriHandler(Router router) {
@@ -35,6 +36,17 @@ public class AccountHandler implements UriHandler {
 		router.get().path("/account").produces(CONTENT_TYPE).blockingHandler(this::query, false);
 		router.get().path("/account/current/login").produces(CONTENT_TYPE).blockingHandler(this::currentLogin, false);
 		router.put().path("/account/resetpwd/:accountId").produces(CONTENT_TYPE).blockingHandler(this::resetPassword, false);
+	}
+
+	@Override
+	public void registePopedom(List<Popedom> list) {
+		list.add(new Popedom.Builder().name("账号添加").code("/[a-zA-Z]+/account/" + HttpMethod.POST.name()).build());
+		list.add(new Popedom.Builder().name("账号删除").code("/[a-zA-Z]+/account/[0-9]+/" + HttpMethod.DELETE.name()).build());
+		list.add(new Popedom.Builder().name("账号更新").code("/[a-zA-Z]+/account/" + HttpMethod.PUT.name()).build());
+		list.add(new Popedom.Builder().name("账号查询").code("/[a-zA-Z]+/account/[0-9]+/" + HttpMethod.GET.name()).build());
+		list.add(new Popedom.Builder().name("账号管理").code("/[a-zA-Z]+/account/" + HttpMethod.GET.name()).build());
+		list.add(new Popedom.Builder().name("当前账号").code("/[a-zA-Z]+/account/current/login/" + HttpMethod.GET.name()).build());
+		list.add(new Popedom.Builder().name("密码修改").code("/[a-zA-Z]+/account/resetpwd/[0-9]+/" + HttpMethod.PUT.name()).build());
 	}
 
 	public void saveOrUpdate(RoutingContext routingContext) {
@@ -101,7 +113,7 @@ public class AccountHandler implements UriHandler {
 		}
 
 		Account account = accountService.getAccountByAccountOrMobileOrEmail(acc, null, null);
-		List<Menu> list = menuService.findMenuByRoleId(account.getRoleId());
+		List<Popedom> list = rolePodomService.findPopedomByRoleId(account.getRoleId());
 
 		Map map = new HashMap();
 		map.put("account", account);

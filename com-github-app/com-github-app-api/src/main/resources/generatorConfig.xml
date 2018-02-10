@@ -5,7 +5,7 @@
 
 <generatorConfiguration>
     <!--<properties resource="jdbc.properties"></properties>-->
-    <classPathEntry location="D:\mavenRepository\mysql\mysql-connector-java\5.1.39\mysql-connector-java-5.1.39.jar" />
+    <classPathEntry location="/usr/local/xsy/mavenRepository/mysql/mysql-connector-java/5.1.39/mysql-connector-java-5.1.39.jar" />
     <context id="testTables" targetRuntime="MyBatis3">
         <property name="suppressAllComments" value="true" />
         <property name="useActualColumnNames" value="false" />
@@ -37,7 +37,7 @@
         <!--</plugin>-->
 
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://127.0.0.1:3306/mis" userId="root"
+                        connectionURL="jdbc:mysql://mysql1.net.com:3306/mis" userId="root"
                         password="870712">
         </jdbcConnection>
         <javaTypeResolver>
@@ -57,9 +57,9 @@
         <!--
         <table schema="mis" tableName="account" domainObjectName="Account"></table>
         <table schema="mis" tableName="role"></table>
-        <table schema="mis" tableName="role_popedom"></table>
         <table schema="mis" tableName="log"></table>
+        <table schema="mis" tableName="popedom"></table>
         -->
-        <table schema="mis" tableName="menu"></table>
+        <table schema="mis" tableName="role_popedom"></table>
     </context>
 </generatorConfiguration>

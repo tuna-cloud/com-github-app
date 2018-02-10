@@ -1,12 +1,14 @@
 package com.github.app.api.handler.interceptor;
 
 import com.github.app.api.dao.domain.Account;
+import com.github.app.api.dao.domain.Popedom;
 import com.github.app.api.handler.UriHandler;
 import com.github.app.api.services.AccountService;
 import com.github.app.api.services.LogService;
-import com.github.app.api.services.RoleService;
+import com.github.app.api.services.RolePodomService;
 import com.github.app.api.utils.AuthUtils;
 import com.github.app.api.utils.ConfigLoader;
+import com.github.app.api.utils.PopedomContext;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.KeyStoreOptions;
 import io.vertx.ext.auth.User;
@@ -35,7 +37,7 @@ public class AuthInterceptor implements UriHandler {
 	@Autowired
 	private LogService logService;
 	@Autowired
-	private RoleService roleService;
+	private RolePodomService rolePodomService;
 
 	@Override
 	public void registeUriHandler(Router router) {
@@ -83,16 +85,22 @@ public class AuthInterceptor implements UriHandler {
 	 */
 	public void operationAuthentication(RoutingContext routingContext) {
 		String accountStr = routingContext.get("account");
-		String authCode = AuthUtils.authCode(routingContext);
-		String remark = AuthUtils.buildRequestInfo(routingContext);
 
 		Account account = accountService.getAccountByAccountOrMobileOrEmail(accountStr, null, null);
+		String remark = AuthUtils.buildRequestInfo(routingContext);
+		Popedom popedom = PopedomContext.getInstance().match(routingContext.normalisedPath());
 
-		if (roleService.isAuthOperation(authCode, account.getRoleId())) {
-			logService.addLog(account, authCode, "[Y]" + remark);
+		if (popedom == null) {
+			logService.addLog(account, popedom.getName(), "[Y]" + remark);
+			routingContext.next();
+		    return;
+		}
+
+		if (rolePodomService.isAuthOperation(popedom.getCode(), account.getRoleId())) {
+			logService.addLog(account, popedom.getName(), "[Y]" + remark);
 			routingContext.next();
 		} else {
-			logService.addLog(account, authCode, "[N]" + remark);
+			logService.addLog(account, popedom.getName(), "[N]" + remark);
 			responseOperationAuthFailure(routingContext, "you have no permit for this operation");
 		}
 	}

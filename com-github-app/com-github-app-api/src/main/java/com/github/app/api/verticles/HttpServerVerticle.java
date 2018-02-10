@@ -1,6 +1,8 @@
 package com.github.app.api.verticles;
 
+import com.github.app.api.dao.domain.Popedom;
 import com.github.app.api.handler.UriHandler;
+import com.github.app.api.utils.PopedomContext;
 import com.github.app.utils.ClassUtil;
 import com.github.app.utils.ServerEnvConstant;
 import io.vertx.core.AbstractVerticle;
@@ -20,6 +22,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_SINGLETON;
@@ -118,17 +121,21 @@ public class HttpServerVerticle extends AbstractVerticle implements ApplicationC
 
     private void loadHandlers(Router router, String packageName) {
         List<Class<?>> uriHandlers = ClassUtil.getClasses(packageName);
+        List<Popedom> popedoms = new ArrayList<>();
         for (Class<?> cls : uriHandlers) {
             try {
                 Object bean = applicationContext.getBean(cls);
                 if (bean instanceof UriHandler) {
                     UriHandler uriHandler = (UriHandler) bean;
                     uriHandler.registeUriHandler(router);
+                    uriHandler.registePopedom(popedoms);
                 }
             } catch (Exception e) {
                 logger.warn(e.getLocalizedMessage());
             }
         }
+
+        PopedomContext.init(popedoms);
     }
 
     @Override

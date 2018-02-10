@@ -27,7 +27,11 @@ public class BaseServiceTest {
 
     @BeforeClass
     public static void setup() {
-        environmentVariables.set(ServerEnvConstant.APP_HOME, "D:\\project_my\\com-github-app\\application-home");
+        if(System.getProperty("os.name").toLowerCase().startsWith("win")) {
+            environmentVariables.set(ServerEnvConstant.APP_HOME, "D:\\project_my\\com-github-app\\application-home");
+        } else {
+            environmentVariables.set(ServerEnvConstant.APP_HOME, "/home/xsy/github/com-github-app/application-home");
+        }
     }
 
     protected boolean isEqual(Object oldEntity, Object newEntity) {

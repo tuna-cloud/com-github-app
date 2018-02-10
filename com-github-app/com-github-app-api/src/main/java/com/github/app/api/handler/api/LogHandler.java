@@ -1,10 +1,12 @@
 package com.github.app.api.handler.api;
 
 import com.github.app.api.dao.domain.Log;
+import com.github.app.api.dao.domain.Popedom;
 import com.github.app.api.handler.UriHandler;
 import com.github.app.api.services.LogService;
 import com.github.app.api.utils.RequestUtils;
 import io.vertx.core.MultiMap;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,12 @@ public class LogHandler implements UriHandler {
 	public void registeUriHandler(Router router) {
 		router.get().path("/log").produces(CONTENT_TYPE).blockingHandler(this::list, false);
 		router.delete().path("/log").produces(CONTENT_TYPE).blockingHandler(this::truncate, false);
+	}
+
+	@Override
+	public void registePopedom(List<Popedom> list) {
+		list.add(new Popedom.Builder().name("系统日志").code("/[a-zA-Z]+/log/" + HttpMethod.GET.name()).build());
+		list.add(new Popedom.Builder().name("删除日志").code("/[a-zA-Z]+/log/" + HttpMethod.DELETE.name()).build());
 	}
 
 	public void list(RoutingContext routingContext) {

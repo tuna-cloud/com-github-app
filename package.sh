@@ -21,6 +21,6 @@ rm -f $APPLICATION_HOME/libs/*.jar
 rm -f $APPLICATION_HOME/plugins/*.jar
 
 # copy new jar to destanation folder
-cp -f $APPLICATION_HOME/../com-github-app/distribution/target/distribution*bin/libs/*.jar $APPLICATION_HOME/libs
-cp -f $APPLICATION_HOME/../com-github-app/com-github-app-runner/target/com-github-app-runner*.jar $APPLICATION_HOME/libs
+cp -f $APPLICATION_HOME/../com-github-app/distribution/target/distribution*bin/libs/*.jar $APPLICATION_HOME/libs/
+cp -f $APPLICATION_HOME/../com-github-app/com-github-app-runner/target/com-github-app-runner*.jar $APPLICATION_HOME/libs/
 cp -f $APPLICATION_HOME/../com-github-app/com-github-app-agent/target/com-github-app-agent*.jar $APPLICATION_HOME/plugins/java-agent.jar

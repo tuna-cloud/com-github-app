@@ -1,13 +1,15 @@
 package com.github.app.api.handler.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.github.app.api.dao.domain.Popedom;
 import com.github.app.api.dao.domain.Role;
 import com.github.app.api.dao.domain.RolePopedom;
 import com.github.app.api.handler.UriHandler;
-import com.github.app.api.services.RoleService;
+import com.github.app.api.services.RolePodomService;
 import com.github.app.api.utils.RequestUtils;
 import com.github.app.utils.JacksonUtils;
 import io.vertx.core.MultiMap;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +21,10 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class RoleHandler implements UriHandler {
+public class RolePopedomHandler implements UriHandler {
 
     @Autowired
-    private RoleService roleService;
+    private RolePodomService rolePodomService;
 
     @Override
     public void registeUriHandler(Router router) {
@@ -32,6 +34,18 @@ public class RoleHandler implements UriHandler {
         router.get().path("/role/:roleId").produces(CONTENT_TYPE).blockingHandler(this::queryOne, false);
         router.get().path("/role").produces(CONTENT_TYPE).blockingHandler(this::query, false);
         router.put().path("/role/popedom").produces(CONTENT_TYPE).blockingHandler(this::saveRolePopedom, false);
+        router.get().path("/role/popedom/:roleId").produces(CONTENT_TYPE).blockingHandler(this::getRolePopedom, false);
+    }
+
+    @Override
+    public void registePopedom(List<Popedom> list) {
+        list.add(new Popedom.Builder().name("增加角色").code("/[a-zA-Z]+/role/" + HttpMethod.POST.name()).build());
+        list.add(new Popedom.Builder().name("删除角色").code("/[a-zA-Z]+/role/[0-9]+/" + HttpMethod.DELETE.name()).build());
+        list.add(new Popedom.Builder().name("更新角色").code("/[a-zA-Z]+/role/" + HttpMethod.PUT.name()).build());
+        list.add(new Popedom.Builder().name("查询角色").code("/[a-zA-Z]+/role/[0-9]+/" + HttpMethod.GET.name()).build());
+        list.add(new Popedom.Builder().name("角色管理").code("/[a-zA-Z]+/role/" + HttpMethod.GET.name()).build());
+        list.add(new Popedom.Builder().name("修改权限").code("/[a-zA-Z]+/role/popedom/" + HttpMethod.PUT.name()).build());
+        list.add(new Popedom.Builder().name("查询权限").code("/[a-zA-Z]+/role/popedom/[0-9]+/" + HttpMethod.GET.name()).build());
     }
 
     public void saveOrUpdate(RoutingContext routingContext) {
@@ -41,7 +55,7 @@ public class RoleHandler implements UriHandler {
             return;
         }
 
-        roleService.saveOrUpdate(role);
+        rolePodomService.saveOrUpdate(role);
         responseSuccess(routingContext);
     }
     
@@ -52,7 +66,7 @@ public class RoleHandler implements UriHandler {
             return;
         }
 
-        roleService.deleteRoleById(Integer.valueOf(roleId));
+        rolePodomService.deleteRoleById(Integer.valueOf(roleId));
         responseSuccess(routingContext);
     }
 
@@ -63,15 +77,15 @@ public class RoleHandler implements UriHandler {
             return;
         }
 
-        Role role = roleService.getRoleById(Integer.valueOf(roleId));
+        Role role = rolePodomService.getRoleById(Integer.valueOf(roleId));
         responseSuccess(routingContext, role);
     }
 
     public void query(RoutingContext routingContext) {
         MultiMap params = routingContext.queryParams();
 
-        List<Role> list = roleService.list(RequestUtils.getInteger(params, "offset"), RequestUtils.getInteger(params, "rows"));
-        long count = roleService.count();
+        List<Role> list = rolePodomService.list(RequestUtils.getInteger(params, "offset"), RequestUtils.getInteger(params, "rows"));
+        long count = rolePodomService.count();
 
         Map data = new HashMap<>();
         data.put("list", list);
@@ -85,8 +99,19 @@ public class RoleHandler implements UriHandler {
 
         List<RolePopedom> list = JacksonUtils.json2Object(json, new TypeReference<List<RolePopedom>>(){});
 
-        roleService.deleteRolePopedomById(list.get(0).getRoleId(), null);
-        roleService.addRolePopedoms(list);
+        rolePodomService.deleteRolePopedomById(list.get(0).getRoleId(), null);
+        rolePodomService.addRolePopedoms(list);
         responseSuccess(routingContext);
+    }
+
+    public void getRolePopedom(RoutingContext routingContext) {
+        String roleId = routingContext.pathParam("roleId");
+        if (StringUtils.isEmpty(roleId)) {
+            responseFailure(routingContext, "roleId must be supply");
+            return;
+        }
+
+        List<Popedom> list = rolePodomService.findPopedomByRoleId(Integer.valueOf(roleId));
+        responseSuccess(routingContext, list);
     }
 }

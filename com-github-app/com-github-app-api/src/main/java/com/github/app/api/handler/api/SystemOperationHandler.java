@@ -1,9 +1,11 @@
 package com.github.app.api.handler.api;
 
+import com.github.app.api.dao.domain.Popedom;
 import com.github.app.api.handler.UriHandler;
 import com.github.app.api.services.SystemOperationService;
 import com.github.app.api.utils.ConfigLoader;
 import com.github.app.utils.ServerEnvConstant;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
@@ -21,16 +23,16 @@ public class SystemOperationHandler implements UriHandler {
 
     @Override
     public void registeUriHandler(Router router) {
-        router.put().path("/sysinstall").produces(CONTENT_TYPE).blockingHandler(this::install, false);
         router.put().path("/sysbackup").produces(CONTENT_TYPE).blockingHandler(this::backup, false);
         router.put().path("/sysrestore").produces(CONTENT_TYPE).blockingHandler(this::restore, false);
-        router.put().path("/sysdownload").blockingHandler(this::download, false);
+        router.get().path("/sysdownload").blockingHandler(this::download, false);
     }
 
-    public void install(RoutingContext routingContext) {
-        JsonObject config = ConfigLoader.getServerCfg();
-        operationService.install(config);
-        responseSuccess(routingContext);
+    @Override
+    public void registePopedom(List<Popedom> list) {
+        list.add(new Popedom.Builder().name("系统备份").code("/[a-zA-Z]+/sysbackup/" + HttpMethod.PUT.name()).build());
+        list.add(new Popedom.Builder().name("系统恢复").code("/[a-zA-Z]+/sysrestore/" + HttpMethod.PUT.name()).build());
+        list.add(new Popedom.Builder().name("下载备份").code("/[a-zA-Z]+/sysdownload/" + HttpMethod.GET.name()).build());
     }
 
     public void backup(RoutingContext routingContext) {

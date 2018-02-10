@@ -1,5 +1,6 @@
 package com.github.app.api.handler;
 
+import com.github.app.api.dao.domain.Popedom;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
@@ -10,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -59,6 +61,14 @@ public interface UriHandler {
      * @param router
      */
     void registeUriHandler(Router router);
+
+    /**
+     * 注册系统权限信息
+     *
+     * @param list
+     */
+    default void registePopedom(List<Popedom> list) {
+    }
 
     /**
      * @param routingContext
@@ -115,11 +125,10 @@ public interface UriHandler {
     }
 
     /**
-     *
      * @param routingContext
      */
     default void responseFailure(RoutingContext routingContext) {
-        if(routingContext.failed()) {
+        if (routingContext.failed()) {
             responseFailure(routingContext, routingContext.failure());
         } else {
             responseFailure(routingContext, "unknow server error");
@@ -127,7 +136,6 @@ public interface UriHandler {
     }
 
     /**
-     *
      * @param routingContext
      * @param e
      */
@@ -136,7 +144,6 @@ public interface UriHandler {
     }
 
     /**
-     *
      * @param routingContext
      * @param throwable
      */
@@ -149,7 +156,6 @@ public interface UriHandler {
     }
 
     /**
-     *
      * @param routingContext
      */
     default void responseSuccess(RoutingContext routingContext) {

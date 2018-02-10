@@ -1,10 +1,10 @@
 package com.github.app.api.services.impl;
 
 import com.github.app.api.dao.domain.*;
-import com.github.app.api.dao.mapper.MenuMapper;
+import com.github.app.api.dao.mapper.PopedomMapper;
 import com.github.app.api.dao.mapper.RoleMapper;
 import com.github.app.api.dao.mapper.RolePopedomMapper;
-import com.github.app.api.services.RoleService;
+import com.github.app.api.services.RolePodomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
@@ -12,14 +12,14 @@ import org.springframework.util.ObjectUtils;
 import java.util.List;
 
 @Component
-public class RoleServiceImpl implements RoleService {
+public class RolePodomServiceImpl implements RolePodomService {
 
 	@Autowired
 	private RoleMapper roleMapper;
 	@Autowired
 	private RolePopedomMapper rolePopedomMapper;
 	@Autowired
-	private MenuMapper menuMapper;
+	private PopedomMapper popedomMapper;
 
 	@Override
 	public Role getRoleById(Integer roleId) {
@@ -55,32 +55,34 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	public void addRolePopedoms(List<RolePopedom> rolePopedomList) {
+		deleteRolePopedomById(rolePopedomList.get(0).getRoleId(), null);
 		rolePopedomMapper.batchInsert(rolePopedomList);
 	}
 
 	@Override
-	public void deleteRolePopedomById(Integer roleId, Integer menuId) {
+	public void deleteRolePopedomById(Integer roleId, Integer popedomId) {
 		RolePopedomExample example = new RolePopedomExample();
 		if (!ObjectUtils.isEmpty(roleId)) {
 			example.createCriteria().andRoleIdEqualTo(roleId);
 		}
-		if (!ObjectUtils.isEmpty(menuId)) {
-			example.createCriteria().andMenuIdEqualTo(menuId);
+		if (!ObjectUtils.isEmpty(popedomId)) {
+			example.createCriteria().andPopedomIdEqualTo(popedomId);
 		}
 		rolePopedomMapper.deleteByExample(example);
 	}
 
 	@Override
 	public boolean isAuthOperation(String code, Integer roleId) {
-		MenuExample menuExample = new MenuExample();
-		menuExample.createCriteria().andCodeEqualTo(code);
-		Menu menu = menuMapper.selectOneByExample(menuExample);
+		PopedomExample popedomExample = new PopedomExample();
+		popedomExample.createCriteria().andCodeEqualTo(code);
 
-		if(ObjectUtils.isEmpty(menu))
+		Popedom popedom = popedomMapper.selectOneByExample(popedomExample);
+
+		if(ObjectUtils.isEmpty(popedom))
 			return false;
 
 		RolePopedomExample rolePopedomExample = new RolePopedomExample();
-		rolePopedomExample.createCriteria().andMenuIdEqualTo(menu.getMenuId());
+		rolePopedomExample.createCriteria().andPopedomIdEqualTo(popedom.getPopedomId());
 		rolePopedomExample.createCriteria().andRoleIdEqualTo(roleId);
 
 		long count = rolePopedomMapper.countByExample(rolePopedomExample);
@@ -91,7 +93,23 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
+	public void savePopedom(List<Popedom> list) {
+		popedomMapper.batchInsert(list);
+	}
+
+	@Override
+	public List<Popedom> findPopedomByRoleId(Integer roleId) {
+		return popedomMapper.findPopedomByRoleId(roleId);
+	}
+
+	@Override
+	public List<Popedom> findAllPopedom() {
+		return popedomMapper.selectByExample(new PopedomExample());
+	}
+
+	@Override
 	public void truncate() {
+		popedomMapper.truncate();
 		rolePopedomMapper.truncate();
 		roleMapper.truncate();
 	}
