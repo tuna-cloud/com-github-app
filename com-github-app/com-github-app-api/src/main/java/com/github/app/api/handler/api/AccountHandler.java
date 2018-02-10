@@ -40,13 +40,13 @@ public class AccountHandler implements UriHandler {
 
 	@Override
 	public void registePopedom(List<Popedom> list) {
-		list.add(new Popedom.Builder().name("账号添加").code("/[a-zA-Z]+/account/" + HttpMethod.POST.name()).build());
-		list.add(new Popedom.Builder().name("账号删除").code("/[a-zA-Z]+/account/[0-9]+/" + HttpMethod.DELETE.name()).build());
-		list.add(new Popedom.Builder().name("账号更新").code("/[a-zA-Z]+/account/" + HttpMethod.PUT.name()).build());
-		list.add(new Popedom.Builder().name("账号查询").code("/[a-zA-Z]+/account/[0-9]+/" + HttpMethod.GET.name()).build());
-		list.add(new Popedom.Builder().name("账号管理").code("/[a-zA-Z]+/account/" + HttpMethod.GET.name()).build());
-		list.add(new Popedom.Builder().name("当前账号").code("/[a-zA-Z]+/account/current/login/" + HttpMethod.GET.name()).build());
-		list.add(new Popedom.Builder().name("密码修改").code("/[a-zA-Z]+/account/resetpwd/[0-9]+/" + HttpMethod.PUT.name()).build());
+		list.add(new Popedom.Builder().name("*账号添加").code("/[a-zA-Z]+/account/" + HttpMethod.POST.name()).build());
+		list.add(new Popedom.Builder().name("*账号删除").code("/[a-zA-Z]+/account/[0-9]+/" + HttpMethod.DELETE.name()).build());
+		list.add(new Popedom.Builder().name("*账号更新").code("/[a-zA-Z]+/account/" + HttpMethod.PUT.name()).build());
+		list.add(new Popedom.Builder().name("*账号查询").code("/[a-zA-Z]+/account/[0-9]+/" + HttpMethod.GET.name()).build());
+		list.add(new Popedom.Builder().name("*账号查询所有").code("/[a-zA-Z]+/account/" + HttpMethod.GET.name()).build());
+		list.add(new Popedom.Builder().name("*登录账号").code("/[a-zA-Z]+/account/current/login/" + HttpMethod.GET.name()).build());
+		list.add(new Popedom.Builder().name("*密码修改").code("/[a-zA-Z]+/account/resetpwd/[0-9]+/" + HttpMethod.PUT.name()).build());
 	}
 
 	public void saveOrUpdate(RoutingContext routingContext) {

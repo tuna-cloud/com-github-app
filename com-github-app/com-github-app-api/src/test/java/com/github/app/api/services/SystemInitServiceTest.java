@@ -22,7 +22,7 @@ public class SystemInitServiceTest extends BaseServiceTest {
 	@Autowired
 	private RolePodomService rolePodomService;
 
-//	@Test
+	@Test
 	public void systemInit() {
 	    // 清表
 		clearDB();

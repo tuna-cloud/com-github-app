@@ -30,9 +30,9 @@ public class SystemOperationHandler implements UriHandler {
 
     @Override
     public void registePopedom(List<Popedom> list) {
-        list.add(new Popedom.Builder().name("系统备份").code("/[a-zA-Z]+/sysbackup/" + HttpMethod.PUT.name()).build());
-        list.add(new Popedom.Builder().name("系统恢复").code("/[a-zA-Z]+/sysrestore/" + HttpMethod.PUT.name()).build());
-        list.add(new Popedom.Builder().name("下载备份").code("/[a-zA-Z]+/sysdownload/" + HttpMethod.GET.name()).build());
+        list.add(new Popedom.Builder().name("*系统备份").code("/[a-zA-Z]+/sysbackup/" + HttpMethod.PUT.name()).build());
+        list.add(new Popedom.Builder().name("*系统恢复").code("/[a-zA-Z]+/sysrestore/" + HttpMethod.PUT.name()).build());
+        list.add(new Popedom.Builder().name("*下载备份").code("/[a-zA-Z]+/sysdownload/" + HttpMethod.GET.name()).build());
     }
 
     public void backup(RoutingContext routingContext) {

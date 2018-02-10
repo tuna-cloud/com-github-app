@@ -25,7 +25,7 @@ if [ "x$KAFKA_HEAP_OPTS" = "x" ]; then
     export KAFKA_HEAP_OPTS="-Xmx1G -Xms1G"
 fi
 
-EXTRA_ARGS="-name backup -loggc"
+EXTRA_ARGS="-name backupmysql -loggc"
 
 COMMAND=$1
 case $COMMAND in
@@ -37,4 +37,4 @@ case $COMMAND in
     ;;
 esac
 
-exec $base_dir/run-class.sh $EXTRA_ARGS com.github.app.runner.ApplicationBoot $@
+exec $base_dir/run-class.sh com.github.app.runner.ApplicationBoot $EXTRA_ARGS $@

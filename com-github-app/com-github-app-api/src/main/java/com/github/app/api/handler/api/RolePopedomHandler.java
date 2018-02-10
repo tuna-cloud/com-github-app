@@ -39,13 +39,13 @@ public class RolePopedomHandler implements UriHandler {
 
     @Override
     public void registePopedom(List<Popedom> list) {
-        list.add(new Popedom.Builder().name("增加角色").code("/[a-zA-Z]+/role/" + HttpMethod.POST.name()).build());
-        list.add(new Popedom.Builder().name("删除角色").code("/[a-zA-Z]+/role/[0-9]+/" + HttpMethod.DELETE.name()).build());
-        list.add(new Popedom.Builder().name("更新角色").code("/[a-zA-Z]+/role/" + HttpMethod.PUT.name()).build());
-        list.add(new Popedom.Builder().name("查询角色").code("/[a-zA-Z]+/role/[0-9]+/" + HttpMethod.GET.name()).build());
-        list.add(new Popedom.Builder().name("角色管理").code("/[a-zA-Z]+/role/" + HttpMethod.GET.name()).build());
-        list.add(new Popedom.Builder().name("修改权限").code("/[a-zA-Z]+/role/popedom/" + HttpMethod.PUT.name()).build());
-        list.add(new Popedom.Builder().name("查询权限").code("/[a-zA-Z]+/role/popedom/[0-9]+/" + HttpMethod.GET.name()).build());
+        list.add(new Popedom.Builder().name("*角色增加").code("/[a-zA-Z]+/role/" + HttpMethod.POST.name()).build());
+        list.add(new Popedom.Builder().name("*角色删除").code("/[a-zA-Z]+/role/[0-9]+/" + HttpMethod.DELETE.name()).build());
+        list.add(new Popedom.Builder().name("*角色更新").code("/[a-zA-Z]+/role/" + HttpMethod.PUT.name()).build());
+        list.add(new Popedom.Builder().name("*角色查询").code("/[a-zA-Z]+/role/[0-9]+/" + HttpMethod.GET.name()).build());
+        list.add(new Popedom.Builder().name("*角色查询所有").code("/[a-zA-Z]+/role/" + HttpMethod.GET.name()).build());
+        list.add(new Popedom.Builder().name("*权限修改").code("/[a-zA-Z]+/role/popedom/" + HttpMethod.PUT.name()).build());
+        list.add(new Popedom.Builder().name("*权限查询").code("/[a-zA-Z]+/role/popedom/[0-9]+/" + HttpMethod.GET.name()).build());
     }
 
     public void saveOrUpdate(RoutingContext routingContext) {

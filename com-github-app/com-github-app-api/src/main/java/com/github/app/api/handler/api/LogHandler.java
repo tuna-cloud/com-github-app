@@ -30,8 +30,8 @@ public class LogHandler implements UriHandler {
 
 	@Override
 	public void registePopedom(List<Popedom> list) {
-		list.add(new Popedom.Builder().name("系统日志").code("/[a-zA-Z]+/log/" + HttpMethod.GET.name()).build());
-		list.add(new Popedom.Builder().name("删除日志").code("/[a-zA-Z]+/log/" + HttpMethod.DELETE.name()).build());
+		list.add(new Popedom.Builder().name("*日志查询").code("/[a-zA-Z]+/log/" + HttpMethod.GET.name()).build());
+		list.add(new Popedom.Builder().name("*日志删除").code("/[a-zA-Z]+/log/" + HttpMethod.DELETE.name()).build());
 	}
 
 	public void list(RoutingContext routingContext) {

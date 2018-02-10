@@ -18,38 +18,38 @@ Vue.use(Router)
 export const constantRouterMap = [
   {
     path: '/login',
-    component: _import('login/index'),
-    hidden: true
+    component: _import('login/index')
   },
   {
     path: '/404',
-    component: _import('404'),
-    hidden: true
+    component: _import('404')
   },
   {
     path: '/',
     component: Layout,
     redirect: '/dashboard',
     name: 'Dashboard',
-    hidden: true,
     children: [{ path: 'dashboard', component: _import('dashboard/index') }]
   },
   {
-    path: '/system',
+    path: '/api',
     component: Layout,
     redirect: 'noredirect',
     name: '系统管理',
     icon: 'zujian',
+    code: '',
     children: [
-      { path: 'users', name: '用户管理', component: _import('system/user') },
-      { path: 'roles', name: '角色管理', component: _import('system/role') },
-      { path: 'logs', name: '日志管理', component: _import('system/log') }
+      { path: 'account/list', name: '账号管理', component: _import('system/user') },
+      { path: 'account/pwd', name: '密码修改', component: _import('system/user') },
+      { path: 'account/edit', name: '账号信息', component: _import('system/user') },
+      { path: 'role/list', name: '角色管理', component: _import('system/role') },
+      { path: 'sys/db', name: '数据备份', component: _import('system/role') },
+      { path: 'log/list', name: '日志管理', component: _import('system/log') }
     ]
   },
   {
     path: '*',
-    redirect: '/404',
-    hidden: true
+    redirect: '/404'
   }
 ]
 

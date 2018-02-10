@@ -37,4 +37,4 @@ case $COMMAND in
     ;;
 esac
 
-exec $base_dir/run-class.sh $EXTRA_ARGS com.github.app.runner.ApplicationBoot $@
+exec $base_dir/run-class.sh com.github.app.runner.ApplicationBoot $EXTRA_ARGS $@

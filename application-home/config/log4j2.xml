@@ -60,12 +60,12 @@
 		<Logger name="io.vertx.ext.jwt.JWT" level="WARN"/>
 
 		<AsyncLogger name="com.github.app" level="${OUTPUT_LOG_LEVEL}" additivity="false" includeLocation="true">
-			<appender-ref ref="Console" />
+			<!--appender-ref ref="Console" /-->
 			<Appender-ref ref="ProductLog" />
 		</AsyncLogger>
 
 		<AsyncRoot level="debug">
-			<appender-ref ref="Console" />
+			<!--appender-ref ref="Console" /-->
 			<Appender-ref ref="RollingFile" />
 			<Appender-ref ref="RollingFileError" />
 		</AsyncRoot>

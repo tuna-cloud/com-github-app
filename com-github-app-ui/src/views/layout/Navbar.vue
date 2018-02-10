@@ -23,7 +23,6 @@
 import { mapGetters } from 'vuex'
 import Levelbar from './Levelbar'
 import Hamburger from '@/components/Hamburger'
-import { removeToken } from '@/utils/auth'
 
 export default {
   components: {
