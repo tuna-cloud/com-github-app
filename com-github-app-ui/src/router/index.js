@@ -37,14 +37,14 @@ export const constantRouterMap = [
     redirect: 'noredirect',
     name: '系统管理',
     icon: 'zujian',
-    code: '',
+    code: 'vuesystemmgr',
     children: [
-      { path: 'account/list', name: '账号管理', component: _import('system/user') },
-      { path: 'account/pwd', name: '密码修改', component: _import('system/user') },
-      { path: 'account/edit', name: '账号信息', component: _import('system/user') },
-      { path: 'role/list', name: '角色管理', component: _import('system/role') },
-      { path: 'sys/db', name: '数据备份', component: _import('system/role') },
-      { path: 'log/list', name: '日志管理', component: _import('system/log') }
+      { path: 'accountList', name: '账号管理', code: 'vueaccountmgr', component: _import('system/account') },
+      { path: 'accountPwd', name: '密码修改', code: 'vueaccountpwd', component: _import('system/account') },
+      { path: 'accountEdit', name: '账号信息', code: 'vueaccountinfo', component: _import('system/account') },
+      { path: 'roleList', name: '角色管理', code: 'vuerolemgr', component: _import('system/role') },
+      { path: 'sysBackup', name: '数据备份', code: 'vuedbback', component: _import('system/role') },
+      { path: 'logList', name: '日志管理', code: 'vuelogmgr', component: _import('system/log') }
     ]
   },
   {
