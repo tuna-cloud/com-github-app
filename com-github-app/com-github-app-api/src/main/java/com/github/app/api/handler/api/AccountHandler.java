@@ -23,7 +23,7 @@ public class AccountHandler implements UriHandler {
 	@Autowired
 	private AccountService accountService;
 	@Autowired
-    private RolePodomService rolePodomService;
+	private RolePodomService rolePodomService;
 
 	@Override
 	public void registeUriHandler(Router router) {
@@ -38,7 +38,7 @@ public class AccountHandler implements UriHandler {
 
 	@Override
 	public void registePopedom(List<Popedom> list) {
-		list.add(new Popedom.Builder().name("*账号添加").code("/[a-zA-Z]+/account/" + HttpMethod.POST.name()).build());
+		list.add(new Popedom.Builder().name("*帐号添加").code("/[a-zA-Z]+/account/" + HttpMethod.POST.name()).build());
 		list.add(new Popedom.Builder().name("*账号删除").code("/[a-zA-Z]+/account/[0-9]+/" + HttpMethod.DELETE.name()).build());
 		list.add(new Popedom.Builder().name("*账号更新").code("/[a-zA-Z]+/account/" + HttpMethod.PUT.name()).build());
 		list.add(new Popedom.Builder().name("*账号查询").code("/[a-zA-Z]+/account/[0-9]+/" + HttpMethod.GET.name()).build());
