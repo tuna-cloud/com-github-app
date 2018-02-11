@@ -57,6 +57,17 @@ export function formatTime(time, option) {
   }
 }
 
+export function formatTimeUs(time) {
+  var d = new Date(time / 1000)
+  var date = (d.getFullYear()) + "-" +
+    (d.getMonth() + 1) + "-" +
+    (d.getDate()) + " " +
+    (d.getHours()) + ":" +
+    (d.getMinutes()) + ":" +
+    (d.getSeconds())
+  return date
+}
+
 export function isItemInArray(array, item) {
   var ret3 = array.findIndex((value, index, arr) => {
     return value === item

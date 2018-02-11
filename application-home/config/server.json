@@ -13,7 +13,7 @@
   },
   "datasource" : {
     "driverClassName" : "com.mysql.jdbc.Driver",
-    "url" : "jdbc:mysql://mysql1.net.com:3306/mis?useSSL=false&useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=true",
+    "url" : "jdbc:mysql://mysql1.net.com:3306/mis?useSSL=false&useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=true&useLegacyDatetimeCode=false&serverTimezone=UTC",
     "username" : "root",
     "password" : "870712"
   },

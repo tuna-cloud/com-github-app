@@ -6,30 +6,34 @@
           {{scope.$index}}
         </template>
       </el-table-column>
-      <el-table-column label="Title">
+      <el-table-column label="操作" width="180" align="center" >
         <template slot-scope="scope">
-          {{scope.row.title}}
+          {{scope.row.code}}
         </template>
       </el-table-column>
-      <el-table-column label="Author" width="110" align="center">
+      <el-table-column label="帐号" width="110" align="center">
         <template slot-scope="scope">
-          <span>{{scope.row.author}}</span>
+          <span>{{scope.row.opAccount}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Pageviews" width="110" align="center">
+      <el-table-column label="姓名" width="110" align="center">
         <template slot-scope="scope">
-          {{scope.row.pageviews}}
+          {{scope.row.opName}}
         </template>
       </el-table-column>
-      <el-table-column class-name="status-col" label="Status" width="110" align="center">
+      <el-table-column label="角色" width="110" align="center">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{scope.row.status}}</el-tag>
+          {{scope.row.roleName}}
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="created_at" label="Display_time" width="200">
+      <el-table-column label="时间" width="180" align="center">
         <template slot-scope="scope">
-          <i class="el-icon-time"></i>
-          <span>{{scope.row.display_time}}</span>
+          {{formattimeStr(scope.row.logId)}}
+        </template>
+      </el-table-column>
+      <el-table-column label="操作记录" align="center">
+        <template slot-scope="scope">
+          {{scope.row.description.substring(0, 130)}}
         </template>
       </el-table-column>
     </el-table>
@@ -37,7 +41,8 @@
 </template>
 
 <script>
-  import { getList } from '@/api/table'
+  import { getList } from '@/api/log'
+  import { formatTimeUs } from '@/utils/index'
 
   export default {
     data() {
@@ -46,26 +51,20 @@
         listLoading: true
       }
     },
-    filters: {
-      statusFilter(status) {
-        const statusMap = {
-          published: 'success',
-          draft: 'gray',
-          deleted: 'danger'
-        }
-        return statusMap[status]
-      }
-    },
     created() {
       this.fetchData()
     },
     methods: {
       fetchData() {
         this.listLoading = true
-        getList(this.listQuery).then(response => {
-          this.list = response.data.items
+        getList().then(response => {
+          this.list = response.data.list
           this.listLoading = false
         })
+      },
+      formattimeStr(cellValue) {
+        console.log(cellValue)
+        return formatTimeUs(cellValue)
       }
     }
   }
