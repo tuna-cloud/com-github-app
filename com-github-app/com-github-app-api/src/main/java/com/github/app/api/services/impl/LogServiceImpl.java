@@ -51,12 +51,23 @@ public class LogServiceImpl implements LogService {
             example.createCriteria().andOpAccountEqualTo(account);
         }
 
-        if (!ObjectUtils.isEmpty(startTime) && !ObjectUtils.isEmpty(endTime)) {
-            example.createCriteria().andLogIdBetween(startTime*1000, endTime*1000);
+        if (!ObjectUtils.isEmpty(startTime)) {
+            example.createCriteria().andLogIdGreaterThan(startTime * 1000);
+        }
+        if (!ObjectUtils.isEmpty(endTime)) {
+            example.createCriteria().andLogIdLessThan(endTime * 1000);
+        }
+
+        if (ObjectUtils.isEmpty(offset)) {
+            offset = Integer.valueOf(0);
+        }
+        if (ObjectUtils.isEmpty(rows)) {
+            rows = Integer.valueOf(20);
         }
 
         example.setOffset(offset);
         example.setRows(rows);
+        example.setOrderByClause(" log_id desc ");
         return logMapper.selectByExample(example);
     }
 
