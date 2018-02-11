@@ -56,3 +56,13 @@
      return d.getMonth() + 1 + '月' + d.getDate() + '日' + d.getHours() + '时' + d.getMinutes() + '分'
    }
  }
+
+ export function isItemInArray(array, item) {
+   var ret3 = array.findIndex((value, index, arr) => {
+     return value === item
+   })
+   if (ret3 !== -1) {
+     return true
+   }
+   return false
+ }

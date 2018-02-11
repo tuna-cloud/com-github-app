@@ -35,6 +35,8 @@ public class RolePopedomHandler implements UriHandler {
         router.get().path("/role").produces(CONTENT_TYPE).blockingHandler(this::query, false);
         router.put().path("/role/popedom").produces(CONTENT_TYPE).blockingHandler(this::saveRolePopedom, false);
         router.get().path("/role/popedom/:roleId").produces(CONTENT_TYPE).blockingHandler(this::getRolePopedom, false);
+        router.get().path("/role/popedom/vue/:roleId").produces(CONTENT_TYPE).blockingHandler(this::getRolePopedomVue, false);
+        router.get().path("/role/popedom/api/:roleId").produces(CONTENT_TYPE).blockingHandler(this::getRolePopedomApi, false);
     }
 
     @Override
@@ -46,6 +48,8 @@ public class RolePopedomHandler implements UriHandler {
         list.add(new Popedom.Builder().name("*角色查询所有").code("/[a-zA-Z]+/role/" + HttpMethod.GET.name()).build());
         list.add(new Popedom.Builder().name("*权限修改").code("/[a-zA-Z]+/role/popedom/" + HttpMethod.PUT.name()).build());
         list.add(new Popedom.Builder().name("*权限查询").code("/[a-zA-Z]+/role/popedom/[0-9]+/" + HttpMethod.GET.name()).build());
+        list.add(new Popedom.Builder().name("*界面权限查询").code("/[a-zA-Z]+/role/popedom/vue/[0-9]+/" + HttpMethod.GET.name()).build());
+        list.add(new Popedom.Builder().name("*接口权限查询").code("/[a-zA-Z]+/role/popedom/api/[0-9]+/" + HttpMethod.GET.name()).build());
     }
 
     public void saveOrUpdate(RoutingContext routingContext) {
@@ -112,6 +116,28 @@ public class RolePopedomHandler implements UriHandler {
         }
 
         List<Popedom> list = rolePodomService.findPopedomByRoleId(Integer.valueOf(roleId));
+        responseSuccess(routingContext, list);
+    }
+
+    public void getRolePopedomVue(RoutingContext routingContext) {
+        String roleId = routingContext.pathParam("roleId");
+        if (StringUtils.isEmpty(roleId)) {
+            responseFailure(routingContext, "roleId must be supply");
+            return;
+        }
+
+        List<Popedom> list = rolePodomService.findVuePopedomByRoleId(Integer.valueOf(roleId));
+        responseSuccess(routingContext, list);
+    }
+
+    public void getRolePopedomApi(RoutingContext routingContext) {
+        String roleId = routingContext.pathParam("roleId");
+        if (StringUtils.isEmpty(roleId)) {
+            responseFailure(routingContext, "roleId must be supply");
+            return;
+        }
+
+        List<Popedom> list = rolePodomService.findApiPopedomByRoleId(Integer.valueOf(roleId));
         responseSuccess(routingContext, list);
     }
 }

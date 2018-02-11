@@ -19,6 +19,7 @@ public class VueUIHandler implements UriHandler {
 
     @Override
     public void registePopedom(List<Popedom> list) {
+        list.add(Popedom.builder().name("主面板").code("vuedashboard").build());
         list.add(Popedom.builder().name("系统管理").code("vuesystemmgr").build());
         list.add(Popedom.builder().name("账号管理").code("vueaccountmgr").build());
         list.add(Popedom.builder().name("密码修改").code("vueaccountpwd").build());

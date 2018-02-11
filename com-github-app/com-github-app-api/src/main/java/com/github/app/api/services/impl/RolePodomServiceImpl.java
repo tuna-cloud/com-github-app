@@ -103,6 +103,16 @@ public class RolePodomServiceImpl implements RolePodomService {
 	}
 
 	@Override
+	public List<Popedom> findVuePopedomByRoleId(Integer roleId) {
+		return popedomMapper.findVuePopedomByRoleId(roleId);
+	}
+
+	@Override
+	public List<Popedom> findApiPopedomByRoleId(Integer roleId) {
+		return popedomMapper.findApiPopedomByRoleId(roleId);
+	}
+
+	@Override
 	public List<Popedom> findAllPopedom() {
 		return popedomMapper.selectByExample(new PopedomExample());
 	}

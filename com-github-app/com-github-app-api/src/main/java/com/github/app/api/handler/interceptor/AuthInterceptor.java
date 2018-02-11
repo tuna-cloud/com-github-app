@@ -88,10 +88,10 @@ public class AuthInterceptor implements UriHandler {
 
 		Account account = accountService.getAccountByAccountOrMobileOrEmail(accountStr, null, null);
 		String remark = AuthUtils.buildRequestInfo(routingContext);
-		Popedom popedom = PopedomContext.getInstance().match(routingContext.normalisedPath());
+		Popedom popedom = PopedomContext.getInstance().match(routingContext.normalisedPath() + "/" + routingContext.request().method().name());
 
 		if (popedom == null) {
-			logService.addLog(account, popedom.getName(), "[Y]" + remark);
+			logService.addLog(account, AuthUtils.authCode(routingContext), "[Y]" + remark);
 			routingContext.next();
 		    return;
 		}

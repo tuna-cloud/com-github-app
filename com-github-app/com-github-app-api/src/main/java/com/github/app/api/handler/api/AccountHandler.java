@@ -15,9 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class AccountHandler implements UriHandler {
@@ -113,11 +111,15 @@ public class AccountHandler implements UriHandler {
 		}
 
 		Account account = accountService.getAccountByAccountOrMobileOrEmail(acc, null, null);
-		List<Popedom> list = rolePodomService.findPopedomByRoleId(account.getRoleId());
+		List<Popedom> list = rolePodomService.findVuePopedomByRoleId(account.getRoleId());
 
 		Map map = new HashMap();
 		map.put("account", account);
-		map.put("list", list);
+		Set<String> codes = new HashSet<>();
+		for (Popedom popedom : list) {
+			codes.add(popedom.getCode());
+		}
+		map.put("list", codes);
 
 		responseSuccess(routingContext, map);
 	}

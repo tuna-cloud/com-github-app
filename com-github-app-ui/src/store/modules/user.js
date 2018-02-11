@@ -6,6 +6,7 @@ const user = {
     token: getToken(),
     name: '',
     avatar: '',
+    codes: [],
     roles: []
   },
 
@@ -21,6 +22,9 @@ const user = {
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
+    },
+    SET_CODES: (state, codes) => {
+      state.codes = codes
     }
   },
 
@@ -49,7 +53,8 @@ const user = {
           console.log(response.data)
           commit('SET_ROLES', data.account.role.name)
           commit('SET_NAME', data.account.name)
-          commit('SET_AVATAR', data.avatar)
+          commit('SET_AVATAR', data.account.photoUrl)
+          commit('SET_CODES', data.list)
           resolve(response)
         }).catch(error => {
           reject(error)
@@ -63,6 +68,7 @@ const user = {
         logout(state.token).then(() => {
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
+          commit('SET_CODES', [])
           removeToken()
           resolve()
         }).catch(error => {
@@ -75,6 +81,8 @@ const user = {
     FedLogOut({ commit }) {
       return new Promise(resolve => {
         commit('SET_TOKEN', '')
+        commit('SET_ROLES', [])
+        commit('SET_CODES', [])
         removeToken()
         resolve()
       })

@@ -99,9 +99,9 @@ public class HttpServerVerticle extends AbstractVerticle implements ApplicationC
         rootRouter.route("/*").handler(ResponseContentTypeHandler.create());
         rootRouter.route("/*").handler(BodyHandler.create());
         loadHandlers(rootRouter, "com.github.app.api.handler.common");
-        rootRouter.route("/static/*").handler(StaticHandler.create()
+        rootRouter.route("/static/*").blockingHandler(StaticHandler.create()
                 .setAllowRootFileSystemAccess(true)
-                .setWebRoot(System.getenv(ServerEnvConstant.APP_HOME) + File.separator + "web"));
+                .setWebRoot(System.getenv(ServerEnvConstant.APP_HOME) + File.separator + "web"), false);
 
         /**
          * apiRouter will validate the token in the global interceptor
@@ -135,7 +135,7 @@ public class HttpServerVerticle extends AbstractVerticle implements ApplicationC
             }
         }
 
-        PopedomContext.init(popedoms);
+        PopedomContext.getInstance().addPopedoms(popedoms);
     }
 
     @Override
