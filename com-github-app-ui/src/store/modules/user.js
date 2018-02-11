@@ -31,24 +31,23 @@ const user = {
   actions: {
     // 登录
     Login({ commit }, userInfo) {
-      const account = userInfo.account.trim()
+      const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
-        login(account, userInfo.password).then(response => {
+        login(username, userInfo.password).then(response => {
           const data = response
           setToken(data.data)
           commit('SET_TOKEN', data.data)
           resolve()
         }).catch(error => {
-          console.log(error)
           reject(error)
         })
       })
     },
 
-    // 获取用户信息及菜单信息
+    // 获取用户信息
     GetInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        getInfo().then(response => {
+        getInfo(state.token).then(response => {
           const data = response.data
           console.log(response.data)
           commit('SET_ROLES', data.account.role.name)

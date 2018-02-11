@@ -1,7 +1,7 @@
-import fetch from '@/utils/fetch'
+import request from '@/utils/request'
 
 export function login(account, password) {
-  return fetch({
+  return request({
     url: '/open/auth',
     method: 'post',
     data: {
@@ -12,14 +12,14 @@ export function login(account, password) {
 }
 
 export function getInfo() {
-  return fetch({
+  return request({
     url: '/api/account/current/login',
     method: 'get'
   })
 }
 
 export function logout() {
-  return fetch({
+  return request({
     url: '/api/account/logout',
     method: 'put'
   })

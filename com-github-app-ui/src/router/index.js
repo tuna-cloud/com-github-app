@@ -1,36 +1,43 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-const _import = require('./_import_' + process.env.NODE_ENV)
-// in development env not use Lazy Loading,because Lazy Loading too many pages will cause webpack hot update too slow.so only in production use Lazy Loading
 
-/* layout */
-import Layout from '../views/layout/Layout'
+// in development-env not use lazy-loading, because lazy-loading too many pages will cause webpack hot update too slow. so only in production use lazy-loading;
+// detail: https://panjiachen.github.io/vue-element-admin-site/#/lazy-loading
 
 Vue.use(Router)
 
+/* Layout */
+import Layout from '../views/layout/Layout'
+
 /**
- * icon : the icon show in the sidebar
- * redirect : if `redirect:noredirect` will not redirct in the levelbar
- * name : the title show in menu
- * code : if no code value set, this item will not show in sidebar
+* hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
+* alwaysShow: true               if set true, will always show the root menu, whatever its child routes length
+*                                if not set alwaysShow, only more than one route under the children
+*                                it will becomes nested mode, otherwise not show the root menu
+* redirect: noredirect           if `redirect:noredirect` will no redirct in the breadcrumb
+* name:'router-name'             the name is used by <keep-alive> (must set!!!)
+* meta : {
+    title: 'title'               the name show in submenu and breadcrumb (recommend set)
+    icon: 'svg-name'             the icon show in the sidebar,
+  }
 **/
 export const constantRouterMap = [
   {
     path: '/login',
-    component: _import('login/index')
+    component: () => import('@/views/login/index')
   },
   {
     path: '/404',
-    component: _import('404')
+    component: () => import('@/views/404')
   },
   {
     path: '/',
     component: Layout,
     redirect: '/dashboard',
     name: '主面板',
-    icon: 'home',
+    icon: 'form',
     code: 'vuedashboard',
-    children: [{ path: 'dashboard', component: _import('dashboard/index') }]
+    children: [{ path: 'dashboard', component: () => import('@/views/dashboard/index') }]
   },
   {
     path: '/api',
@@ -40,12 +47,12 @@ export const constantRouterMap = [
     icon: 'table',
     code: 'vuesystemmgr',
     children: [
-      { path: 'account/list', name: '账号管理', code: 'vueaccountmgr', component: _import('system/account') },
-      { path: 'account/pwd', name: '密码修改', code: 'vueaccountpwd', component: _import('system/account') },
-      { path: 'account/edit', name: '账号信息', code: 'vueaccountinfo', component: _import('system/account') },
-      { path: 'role/list', name: '角色管理', code: 'vuerolemgr', component: _import('system/role') },
-      { path: 'sysBackup', name: '数据备份', code: 'vuedbback', component: _import('system/role') },
-      { path: 'log/list', name: '日志管理', code: 'vuelogmgr', component: _import('system/log') }
+      { path: 'account/list', name: '账号管理', code: 'vueaccountmgr', component: () => import('@/views/system/account') },
+      { path: 'account/pwd', name: '密码修改', code: 'vueaccountpwd', component: () => import('@/views/system/account') },
+      { path: 'account/edit', name: '账号信息', code: 'vueaccountinfo', component: () => import('@/views/system/account') },
+      { path: 'role/list', name: '角色管理', code: 'vuerolemgr', component: () => import('@/views/system/role') },
+      { path: 'sysBackup', name: '数据备份', code: 'vuedbback', component: () => import('@/views/system/role') },
+      { path: 'log/list', name: '日志管理', code: 'vuelogmgr', component: () => import('@/views/system/log') }
     ]
   },
   {

@@ -2,19 +2,20 @@
   <div class="login-container">
     <el-form autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left" label-width="0px"
       class="card-box login-form">
-      <h3 class="title">vue-admin</h3>
-      <el-form-item prop="account">
+      <h3 class="title">vue-element-admin</h3>
+      <el-form-item prop="username">
         <span class="svg-container svg-container_login">
-          <icon-svg icon-class="yonghuming" />
+          <svg-icon icon-class="user" />
         </span>
-        <el-input name="account" type="text" v-model="loginForm.account" autoComplete="on" placeholder="account" />
+        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="username" />
       </el-form-item>
       <el-form-item prop="password">
         <span class="svg-container">
-          <icon-svg icon-class="mima"></icon-svg>
+          <svg-icon icon-class="password"></svg-icon>
         </span>
-        <el-input name="password" type="password" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on"
+        <el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on"
           placeholder="password"></el-input>
+          <span class="show-pwd" @click="showPwd"><svg-icon icon-class="eye" /></span>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" style="width:100%;" :loading="loading" @click.native.prevent="handleLogin">
@@ -27,8 +28,6 @@
 
 <script>
 import { isvalidUsername } from '@/utils/validate'
-import { getUserAccount } from '@/utils/auth'
-import { setUserAccount } from '@/utils/auth'
 
 export default {
   name: 'login',
@@ -49,24 +48,31 @@ export default {
     }
     return {
       loginForm: {
-        account: '',
+        username: '',
         password: ''
       },
       loginRules: {
-        account: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePass }]
       },
-      loading: false
+      loading: false,
+      pwdType: 'password'
     }
   },
   methods: {
+    showPwd() {
+      if (this.pwdType === 'password') {
+        this.pwdType = ''
+      } else {
+        this.pwdType = 'password'
+      }
+    },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
           this.$store.dispatch('Login', this.loginForm).then(() => {
             this.loading = false
-            setUserAccount(this.loginForm.account)
             this.$router.push({ path: '/' })
           }).catch(() => {
             this.loading = false
@@ -77,25 +83,19 @@ export default {
         }
       })
     }
-  },
-  mounted() {
-    var acc = getUserAccount()
-    if (acc != null && acc.length > 0) {
-      this.loginForm.account = getUserAccount()
-    }
   }
 }
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
-  @import "src/styles/mixin.scss";
   $bg:#2d3a4b;
   $dark_gray:#889aa4;
   $light_gray:#eee;
 
   .login-container {
-    @include relative;
-    height: 100vh;
+    position: fixed;
+    height: 100%;
+    width:100%;
     background-color: $bg;
     input:-webkit-autofill {
       -webkit-box-shadow: 0 0 0px 1000px #293444 inset !important;
@@ -159,6 +159,7 @@ export default {
       font-size: 16px;
       color: $dark_gray;
       cursor: pointer;
+      user-select:none;
     }
     .thirdparty-button{
       position: absolute;

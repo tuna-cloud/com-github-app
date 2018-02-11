@@ -36,12 +36,3 @@ export function validatAlphabets(str) {
   return reg.test(str)
 }
 
-/* 电话号码验证 */
-export function isMobileNum(obj) {
-  var reg = /^1[0-9]{10}/
-  if (!reg.test(obj.value)) {
-    return false
-  }
-  return true
-}
-
