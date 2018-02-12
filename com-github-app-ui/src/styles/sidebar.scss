@@ -39,6 +39,7 @@
     .submenu-title-noDropdown {
       margin-left: 0px!important;
       position: relative;
+      pointer-events: none;
       span {
         height: 0px;
         width: 0px;

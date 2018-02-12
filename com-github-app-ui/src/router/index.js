@@ -35,7 +35,7 @@ export const constantRouterMap = [
     component: Layout,
     redirect: '/dashboard',
     name: '首页',
-    icon: 'table',
+    icon: 'home',
     code: 'vuedashboard',
     children: [{ path: 'dashboard', component: () => import('@/views/dashboard/index') }]
   },
@@ -44,7 +44,7 @@ export const constantRouterMap = [
     component: Layout,
     redirect: 'noredirect',
     name: '系统管理',
-    icon: 'table',
+    icon: 'settings',
     code: 'vuesystemmgr',
     children: [
       { path: 'account/list', name: '账号管理', code: 'vueaccountmgr', component: () => import('@/views/system/account') },
