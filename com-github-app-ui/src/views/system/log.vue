@@ -63,7 +63,6 @@
         })
       },
       formattimeStr(cellValue) {
-        console.log(cellValue)
         return formatTimeUs(cellValue)
       }
     }
