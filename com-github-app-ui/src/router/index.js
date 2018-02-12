@@ -34,8 +34,8 @@ export const constantRouterMap = [
     path: '/',
     component: Layout,
     redirect: '/dashboard',
-    name: '主面板',
-    icon: 'form',
+    name: '首页',
+    icon: 'table',
     code: 'vuedashboard',
     children: [{ path: 'dashboard', component: () => import('@/views/dashboard/index') }]
   },
