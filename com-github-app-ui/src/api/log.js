@@ -4,6 +4,13 @@ export function getList(params) {
   return request({
     url: '/api/log',
     method: 'get',
-    params
+    params: params
+  })
+}
+
+export function deleteAllLog() {
+  return request({
+    url: '/api/log',
+    method: 'delete'
   })
 }

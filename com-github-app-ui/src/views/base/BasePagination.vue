@@ -31,8 +31,14 @@
       getCurrentPage: function() {
         return this.currentPage
       },
+      getOffset: function() {
+        return (this.currentPage - 1) * this.rows
+      },
       getPageParam: function() {
-        return 'offset=' + (this.currentPage - 1) * this.rows + '&rows=' + this.rows
+        var obj = {}
+        obj['offset'] = (this.currentPage - 1) * this.rows
+        obj['rows'] = this.rows
+        return obj
       }
     },
     methods: {
