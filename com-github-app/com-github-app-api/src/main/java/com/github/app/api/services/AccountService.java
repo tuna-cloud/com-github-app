@@ -18,6 +18,8 @@ public interface AccountService {
 
     void saveOrUpdate(Account account);
 
+    void changeAccountStatus(Integer accountId);
+
     void resetPassword(Integer accountId);
 
     int deleteByAccountId(Integer accountId);

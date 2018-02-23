@@ -67,10 +67,18 @@ public class AuthInterceptor implements UriHandler {
 				if (res.succeeded()) {
 					User theUser = res.result();
 					String account = theUser.principal().getString("account");
+
+					// 验证帐号是否被停用或者删除，如果停用或者删除，立即阻止此帐号的所有操作
+					Account acc = accountService.getAccountByAccountOrMobileOrEmail(account, null, null);
+					if(acc == null || acc.getIsEnable() == 0) {
+						response(routingContext, CODE_JWT_TOKEN_INVALIDATE, "帐号已停用");
+						return;
+					}
+
 					routingContext.put("account", account);
 					routingContext.next();
 				} else {
-					response(routingContext, CODE_JWT_TOKEN_INVALIDATE, "token invalidate");
+					response(routingContext, CODE_JWT_TOKEN_INVALIDATE, "token失效请重新登录");
 				}
 			});
 		} catch (Exception e) {
@@ -101,7 +109,7 @@ public class AuthInterceptor implements UriHandler {
 			routingContext.next();
 		} else {
 			logService.addLog(account, popedom.getName(), "[N]" + remark);
-			responseOperationAuthFailure(routingContext, "you have no permit for this operation");
+			responseOperationAuthFailure(routingContext, "你没有权限进行此操作");
 		}
 	}
 

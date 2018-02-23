@@ -80,9 +80,11 @@ public class LogServiceImpl implements LogService {
         if (!StringUtils.isEmpty(account)) {
             example.createCriteria().andOpAccountEqualTo(account);
         }
-
-        if (!ObjectUtils.isEmpty(startTime) && !ObjectUtils.isEmpty(endTime)) {
-            example.createCriteria().andLogIdBetween(startTime*1000, endTime*1000);
+        if (!ObjectUtils.isEmpty(startTime)) {
+            example.createCriteria().andLogIdGreaterThan(startTime * 1000);
+        }
+        if (!ObjectUtils.isEmpty(endTime)) {
+            example.createCriteria().andLogIdLessThan(endTime * 1000);
         }
         return logMapper.countByExample(example);
     }

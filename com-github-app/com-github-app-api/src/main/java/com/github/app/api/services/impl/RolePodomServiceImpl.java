@@ -54,6 +54,11 @@ public class RolePodomServiceImpl implements RolePodomService {
 	}
 
 	@Override
+	public List<Role> listAllRole() {
+		return roleMapper.selectByExample(new RoleExample());
+	}
+
+	@Override
 	public void addRolePopedoms(List<RolePopedom> rolePopedomList) {
 		deleteRolePopedomById(rolePopedomList.get(0).getRoleId(), null);
 		rolePopedomMapper.batchInsert(rolePopedomList);

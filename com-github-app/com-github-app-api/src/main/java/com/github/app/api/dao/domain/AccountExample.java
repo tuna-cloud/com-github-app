@@ -1,5 +1,8 @@
 package com.github.app.api.dao.domain;
 
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -327,6 +330,29 @@ public class AccountExample {
             criteria.add(new Criterion(condition, value1, value2));
         }
 
+        public Criteria andRoleIdAndKeyword(Integer roleId, String keyword) {
+            StringBuilder builder = new StringBuilder();
+            if (!ObjectUtils.isEmpty(roleId)) {
+                builder.append("t.role_id =").append(roleId);
+                if (!StringUtils.isEmpty(keyword)) {
+                    builder.append(" and (t.name like '%").append(keyword).append("%'");
+                    builder.append(" or t.mobile like '%").append(keyword).append("%'");
+                    builder.append(" or t.email like '%").append(keyword).append("%'");
+                    builder.append(" or t.account like '%").append(keyword).append("%')");
+                }
+                addCriterion(builder.toString());
+            } else {
+                if (!StringUtils.isEmpty(keyword)) {
+                    builder.append(" t.name like '%").append(keyword).append("%'");
+                    builder.append(" or t.mobile like '%").append(keyword).append("%'");
+                    builder.append(" or t.email like '%").append(keyword).append("%'");
+                    builder.append(" or t.account like '%").append(keyword).append("%'");
+                    addCriterion(builder.toString());
+                }
+            }
+            return (Criteria) this;
+        }
+        
         public Criteria andAccountIdIsNull() {
             addCriterion("account_id is null");
             return (Criteria) this;
@@ -388,62 +414,62 @@ public class AccountExample {
         }
 
         public Criteria andRoleIdIsNull() {
-            addCriterion("t.role_id is null");
+            addCriterion("role_id is null");
             return (Criteria) this;
         }
 
         public Criteria andRoleIdIsNotNull() {
-            addCriterion("t.role_id is not null");
+            addCriterion("role_id is not null");
             return (Criteria) this;
         }
 
         public Criteria andRoleIdEqualTo(Integer value) {
-            addCriterion("t.role_id =", value, "roleId");
+            addCriterion("role_id =", value, "roleId");
             return (Criteria) this;
         }
 
         public Criteria andRoleIdNotEqualTo(Integer value) {
-            addCriterion("t.role_id <>", value, "roleId");
+            addCriterion("role_id <>", value, "roleId");
             return (Criteria) this;
         }
 
         public Criteria andRoleIdGreaterThan(Integer value) {
-            addCriterion("t.role_id >", value, "roleId");
+            addCriterion("role_id >", value, "roleId");
             return (Criteria) this;
         }
 
         public Criteria andRoleIdGreaterThanOrEqualTo(Integer value) {
-            addCriterion("t.role_id >=", value, "roleId");
+            addCriterion("role_id >=", value, "roleId");
             return (Criteria) this;
         }
 
         public Criteria andRoleIdLessThan(Integer value) {
-            addCriterion("t.role_id <", value, "roleId");
+            addCriterion("role_id <", value, "roleId");
             return (Criteria) this;
         }
 
         public Criteria andRoleIdLessThanOrEqualTo(Integer value) {
-            addCriterion("t.role_id <=", value, "roleId");
+            addCriterion("role_id <=", value, "roleId");
             return (Criteria) this;
         }
 
         public Criteria andRoleIdIn(List<Integer> values) {
-            addCriterion("t.role_id in", values, "roleId");
+            addCriterion("role_id in", values, "roleId");
             return (Criteria) this;
         }
 
         public Criteria andRoleIdNotIn(List<Integer> values) {
-            addCriterion("t.role_id not in", values, "roleId");
+            addCriterion("role_id not in", values, "roleId");
             return (Criteria) this;
         }
 
         public Criteria andRoleIdBetween(Integer value1, Integer value2) {
-            addCriterion("t.role_id between", value1, value2, "roleId");
+            addCriterion("role_id between", value1, value2, "roleId");
             return (Criteria) this;
         }
 
         public Criteria andRoleIdNotBetween(Integer value1, Integer value2) {
-            addCriterion("t.role_id not between", value1, value2, "roleId");
+            addCriterion("role_id not between", value1, value2, "roleId");
             return (Criteria) this;
         }
 

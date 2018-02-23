@@ -62,14 +62,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public List<Account> findByKeyWord(Integer roleId, String keyword, Integer offset, Integer rows) {
         AccountExample example = new AccountExample();
-        if (!ObjectUtils.isEmpty(roleId)) {
-            example.or().andRoleIdEqualTo(roleId);
-        }
-        if (!ObjectUtils.isEmpty(keyword)) {
-            example.or().andAccountLike(keyword);
-            example.or().andMobileLike(keyword);
-            example.or().andEmailLike(keyword);
-        }
+        example.createCriteria().andRoleIdAndKeyword(roleId, keyword);
 
         if (!ObjectUtils.isEmpty(offset)) {
             example.setOffset(offset);
@@ -84,14 +77,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public long countByKeyWord(Integer roleId, String keyword) {
         AccountExample example = new AccountExample();
-        if (!ObjectUtils.isEmpty(roleId)) {
-            example.or().andRoleIdEqualTo(roleId);
-        }
-        if (!ObjectUtils.isEmpty(keyword)) {
-            example.or().andAccountLike(keyword);
-            example.or().andMobileLike(keyword);
-            example.or().andEmailLike(keyword);
-        }
+        example.createCriteria().andRoleIdAndKeyword(roleId, keyword);
 
         return accountMapper.countByExample(example);
     }
@@ -133,6 +119,19 @@ public class AccountServiceImpl implements AccountService {
                 account.setPassword(MD5Utils.md5WithSalt(account.getPassword()));
             }
 
+            accountMapper.updateByPrimaryKey(account);
+        }
+    }
+
+    @Override
+    public void changeAccountStatus(Integer accountId) {
+        Account account = getAccountByAccountId(accountId);
+        if (!ObjectUtils.isEmpty(account)) {
+            if(account.getIsEnable() == 1) {
+                account.setIsEnable((short) 0);
+            } else {
+                account.setIsEnable((short) 1);
+            }
             accountMapper.updateByPrimaryKey(account);
         }
     }

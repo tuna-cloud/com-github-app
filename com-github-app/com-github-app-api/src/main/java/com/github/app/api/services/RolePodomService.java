@@ -24,6 +24,8 @@ public interface RolePodomService {
 
 	long count();
 
+	List<Role> listAllRole();
+
 	/**
 	 * 对系统某个角色赋予一组权限
 	 *
