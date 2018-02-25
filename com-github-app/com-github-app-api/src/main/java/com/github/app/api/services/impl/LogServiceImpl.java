@@ -11,9 +11,11 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 public class LogServiceImpl implements LogService {
+    private static AtomicInteger logIdRandom = new AtomicInteger();
 
     @Autowired
     private LogMapper logMapper;
@@ -21,7 +23,9 @@ public class LogServiceImpl implements LogService {
     @Override
     public void addLog(Account account, String code, String remark) {
         Log log = new Log();
-        log.setLogId(System.currentTimeMillis()*1000 + System.nanoTime()/1000);
+        log.setLogId(System.currentTimeMillis() * 1000 + logIdRandom.getAndIncrement() % 1000);
+        if(logIdRandom.get() > Integer.MAX_VALUE)
+            logIdRandom.set(0);
         log.setRoleName(account.getRole().getName());
         log.setRoleId(account.getRoleId());
         log.setOpAccount(account.getAccount());

@@ -55,7 +55,7 @@ public class JWTIssueHandler implements UriHandler {
                     new JWTOptions().setExpiresInMinutes(60 * 3L));
             responseSuccess(routingContext, "", token);
         } else {
-            responseFailure(routingContext, "auth failed, account or password error");
+            responseFailure(routingContext, "账号密码错误或账号已关闭");
         }
     }
 }

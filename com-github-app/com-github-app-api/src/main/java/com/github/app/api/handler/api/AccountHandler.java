@@ -7,8 +7,10 @@ import com.github.app.api.handler.UriHandler;
 import com.github.app.api.services.AccountService;
 import com.github.app.api.services.RolePodomService;
 import com.github.app.api.utils.RequestUtils;
+import com.github.app.utils.MD5Utils;
 import io.vertx.core.MultiMap;
 import io.vertx.core.http.HttpMethod;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +30,15 @@ public class AccountHandler implements UriHandler {
 
 	@Override
 	public void registeUriHandler(Router router) {
-		router.post().path("/account").produces(CONTENT_TYPE).blockingHandler(this::saveOrUpdate, false);
+		router.post().path("/account").produces(CONTENT_TYPE).blockingHandler(this::save, false);
 		router.delete().path("/account/:accountId").produces(CONTENT_TYPE).blockingHandler(this::delete, false);
-		router.put().path("/account").produces(CONTENT_TYPE).blockingHandler(this::saveOrUpdate, false);
+		router.put().path("/account").produces(CONTENT_TYPE).blockingHandler(this::update, false);
 		router.put().path("/account/enable").produces(CONTENT_TYPE).blockingHandler(this::enable, false);
 		router.get().path("/account/:accountId").produces(CONTENT_TYPE).blockingHandler(this::queryOne, false);
 		router.get().path("/account").produces(CONTENT_TYPE).blockingHandler(this::query, false);
 		router.get().path("/account/current/login").produces(CONTENT_TYPE).blockingHandler(this::currentLogin, false);
 		router.put().path("/account/resetpwd/:accountId").produces(CONTENT_TYPE).blockingHandler(this::resetPassword, false);
+		router.put().path("/account/editpwd").produces(CONTENT_TYPE).blockingHandler(this::editPassword, false);
 	}
 
 	@Override
@@ -48,6 +51,7 @@ public class AccountHandler implements UriHandler {
 		list.add(new Popedom.Builder().name("*查询所有账号").code("/[a-zA-Z]+/account/" + HttpMethod.GET.name()).build());
 		list.add(new Popedom.Builder().name("*当前登录账号").code("/[a-zA-Z]+/account/current/login/" + HttpMethod.GET.name()).build());
 		list.add(new Popedom.Builder().name("*重置帐号密码").code("/[a-zA-Z]+/account/resetpwd/[0-9]+/" + HttpMethod.PUT.name()).build());
+		list.add(new Popedom.Builder().name("*修改账号密码").code("/[a-zA-Z]+/account/editpwd/" + HttpMethod.PUT.name()).build());
 	}
 
 	public void enable(RoutingContext routingContext) {
@@ -62,7 +66,7 @@ public class AccountHandler implements UriHandler {
 		responseSuccess(routingContext);
 	}
 
-	public void saveOrUpdate(RoutingContext routingContext) {
+	public void save(RoutingContext routingContext) {
 		Account account = routingContext.getBodyAsJson().mapTo(Account.class);
 
 		if (StringUtils.isEmpty(account.getAccount())) {
@@ -76,6 +80,36 @@ public class AccountHandler implements UriHandler {
 		}
 
 		accountService.saveOrUpdate(account);
+		responseSuccess(routingContext);
+	}
+
+	/**
+	 * 不允许修改账号密码状态角色信息
+	 * @param routingContext
+	 */
+	public void update(RoutingContext routingContext) {
+		Account account = routingContext.getBodyAsJson().mapTo(Account.class);
+
+		if (StringUtils.isEmpty(account.getAccount())) {
+			responseFailure(routingContext, "帐号不能为空");
+			return;
+		}
+
+		if (ObjectUtils.isEmpty(account.getRoleId())) {
+			responseFailure(routingContext, "角色不能为空");
+			return;
+		}
+
+		Account dbAccount = accountService.getAccountByAccountOrMobileOrEmail(account.getAccount(), null, null);
+
+		dbAccount.setName(account.getName());
+		dbAccount.setSex(account.getSex());
+		dbAccount.setMobile(account.getMobile());
+		dbAccount.setEmail(account.getEmail());
+		dbAccount.setAddress(account.getAddress());
+		dbAccount.setRemark(account.getRemark());
+
+		accountService.saveOrUpdate(dbAccount);
 		responseSuccess(routingContext);
 	}
 
@@ -101,12 +135,9 @@ public class AccountHandler implements UriHandler {
 		List<Account> list = accountService.findByKeyWord(RequestUtils.getInteger(params, "roleId"), params.get("keyword"), RequestUtils.getInteger(params, "offset"), RequestUtils.getInteger(params, "rows"));
 		long count = accountService.countByKeyWord(RequestUtils.getInteger(params, "roleId"), params.get("keyword"));
 
-		List<Role> roles = rolePodomService.listAllRole();
-
 		Map map = new HashMap();
 		map.put("total", count);
 		map.put("list", list);
-		map.put("roles", roles);
 
 		responseSuccess(routingContext, map);
 	}
@@ -149,6 +180,47 @@ public class AccountHandler implements UriHandler {
 			return;
 		}
 		accountService.resetPassword(Integer.valueOf(accountId));
+		responseSuccess(routingContext);
+	}
+
+	public void editPassword(RoutingContext routingContext) {
+		JsonObject jsonObject = routingContext.getBodyAsJson();
+
+		if(!jsonObject.containsKey("oldPwd")) {
+			responseFailure(routingContext, "oldPwd参数缺失");
+			return;
+		}
+
+		if(!jsonObject.containsKey("newPwd")) {
+			responseFailure(routingContext, "newPwd参数缺失");
+			return;
+		}
+
+		if(!jsonObject.containsKey("newPwdCheck")) {
+			responseFailure(routingContext, "newPwdCheck参数缺失");
+			return;
+		}
+
+		String acc = routingContext.get("account");
+		if (StringUtils.isEmpty(acc)) {
+			responseFailure(routingContext, "未登录");
+			return;
+		}
+
+		Account account = accountService.getAccountByAccountOrMobileOrEmail(acc, null, null);
+
+		if (!MD5Utils.validateMd5WithSalt(jsonObject.getString("oldPwd"), account.getPassword())) {
+			responseFailure(routingContext, "原始密码输入有误");
+			return;
+		}
+
+		if (!jsonObject.getString("newPwd").equals(jsonObject.getString("newPwdCheck"))) {
+			responseFailure(routingContext, "新密码两次输入不一致");
+			return;
+		}
+
+		account.setPassword(jsonObject.getString("newPwd"));
+		accountService.saveOrUpdate(account);
 		responseSuccess(routingContext);
 	}
 }
