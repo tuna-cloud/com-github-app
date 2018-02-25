@@ -98,7 +98,8 @@ public class AuthInterceptor implements UriHandler {
 		String remark = AuthUtils.buildRequestInfo(routingContext);
 		Popedom popedom = PopedomContext.getInstance().match(routingContext.normalisedPath() + "/" + routingContext.request().method().name());
 
-		if (popedom == null) {
+		// 接口未设置权限信息或者登录账号为超级管理员，直接放行
+		if (popedom == null || account.getRoleId() == 1) {
 			logService.addLog(account, AuthUtils.authCode(routingContext), "[Y]" + remark);
 			routingContext.next();
 		    return;
