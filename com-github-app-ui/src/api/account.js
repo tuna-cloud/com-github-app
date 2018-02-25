@@ -26,3 +26,24 @@ export function resetAccountPwdById(id) {
     method: 'put'
   })
 }
+export function saveOrUpdate(account) {
+  return request({
+    url: '/api/account',
+    method: 'post',
+    data: account
+  })
+}
+export function editAccountPwd(params) {
+  return request({
+    url: '/api/account/editpwd',
+    method: 'put',
+    data: params
+  })
+}
+export function updateAccount(account) {
+  return request({
+    url: '/api/account',
+    method: 'put',
+    data: account
+  })
+}
