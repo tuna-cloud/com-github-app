@@ -9,7 +9,7 @@
 		<Property name="EVERY_MAX_FILE_NUM">5000</Property><!-- 日志文件最大个数 -->
 		<Property name="EVERY_FILE_SIZE">10M</Property><!-- 日志切割的最小单位 -->
 		<Property name="DATA_FILE_SIZE">100M</Property><!-- 数据日志切割的最小单位 -->
-		<Property name="OUTPUT_LOG_LEVEL">INFO</Property><!-- 日志输出级别 -->
+		<Property name="OUTPUT_LOG_LEVEL">DEBUG</Property><!-- 日志输出级别 -->
 	</Properties>
 
 	<Appenders>
@@ -64,7 +64,7 @@
 			<Appender-ref ref="ProductLog" />
 		</AsyncLogger>
 
-		<AsyncRoot level="INFO">
+		<AsyncRoot level="${OUTPUT_LOG_LEVEL}">
 			<appender-ref ref="Console" />
 			<Appender-ref ref="RollingFile" />
 			<Appender-ref ref="RollingFileError" />

@@ -1,27 +1,34 @@
 <template>
   <div class="login-container">
     <el-form autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left" label-width="0px"
-      class="card-box login-form">
+             class="card-box login-form">
       <h3 class="title">vue-element-admin</h3>
+
       <el-form-item prop="username">
         <span class="svg-container svg-container_login">
           <svg-icon icon-class="user" />
         </span>
         <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="username" />
       </el-form-item>
+
       <el-form-item prop="password">
-        <span class="svg-container">
-          <svg-icon icon-class="password"></svg-icon>
-        </span>
-        <el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on"
-          placeholder="password"></el-input>
-          <span class="show-pwd" @click="showPwd"><svg-icon icon-class="eye" /></span>
+            <span class="svg-container">
+              <svg-icon icon-class="password"></svg-icon>
+            </span>
+        <el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on" placeholder="password"></el-input>
+        <span class="show-pwd" @click="showPwd"><svg-icon icon-class="eye" /></span>
       </el-form-item>
-      <el-form-item>
-        <el-button type="primary" style="width:100%;" :loading="loading" @click.native.prevent="handleLogin">
-          登录
-        </el-button>
-      </el-form-item>
+
+      <el-row :gutter="5">
+        <el-col :span="8">
+          <img :src="captchaUrl" style="width:100%;height:100%">
+        </el-col>
+        <el-col :span="16">
+          <el-form-item>
+            <el-button type="primary" style="width:100%;" :loading="loading" @click.native.prevent="handleLogin">登录</el-button>
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
   </div>
 </template>
@@ -49,7 +56,9 @@ export default {
     return {
       loginForm: {
         username: '',
-        password: ''
+        password: '',
+        captchaUrl: '',
+        captchaCode: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
