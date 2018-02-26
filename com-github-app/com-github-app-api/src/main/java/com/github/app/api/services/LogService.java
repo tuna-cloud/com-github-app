@@ -9,6 +9,8 @@ public interface LogService {
 
     void addLog(Account account, String code, String remark);
 
+    void addLog(String account, String code, String remark);
+
     void addLog(Log log);
 
     void addLog(List<Log> logs);

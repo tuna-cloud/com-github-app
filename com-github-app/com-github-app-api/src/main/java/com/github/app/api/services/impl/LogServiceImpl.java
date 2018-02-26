@@ -36,6 +36,21 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
+    public void addLog(String account, String code, String remark) {
+        Log log = new Log();
+        log.setLogId(System.currentTimeMillis() * 1000 + logIdRandom.getAndIncrement() % 1000);
+        if(logIdRandom.get() > Integer.MAX_VALUE)
+            logIdRandom.set(0);
+        log.setRoleName(null);
+        log.setRoleId(null);
+        log.setOpAccount(account);
+        log.setOpName(account);
+        log.setCode(code);
+        log.setDescription(remark);
+        addLog(log);
+    }
+
+    @Override
     public void addLog(Log log) {
         logMapper.insert(log);
     }

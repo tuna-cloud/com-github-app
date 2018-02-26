@@ -100,7 +100,11 @@ public class AuthInterceptor implements UriHandler {
 
 		// 接口未设置权限信息或者登录账号为超级管理员，直接放行
 		if (popedom == null || account.getRoleId() == 1) {
-			logService.addLog(account, AuthUtils.authCode(routingContext), "[Y]" + remark);
+			String code = AuthUtils.authCode(routingContext);
+			if (popedom != null) {
+				code = popedom.getName();
+			}
+			logService.addLog(account, code, "[Y]" + remark);
 			routingContext.next();
 		    return;
 		}
