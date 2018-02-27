@@ -1,6 +1,7 @@
 package com.github.app.api.services.impl;
 
 import com.github.app.api.services.SystemOperationService;
+import com.github.app.utils.MD5Utils;
 import com.github.app.utils.ServerEnvConstant;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -139,13 +140,22 @@ public class MySqlOperationServiceImpl implements SystemOperationService {
             File file = files[i];
             JsonObject jsonObject = new JsonObject();
             jsonObject.put("name", file.getName());
-            jsonObject.put("usableSize", file.getUsableSpace());
-            jsonObject.put("totalSize", file.getTotalSpace());
+            jsonObject.put("size", file.length());
             jsonObject.put("createTime", file.lastModified());
+            jsonObject.put("code", MD5Utils.md5WithSalt(file.getName()));
             jsonArray.add(jsonObject);
         }
 
         return new JsonObject().put("list", jsonArray).put("total", files.length);
+    }
+
+    @Override
+    public void deleteSqlFile(String fileName) {
+        String path = System.getenv(ServerEnvConstant.APP_HOME) + File.separator + "data" + File.separator + "backup";
+        File file = new File(path + File.separator + fileName);
+        if (file.exists()) {
+            file.delete();
+        }
     }
 
     /**
@@ -203,11 +213,11 @@ public class MySqlOperationServiceImpl implements SystemOperationService {
         public int compare(File f1, File f2) {
             long diff = f1.lastModified() - f2.lastModified();
             if (diff > 0) {
-                return 1;
+                return -1;
             } else if (diff == 0) {
                 return 0;
             } else {
-                return -1;
+                return 1;
             }
         }
     }

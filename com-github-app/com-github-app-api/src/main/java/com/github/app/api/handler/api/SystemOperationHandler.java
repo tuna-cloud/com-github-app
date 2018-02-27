@@ -27,16 +27,16 @@ public class SystemOperationHandler implements UriHandler {
     public void registeUriHandler(Router router) {
         router.get().path("/sysbackup").produces(CONTENT_TYPE).blockingHandler(this::list, false);
         router.put().path("/sysbackup").produces(CONTENT_TYPE).blockingHandler(this::backup, false);
+        router.delete().path("/sysbackup").produces(CONTENT_TYPE).blockingHandler(this::del, false);
         router.put().path("/sysrestore").produces(CONTENT_TYPE).blockingHandler(this::restore, false);
-        router.get().path("/sysdownload").blockingHandler(this::download, false);
     }
 
     @Override
     public void registePopedom(List<Popedom> list) {
         list.add(new Popedom.Builder().name("*查询备份").code("/[a-zA-Z]+/sysbackup/" + HttpMethod.GET.name()).build());
         list.add(new Popedom.Builder().name("*系统备份").code("/[a-zA-Z]+/sysbackup/" + HttpMethod.PUT.name()).build());
+        list.add(new Popedom.Builder().name("*删除备份").code("/[a-zA-Z]+/sysbackup/" + HttpMethod.DELETE.name()).build());
         list.add(new Popedom.Builder().name("*系统恢复").code("/[a-zA-Z]+/sysrestore/" + HttpMethod.PUT.name()).build());
-        list.add(new Popedom.Builder().name("*下载备份").code("/[a-zA-Z]+/sysdownload/" + HttpMethod.GET.name()).build());
     }
 
     public void list(RoutingContext routingContext) {
@@ -48,6 +48,17 @@ public class SystemOperationHandler implements UriHandler {
     public void backup(RoutingContext routingContext) {
         JsonObject config = ConfigLoader.getServerCfg();
         operationService.backup(config);
+        responseSuccess(routingContext);
+    }
+
+    public void del(RoutingContext routingContext) {
+        List<String> list = routingContext.queryParam("fileName");
+        if(list == null || list.size() < 1) {
+            responseFailure(routingContext, "必须选择一个文件");
+            return;
+        }
+
+        operationService.deleteSqlFile(list.get(0));
         responseSuccess(routingContext);
     }
 
