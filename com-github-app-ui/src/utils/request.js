@@ -20,13 +20,12 @@ service.interceptors.request.use(config => {
   console.log(error) // for debug
   Promise.reject(error)
 })
-
 // respone拦截器
 service.interceptors.response.use(
   response => {
-  /**
-  * code为非0是抛错 可结合自己业务进行修改
-  */
+    /**
+     * code为非0是抛错 可结合自己业务进行修改
+     */
     const res = response.data
     if (res.code !== 0) {
       Message({
