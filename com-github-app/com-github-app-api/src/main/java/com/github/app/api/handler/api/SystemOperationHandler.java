@@ -54,7 +54,7 @@ public class SystemOperationHandler implements UriHandler {
     public void restore(RoutingContext routingContext) {
         List<String> list = routingContext.queryParam("fileName");
         if(list == null || list.size() < 1) {
-            responseFailure(routingContext, "fileName must be filled");
+            responseFailure(routingContext, "必须选择一个文件");
             return;
         }
 
@@ -67,7 +67,7 @@ public class SystemOperationHandler implements UriHandler {
     public void download(RoutingContext routingContext) {
         List<String> list = routingContext.queryParam("fileName");
         if(list == null || list.size() < 1) {
-            responseFailure(routingContext, "fileName must be filled");
+            responseFailure(routingContext, "必须选择一个文件");
             return;
         }
 
