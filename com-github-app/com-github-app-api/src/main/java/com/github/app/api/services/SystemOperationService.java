@@ -1,5 +1,6 @@
 package com.github.app.api.services;
 
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
 public interface SystemOperationService {
@@ -12,4 +13,6 @@ public interface SystemOperationService {
     void backup(JsonObject jsonObject);
 
     void restore(JsonObject jsonObject, String fileName);
+
+    JsonObject list(Integer offset, Integer rows);
 }

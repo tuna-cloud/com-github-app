@@ -2,15 +2,19 @@ package com.github.app.api.services.impl;
 
 import com.github.app.api.services.SystemOperationService;
 import com.github.app.utils.ServerEnvConstant;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.apache.commons.exec.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.Comparator;
 
 @Component
 public class MySqlOperationServiceImpl implements SystemOperationService {
@@ -112,6 +116,38 @@ public class MySqlOperationServiceImpl implements SystemOperationService {
         exeMysqlImport(sqlFileName, commandLine);
     }
 
+    @Override
+    public JsonObject list(Integer offset, Integer rows) {
+        if (ObjectUtils.isEmpty(offset)) {
+            offset = Integer.valueOf(0);
+        }
+
+        if (ObjectUtils.isEmpty(rows)) {
+            rows = Integer.valueOf(20);
+        }
+
+        JsonArray jsonArray = new JsonArray();
+
+        String path = System.getenv(ServerEnvConstant.APP_HOME) + File.separator + "data" + File.separator + "backup";
+
+        File dir = new File(path);
+
+        File[] files = dir.listFiles();
+        Arrays.sort(files, new CompratorByLastModified());
+
+        for(int i = offset; i < files.length && i < offset + rows; i++) {
+            File file = files[i];
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.put("name", file.getName());
+            jsonObject.put("usableSize", file.getUsableSpace());
+            jsonObject.put("totalSize", file.getTotalSpace());
+            jsonObject.put("createTime", file.lastModified());
+            jsonArray.add(jsonObject);
+        }
+
+        return new JsonObject().put("list", jsonArray).put("total", files.length);
+    }
+
     /**
      *
      * @param fileName
@@ -160,5 +196,19 @@ public class MySqlOperationServiceImpl implements SystemOperationService {
         String tmp = uri.substring(uri.indexOf(port) + port.length() + 1);
         tmp = tmp.substring(0, tmp.indexOf("?"));
         return tmp;
+    }
+
+    static class CompratorByLastModified implements Comparator<File> {
+
+        public int compare(File f1, File f2) {
+            long diff = f1.lastModified() - f2.lastModified();
+            if (diff > 0) {
+                return 1;
+            } else if (diff == 0) {
+                return 0;
+            } else {
+                return -1;
+            }
+        }
     }
 }
