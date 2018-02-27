@@ -4,42 +4,46 @@
              class="card-box login-form">
       <h3 class="title">vue-element-admin</h3>
 
-      <el-form-item prop="username">
+      <el-form-item prop="account">
         <span class="svg-container svg-container_login">
           <svg-icon icon-class="user" />
         </span>
-        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="username" />
+        <el-input name="account" type="text" v-model="loginForm.account" autoComplete="on" placeholder="帐号" />
       </el-form-item>
 
       <el-form-item prop="password">
             <span class="svg-container">
               <svg-icon icon-class="password"></svg-icon>
             </span>
-        <el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on" placeholder="password"></el-input>
+        <el-input name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on" placeholder="密码"></el-input>
         <span class="show-pwd" @click="showPwd"><svg-icon icon-class="eye" /></span>
       </el-form-item>
 
       <el-row :gutter="5">
         <el-col :span="8">
-          <img :src="captchaUrl" style="width:100%;height:100%">
+          <img :src="captchaUrl" style="width:100%;height:100%;border-radius:4px;margin-top: 5px;" @click="fetchData">
         </el-col>
         <el-col :span="16">
-          <el-form-item>
-            <el-button type="primary" style="width:100%;" :loading="loading" @click.native.prevent="handleLogin">登录</el-button>
+          <el-form-item prop="validateCode">
+            <el-input name="validateCode" type="text" v-model="loginForm.validateCode" autoComplete="on" placeholder="验证码" />
           </el-form-item>
         </el-col>
       </el-row>
+      <el-form-item>
+        <el-button type="primary" style="width:100%;" :loading="loading" @click.native.prevent="handleLogin">登录</el-button>
+      </el-form-item>
     </el-form>
   </div>
 </template>
 
 <script>
 import { isvalidUsername } from '@/utils/validate'
+import { getCaptcha } from '@/api/login'
 
 export default {
   name: 'login',
   data() {
-    const validateUsername = (rule, value, callback) => {
+    const validateAccount = (rule, value, callback) => {
       if (!isvalidUsername(value)) {
         callback(new Error('请输入正确的用户名'))
       } else {
@@ -53,22 +57,62 @@ export default {
         callback()
       }
     }
+    const validateCode = (rule, value, callback) => {
+      if (value.length !== this.captchaLength) {
+        callback(new Error('验证码长度必须是' + this.captchaLength + '位'))
+      } else {
+        if (this.captchaType === 0) {
+          if (/^[0-9]+$/.test(this.loginForm.validateCode)) {
+            callback()
+          } else {
+            callback(new Error('验证码必须全部为数字'))
+          }
+        } else if (this.captchaType === 1) {
+          if (/^[a-z]+$/.test(this.loginForm.validateCode)) {
+            callback()
+          } else {
+            callback(new Error('验证码必须全部为字母'))
+          }
+        } else if (this.captchaType === 2) {
+          if (/^[a-z0-9]+$/.test(this.loginForm.validateCode)) {
+            callback()
+          } else {
+            callback(new Error('验证码必须由数字和字母组成'))
+          }
+        }
+      }
+    }
     return {
+      captchaUrl: '',
+      captchaLength: 5,
+      captchaType: 1,
       loginForm: {
-        username: '',
+        account: '',
         password: '',
-        captchaUrl: '',
+        validateCode: '',
         captchaCode: ''
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePass }]
+        account: [{ required: true, trigger: 'blur', validator: validateAccount }],
+        password: [{ required: true, trigger: 'blur', validator: validatePass }],
+        validateCode: [{ required: true, trigger: 'blur', validator: validateCode }]
       },
       loading: false,
       pwdType: 'password'
     }
   },
+  mounted() {
+    this.fetchData()
+  },
   methods: {
+    fetchData() {
+      getCaptcha().then(rep => {
+        this.captchaUrl = process.env.BASE_API + rep.data.captchaUrl
+        this.loginForm.captchaCode = rep.data.captchaCode
+        this.captchaLength = rep.data.captchaLength
+        this.captchaType = rep.data.captchaType
+      })
+    },
     showPwd() {
       if (this.pwdType === 'password') {
         this.pwdType = ''

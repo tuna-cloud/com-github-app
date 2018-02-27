@@ -1,13 +1,17 @@
 import request from '@/utils/request'
 
-export function login(account, password) {
+export function login(params) {
   return request({
     url: '/open/auth',
     method: 'post',
-    data: {
-      account,
-      password
-    }
+    data: params
+  })
+}
+
+export function getCaptcha() {
+  return request({
+    url: '/open/auth',
+    method: 'get'
   })
 }
 
