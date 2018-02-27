@@ -32,7 +32,10 @@ public class JWTIssueHandler implements UriHandler {
     @Autowired
     private LogService logService;
 
-    private CaptchaFactory captchaFactory = new CaptchaFactory(2, 6);
+    private static final int CAPTCHA_LENGTH = 5;
+    private static final int CAPTCHA_TYPE = 1;
+
+    private CaptchaFactory captchaFactory = new CaptchaFactory(CAPTCHA_TYPE, CAPTCHA_LENGTH);
 
     private Cage cage = new GCage();
 
@@ -55,6 +58,14 @@ public class JWTIssueHandler implements UriHandler {
         } catch (Exception e) {
             responseFailure(routingContext, e);
         }
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.put("captchaUrl", captchaUrl);
+        jsonObject.put("captchaCode", md5);
+        jsonObject.put("captchaLength", CAPTCHA_LENGTH);
+        jsonObject.put("captchaType", CAPTCHA_TYPE);
+
+        responseSuccess(routingContext, jsonObject);
     }
 
     public void issueJWTToken(RoutingContext routingContext) {
@@ -63,13 +74,42 @@ public class JWTIssueHandler implements UriHandler {
 
         String account = jsonObject.getString("account");
         String password = jsonObject.getString("password");
+        String validateCode = jsonObject.getString("validateCode");
+        String captchaCode = jsonObject.getString("captchaCode");
+
+        if (StringUtils.isEmpty(validateCode)) {
+            responseFailure(routingContext, "验证码必须填写");
+            return;
+        }
+
+        if (StringUtils.isEmpty(captchaCode)) {
+            responseFailure(routingContext, "验证码参数缺失");
+            return;
+        }
 
         if (StringUtils.isEmpty(account)) {
             responseFailure(routingContext, "帐号必须填写");
             return;
         }
+
         if (StringUtils.isEmpty(password)) {
             responseFailure(routingContext, "密码必须填写");
+            return;
+        }
+
+        File file = new File(ServerEnvConstant.getAppCaptchaTmpPath() + File.separator + captchaCode + ".jpg");
+        if (!file.exists()) {
+            responseFailure(routingContext, "验证码输入有误1");
+            return;
+        }
+
+        if (System.currentTimeMillis() - file.lastModified() > 30 * 1000) {
+            responseFailure(routingContext, "验证码已失效");
+            return;
+        }
+
+        if (!MD5Utils.validateMd5WithSalt(validateCode, captchaCode)) {
+            responseFailure(routingContext, "验证码输入有误");
             return;
         }
 

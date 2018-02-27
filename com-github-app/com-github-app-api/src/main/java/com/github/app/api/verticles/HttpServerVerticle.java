@@ -76,6 +76,25 @@ public class HttpServerVerticle extends AbstractVerticle implements ApplicationC
                 bindUri(router);
             }
         });
+
+        /**
+         * 定期清理验证码中过期文件
+         */
+        vertx.setPeriodic(30 * 1000, ar -> {
+            vertx.executeBlocking(future -> {
+                File file = new File(ServerEnvConstant.getAppCaptchaTmpPath());
+                String[] fileNames = file.list();
+                if (fileNames != null && fileNames.length > 0) {
+                    for (String name : fileNames) {
+                        File img = new File(ServerEnvConstant.getAppCaptchaTmpPath() + File.separator + name);
+                        if (System.currentTimeMillis() - img.lastModified() > 60 * 1000) {
+                            img.delete();
+                        }
+                    }
+                }
+            }, asyncResult -> {
+            });
+        });
     }
 
     @Override
