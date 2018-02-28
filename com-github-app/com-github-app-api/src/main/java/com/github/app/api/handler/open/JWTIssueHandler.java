@@ -112,15 +112,6 @@ public class JWTIssueHandler implements UriHandler {
             String token = provider.generateToken(new JsonObject().put("account", account),
                     new JWTOptions().setExpiresInMinutes(60 * 3L));
             logService.addLog(account, "登录成功", "[Y]-->token:" + token + "");
-            /**
-             * 登记session 信息
-             */
-            if (!ObjectUtils.isEmpty(routingContext.session().get(SessionConstant.SESSION_ACCOUNT))) {
-                routingContext.session().put(SessionConstant.SESSION_ACCOUNT, JsonObject.mapFrom(acc).toBuffer());
-                routingContext.session().put(SessionConstant.SESSION_FIRST_ACTIVE_TIME, System.currentTimeMillis());
-                routingContext.session().put(SessionConstant.SESSION_IP_ADDRESS, routingContext.request().remoteAddress().toString());
-            }
-
             responseSuccess(routingContext, "", token);
         } else {
             logService.addLog(account, "登录失败", String.format("帐号:%s,密码:%s,IP:", account, password, routingContext.request().remoteAddress().toString()));
