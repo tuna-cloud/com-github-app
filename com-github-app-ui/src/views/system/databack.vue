@@ -41,6 +41,7 @@
     </el-table>
 
     <base-pagination :total="total" v-on:change="fetchData" ref="pageinfo"></base-pagination>
+    <base-upload-file ref="uploadfile"></base-upload-file>
   </div>
 </template>
 
@@ -51,10 +52,11 @@
   import { deleteSqlFile } from '@/api/sysdatabackup'
   import { formatTimeUs } from '@/utils/index'
   import BasePagination from '../base/BasePagination'
+  import BaseUploadFile from '../base/BaseUploadFile'
   import { Message, MessageBox } from 'element-ui'
 
   export default {
-    components: { BasePagination },
+    components: { BasePagination, BaseUploadFile },
     data() {
       return {
         list: [],
@@ -76,7 +78,7 @@
         })
       },
       uploadSqlFile() {
-        formatTimeUs()
+        this.$refs.uploadfile.beginUpload()
       },
       formattimeStr(cellValue) {
         return formatTimeUs(cellValue)
