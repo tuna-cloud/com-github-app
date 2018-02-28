@@ -8,6 +8,7 @@ import org.junit.Test;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.regex.Pattern;
 
 public class CageTest {
 
@@ -32,5 +33,18 @@ public class CageTest {
                 os.close();
             }
         }
+    }
+
+    @Test
+    public void test1() {
+        String content1 = "/api/123";
+        String content2 = "/open/123";
+        String content3 = "/static/123";
+
+        String pattern = "^(?!/static).*";
+
+        System.out.println(Pattern.matches(pattern, content1));
+        System.out.println(Pattern.matches(pattern, content2));
+        System.out.println(Pattern.matches(pattern, content3));
     }
 }

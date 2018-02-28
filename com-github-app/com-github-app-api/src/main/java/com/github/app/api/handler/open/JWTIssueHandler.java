@@ -8,6 +8,7 @@ import com.github.app.utils.MD5Utils;
 import com.github.app.utils.ServerEnvConstant;
 import com.github.cage.Cage;
 import com.github.cage.GCage;
+import io.vertx.core.buffer.Buffer;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.KeyStoreOptions;
 import io.vertx.ext.auth.jwt.JWTAuth;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -42,30 +44,29 @@ public class JWTIssueHandler implements UriHandler {
     @Override
     public void registeUriHandler(Router router) {
         router.post().path("/auth").produces(CONTENT_TYPE).blockingHandler(this::issueJWTToken, false);
-        router.get().path("/auth").produces(CONTENT_TYPE).blockingHandler(this::captchaCode, false);
+        router.get().path("/auth").blockingHandler(this::captchaCode, false);
     }
 
     public void captchaCode(RoutingContext routingContext) {
-        String path = ServerEnvConstant.getAppCaptchaTmpPath();
+        routingContext.response().putHeader("Pragma", "No-cache");
+        routingContext.response().putHeader("Cache-Control", "no-cache");
+        routingContext.response().putHeader("Expires", "0");
+        routingContext.response().putHeader("content-type", "image/jpeg");
+
         String captchaCode = captchaFactory.next();
-        String md5 = MD5Utils.md5WithSalt(captchaCode);
-        String captchaUrl = "/static/tmp/" + md5 + ".jpg";
 
         try {
-            OutputStream os = new FileOutputStream(path + File.separator + md5 + ".jpg", false);
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
             cage.draw(captchaCode, os);
+
+            Buffer buffer = Buffer.buffer();
+            buffer.appendBytes(os.toByteArray());
             os.close();
+            routingContext.session().put("captchaCode", captchaCode);
+            routingContext.response().end(buffer);
         } catch (Exception e) {
             responseFailure(routingContext, e);
         }
-
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.put("captchaUrl", captchaUrl);
-        jsonObject.put("captchaCode", md5);
-        jsonObject.put("captchaLength", CAPTCHA_LENGTH);
-        jsonObject.put("captchaType", CAPTCHA_TYPE);
-
-        responseSuccess(routingContext, jsonObject);
     }
 
     public void issueJWTToken(RoutingContext routingContext) {
@@ -75,15 +76,9 @@ public class JWTIssueHandler implements UriHandler {
         String account = jsonObject.getString("account");
         String password = jsonObject.getString("password");
         String validateCode = jsonObject.getString("validateCode");
-        String captchaCode = jsonObject.getString("captchaCode");
 
         if (StringUtils.isEmpty(validateCode)) {
             responseFailure(routingContext, "验证码必须填写");
-            return;
-        }
-
-        if (StringUtils.isEmpty(captchaCode)) {
-            responseFailure(routingContext, "验证码参数缺失");
             return;
         }
 
@@ -97,18 +92,7 @@ public class JWTIssueHandler implements UriHandler {
             return;
         }
 
-        File file = new File(ServerEnvConstant.getAppCaptchaTmpPath() + File.separator + captchaCode + ".jpg");
-        if (!file.exists()) {
-            responseFailure(routingContext, "验证码输入有误1");
-            return;
-        }
-
-        if (System.currentTimeMillis() - file.lastModified() > 30 * 1000) {
-            responseFailure(routingContext, "验证码已失效");
-            return;
-        }
-
-        if (!MD5Utils.validateMd5WithSalt(validateCode, captchaCode)) {
+        if (!validateCode.equalsIgnoreCase(routingContext.session().get("captchaCode"))) {
             responseFailure(routingContext, "验证码输入有误");
             return;
         }

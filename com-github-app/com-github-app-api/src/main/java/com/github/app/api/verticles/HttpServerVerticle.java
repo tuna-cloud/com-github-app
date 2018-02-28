@@ -13,6 +13,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.net.JksOptions;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.*;
+import io.vertx.ext.web.sstore.LocalSessionStore;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.BeansException;
@@ -73,28 +74,10 @@ public class HttpServerVerticle extends AbstractVerticle implements ApplicationC
                 logger.error("", asyncResult.cause());
                 vertx.close();
             } else {
-                bindUri(router);
+                initRouter(router);
             }
         });
 
-        /**
-         * 定期清理验证码中过期文件
-         */
-        vertx.setPeriodic(30 * 1000, ar -> {
-            vertx.executeBlocking(future -> {
-                File file = new File(ServerEnvConstant.getAppCaptchaTmpPath());
-                String[] fileNames = file.list();
-                if (fileNames != null && fileNames.length > 0) {
-                    for (String name : fileNames) {
-                        File img = new File(ServerEnvConstant.getAppCaptchaTmpPath() + File.separator + name);
-                        if (System.currentTimeMillis() - img.lastModified() > 60 * 1000) {
-                            img.delete();
-                        }
-                    }
-                }
-            }, asyncResult -> {
-            });
-        });
     }
 
     @Override
@@ -102,21 +85,33 @@ public class HttpServerVerticle extends AbstractVerticle implements ApplicationC
         super.stop();
     }
 
-    private void bindUri(Router rootRouter) {
-        rootRouter.route().handler(CorsHandler.create("*")
+    private void initRouter(Router rootRouter) {
+        rootRouter.route().handler(CorsHandler.create("http://localhost:9528")
                 .allowedMethod(HttpMethod.GET)
                 .allowedMethod(HttpMethod.POST)
                 .allowedMethod(HttpMethod.DELETE)
                 .allowedMethod(HttpMethod.PUT)
                 .allowedMethod(HttpMethod.OPTIONS)
+                .allowCredentials(true)
                 .allowedHeader("X-Token")
+                .allowedHeader("Cookie")
+                .allowedHeader("Accept")
+                .allowedHeader("Accept-Encoding")
+                .allowedHeader("Accept-Language")
+                .allowedHeader("Connection")
+                .allowedHeader("Host")
+                .allowedHeader("Referer")
                 .allowedHeader("Content-Type"));
 
-        rootRouter.route("/*").handler(LoggerHandler.create());
-        rootRouter.route("/*").handler(TimeoutHandler.create(10000));
-        rootRouter.route("/*").handler(ResponseTimeHandler.create());
-        rootRouter.route("/*").handler(ResponseContentTypeHandler.create());
-        rootRouter.route("/*").handler(BodyHandler.create());
+        CookieHandler cookieHandler = CookieHandler.create();
+        SessionHandler sessionHandler = SessionHandler.create(LocalSessionStore.create(vertx, "application.session.map", 30*1000));
+
+        rootRouter.route().handler(LoggerHandler.create());
+        rootRouter.route().handler(TimeoutHandler.create(8000));
+        rootRouter.route().handler(ResponseTimeHandler.create());
+        rootRouter.route().handler(ResponseContentTypeHandler.create());
+        rootRouter.route().handler(BodyHandler.create());
+
         loadHandlers(rootRouter, "com.github.app.api.handler.common");
         rootRouter.route("/static/*").blockingHandler(StaticHandler.create()
                 .setAllowRootFileSystemAccess(true)
@@ -126,6 +121,8 @@ public class HttpServerVerticle extends AbstractVerticle implements ApplicationC
          * apiRouter will validate the token in the global interceptor
          */
         Router apiRouter = Router.router(vertx);
+        apiRouter.route().handler(cookieHandler);
+        apiRouter.route().handler(sessionHandler);
         loadHandlers(apiRouter, "com.github.app.api.handler.interceptor");
         loadHandlers(apiRouter, "com.github.app.api.handler.api");
         rootRouter.mountSubRouter("/api", apiRouter);
@@ -134,6 +131,8 @@ public class HttpServerVerticle extends AbstractVerticle implements ApplicationC
          * openRouter is fully opened api, have no interceptor to validate token and other user info
          */
         Router openRouter = Router.router(vertx);
+        openRouter.route().handler(cookieHandler);
+        openRouter.route().handler(sessionHandler);
         loadHandlers(openRouter, "com.github.app.api.handler.open");
         rootRouter.mountSubRouter("/open", openRouter);
     }
