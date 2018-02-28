@@ -40,11 +40,14 @@ public class CageTest {
         String content1 = "/api/123";
         String content2 = "/open/123";
         String content3 = "/static/123";
+        String content4 = "https://localhost:9258";
 
         String pattern = "^(?!/static).*";
+        String pattern1 = "http.*";
 
         System.out.println(Pattern.matches(pattern, content1));
         System.out.println(Pattern.matches(pattern, content2));
         System.out.println(Pattern.matches(pattern, content3));
+        System.out.println(Pattern.matches(pattern1, content4));
     }
 }

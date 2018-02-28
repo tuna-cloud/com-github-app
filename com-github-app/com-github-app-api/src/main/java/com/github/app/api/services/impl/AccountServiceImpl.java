@@ -19,24 +19,24 @@ public class AccountServiceImpl implements AccountService {
     private AccountMapper accountMapper;
 
     @Override
-    public boolean authLogin(String account, String password) {
+    public Account authLogin(String account, String password) {
         if(StringUtils.isEmpty(account))
-            return false;
+            return null;
         if(StringUtils.isEmpty(password))
-            return false;
+            return null;
 
         AccountExample example = new AccountExample();
         example.createCriteria().andAccountEqualTo(account).andIsEnableEqualTo((short) 1);
         Account acc = accountMapper.selectOneByExample(example);
 
         if(acc == null)
-            return false;
+            return null;
 
         if (!MD5Utils.validateMd5WithSalt(password, acc.getPassword())) {
-            return false;
+            return null;
         }
 
-        return true;
+        return acc;
     }
 
     @Override

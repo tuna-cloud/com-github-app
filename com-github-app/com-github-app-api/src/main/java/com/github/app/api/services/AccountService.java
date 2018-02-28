@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface AccountService {
 
-    boolean authLogin(String account, String password);
+    Account authLogin(String account, String password);
 
     Account getAccountByAccountId(Integer accountId);
 

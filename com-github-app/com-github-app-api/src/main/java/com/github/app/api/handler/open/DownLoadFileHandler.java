@@ -1,11 +1,13 @@
 package com.github.app.api.handler.open;
 
 import com.github.app.api.handler.UriHandler;
+import com.github.app.api.utils.SessionConstant;
 import com.github.app.utils.MD5Utils;
 import com.github.app.utils.ServerEnvConstant;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 
 import java.io.File;
 import java.util.List;
@@ -23,6 +25,11 @@ public class DownLoadFileHandler implements UriHandler {
      * @param routingContext
      */
     public void downloadFile(RoutingContext routingContext) {
+        if (!ObjectUtils.isEmpty(routingContext.session().get(SessionConstant.SESSION_ACCOUNT))) {
+            responseFailure(routingContext, "not login, can't download this file");
+            return;
+        }
+
         List<String> list = routingContext.queryParam("fileName");
         if(list == null || list.size() < 1) {
             responseFailure(routingContext, "paremeter missing");

@@ -9,6 +9,7 @@ import com.github.app.api.services.RolePodomService;
 import com.github.app.api.utils.AuthUtils;
 import com.github.app.api.utils.ConfigLoader;
 import com.github.app.api.utils.PopedomContext;
+import com.github.app.api.utils.SessionConstant;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.KeyStoreOptions;
 import io.vertx.ext.auth.User;
@@ -20,6 +21,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 @Component
@@ -73,6 +75,15 @@ public class AuthInterceptor implements UriHandler {
 					if(acc == null || acc.getIsEnable() == 0) {
 						response(routingContext, CODE_JWT_TOKEN_INVALIDATE, "帐号已停用");
 						return;
+					}
+
+					/**
+					 * 登记session 信息
+					 */
+					if (!ObjectUtils.isEmpty(routingContext.session().get(SessionConstant.SESSION_ACCOUNT))) {
+						routingContext.session().put(SessionConstant.SESSION_ACCOUNT, JsonObject.mapFrom(acc).toBuffer());
+						routingContext.session().put(SessionConstant.SESSION_FIRST_ACTIVE_TIME, System.currentTimeMillis());
+						routingContext.session().put(SessionConstant.SESSION_IP_ADDRESS, routingContext.request().remoteAddress().toString());
 					}
 
 					routingContext.put("account", account);

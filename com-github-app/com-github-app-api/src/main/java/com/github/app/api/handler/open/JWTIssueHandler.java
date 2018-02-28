@@ -1,11 +1,11 @@
 package com.github.app.api.handler.open;
 
+import com.github.app.api.dao.domain.Account;
 import com.github.app.api.handler.UriHandler;
 import com.github.app.api.services.AccountService;
 import com.github.app.api.services.LogService;
 import com.github.app.api.utils.CaptchaFactory;
-import com.github.app.utils.MD5Utils;
-import com.github.app.utils.ServerEnvConstant;
+import com.github.app.api.utils.SessionConstant;
 import com.github.cage.Cage;
 import com.github.cage.GCage;
 import io.vertx.core.buffer.Buffer;
@@ -18,12 +18,10 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 
 @Component
 public class JWTIssueHandler implements UriHandler {
@@ -36,6 +34,7 @@ public class JWTIssueHandler implements UriHandler {
 
     private static final int CAPTCHA_LENGTH = 5;
     private static final int CAPTCHA_TYPE = 1;
+    private static final String CAPTCHA_CODE = "captchaCode";
 
     private CaptchaFactory captchaFactory = new CaptchaFactory(CAPTCHA_TYPE, CAPTCHA_LENGTH);
 
@@ -62,7 +61,7 @@ public class JWTIssueHandler implements UriHandler {
             Buffer buffer = Buffer.buffer();
             buffer.appendBytes(os.toByteArray());
             os.close();
-            routingContext.session().put("captchaCode", captchaCode);
+            routingContext.session().put(CAPTCHA_CODE, captchaCode);
             routingContext.response().end(buffer);
         } catch (Exception e) {
             responseFailure(routingContext, e);
@@ -92,10 +91,12 @@ public class JWTIssueHandler implements UriHandler {
             return;
         }
 
-        if (!validateCode.equalsIgnoreCase(routingContext.session().get("captchaCode"))) {
+        if (!validateCode.equalsIgnoreCase(routingContext.session().get(CAPTCHA_CODE))) {
             responseFailure(routingContext, "验证码输入有误");
             return;
         }
+
+        routingContext.session().remove(CAPTCHA_CODE);
 
         if (config == null) {
             JsonObject sysConfig = routingContext.vertx().getOrCreateContext().config().getJsonObject("jwt.keystore");
@@ -105,11 +106,21 @@ public class JWTIssueHandler implements UriHandler {
                             .setPassword(sysConfig.getString("password")));
         }
 
-        if (accountService.authLogin(account, password)) {
+        Account acc = accountService.authLogin(account, password);
+        if (!ObjectUtils.isEmpty(acc)) {
             JWTAuth provider = JWTAuth.create(routingContext.vertx(), config);
             String token = provider.generateToken(new JsonObject().put("account", account),
                     new JWTOptions().setExpiresInMinutes(60 * 3L));
             logService.addLog(account, "登录成功", "[Y]-->token:" + token + "");
+            /**
+             * 登记session 信息
+             */
+            if (!ObjectUtils.isEmpty(routingContext.session().get(SessionConstant.SESSION_ACCOUNT))) {
+                routingContext.session().put(SessionConstant.SESSION_ACCOUNT, JsonObject.mapFrom(acc).toBuffer());
+                routingContext.session().put(SessionConstant.SESSION_FIRST_ACTIVE_TIME, System.currentTimeMillis());
+                routingContext.session().put(SessionConstant.SESSION_IP_ADDRESS, routingContext.request().remoteAddress().toString());
+            }
+
             responseSuccess(routingContext, "", token);
         } else {
             logService.addLog(account, "登录失败", String.format("帐号:%s,密码:%s,IP:", account, password, routingContext.request().remoteAddress().toString()));

@@ -86,7 +86,7 @@ public class HttpServerVerticle extends AbstractVerticle implements ApplicationC
     }
 
     private void initRouter(Router rootRouter) {
-        rootRouter.route().handler(CorsHandler.create("http://localhost:9528")
+        rootRouter.route().handler(CorsHandler.create(".*")
                 .allowedMethod(HttpMethod.GET)
                 .allowedMethod(HttpMethod.POST)
                 .allowedMethod(HttpMethod.DELETE)
@@ -101,10 +101,14 @@ public class HttpServerVerticle extends AbstractVerticle implements ApplicationC
                 .allowedHeader("Connection")
                 .allowedHeader("Host")
                 .allowedHeader("Referer")
+                .allowedHeader("Origin")
                 .allowedHeader("Content-Type"));
 
         CookieHandler cookieHandler = CookieHandler.create();
-        SessionHandler sessionHandler = SessionHandler.create(LocalSessionStore.create(vertx, "application.session.map", 30*1000));
+        SessionHandler sessionHandler = SessionHandler.create(LocalSessionStore.create(vertx, "application.session.map", 30*60*1000));
+
+        rootRouter.route().pathRegex("^(?!/static).*").handler(cookieHandler);
+        rootRouter.route().pathRegex("^(?!/static).*").handler(sessionHandler);
 
         rootRouter.route().handler(LoggerHandler.create());
         rootRouter.route().handler(TimeoutHandler.create(8000));
@@ -121,8 +125,6 @@ public class HttpServerVerticle extends AbstractVerticle implements ApplicationC
          * apiRouter will validate the token in the global interceptor
          */
         Router apiRouter = Router.router(vertx);
-        apiRouter.route().handler(cookieHandler);
-        apiRouter.route().handler(sessionHandler);
         loadHandlers(apiRouter, "com.github.app.api.handler.interceptor");
         loadHandlers(apiRouter, "com.github.app.api.handler.api");
         rootRouter.mountSubRouter("/api", apiRouter);
@@ -131,8 +133,6 @@ public class HttpServerVerticle extends AbstractVerticle implements ApplicationC
          * openRouter is fully opened api, have no interceptor to validate token and other user info
          */
         Router openRouter = Router.router(vertx);
-        openRouter.route().handler(cookieHandler);
-        openRouter.route().handler(sessionHandler);
         loadHandlers(openRouter, "com.github.app.api.handler.open");
         rootRouter.mountSubRouter("/open", openRouter);
     }
