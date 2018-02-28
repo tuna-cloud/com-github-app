@@ -21,7 +21,7 @@
 
       <el-row :gutter="5">
         <el-col :span="8">
-          <img :src="captchaUrl" style="width:100%;height:100%;border-radius:4px;margin-top: 5px;" @click="fetchData">
+          <img :src="captchaUrl" style="width:100%;height:100%;border-radius:4px;margin-top: 5px;" @click="refreshCaptcha">
         </el-col>
         <el-col :span="16">
           <el-form-item prop="validateCode">
@@ -38,7 +38,6 @@
 
 <script>
 import { isvalidUsername } from '@/utils/validate'
-import { getCaptcha } from '@/api/login'
 
 export default {
   name: 'login',
@@ -89,8 +88,7 @@ export default {
       loginForm: {
         account: '',
         password: '',
-        validateCode: '',
-        captchaCode: ''
+        validateCode: ''
       },
       loginRules: {
         account: [{ required: true, trigger: 'blur', validator: validateAccount }],
@@ -102,23 +100,18 @@ export default {
     }
   },
   mounted() {
-    this.fetchData()
+    this.refreshCaptcha()
   },
   methods: {
-    fetchData() {
-      getCaptcha().then(rep => {
-        this.captchaUrl = process.env.BASE_API + rep.data.captchaUrl
-        this.loginForm.captchaCode = rep.data.captchaCode
-        this.captchaLength = rep.data.captchaLength
-        this.captchaType = rep.data.captchaType
-      })
-    },
     showPwd() {
       if (this.pwdType === 'password') {
         this.pwdType = ''
       } else {
         this.pwdType = 'password'
       }
+    },
+    refreshCaptcha() {
+      this.captchaUrl = process.env.BASE_API + '/open/auth?' + Math.random()
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
@@ -129,9 +122,10 @@ export default {
             this.$router.push({ path: '/' })
           }).catch(() => {
             this.loading = false
+            this.refreshCaptcha()
+            this.loginForm.validateCode = ''
           })
         } else {
-          console.log('error submit!!')
           return false
         }
       })

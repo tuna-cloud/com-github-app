@@ -8,13 +8,6 @@ export function login(params) {
   })
 }
 
-export function getCaptcha() {
-  return request({
-    url: '/open/auth',
-    method: 'get'
-  })
-}
-
 export function getInfo() {
   return request({
     url: '/api/account/current/login',
