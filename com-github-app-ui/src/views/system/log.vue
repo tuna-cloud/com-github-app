@@ -64,6 +64,7 @@
   import { deleteAllLog } from '@/api/log'
   import { formatTimeUs } from '@/utils/index'
   import BasePagination from '../base/BasePagination'
+  import { MessageBox } from 'element-ui'
 
   export default {
     components: { BasePagination },
@@ -126,8 +127,14 @@
         return formatTimeUs(cellValue)
       },
       deleteLog() {
-        deleteAllLog().then(response => {
-          this.fetchData()
+        MessageBox.confirm('确认要清除全部日志？', '提示', {
+          confirmButtonText: '继续',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          deleteAllLog().then(response => {
+            this.fetchData()
+          })
         })
       }
     }

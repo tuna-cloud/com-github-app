@@ -23,7 +23,7 @@
       </el-table-column>
       <el-table-column label="已用空间(字节)" align="center">
         <template slot-scope="scope">
-          {{scope.row.size/1024}} Kb
+          {{formatFileSize(scope.row.size/1024)}} Kb
         </template>
       </el-table-column>
       <el-table-column label="时间" align="center">
@@ -41,7 +41,7 @@
     </el-table>
 
     <base-pagination :total="total" v-on:change="fetchData" ref="pageinfo"></base-pagination>
-    <base-upload-file ref="uploadfile"></base-upload-file>
+    <base-upload-file :uploadUrl="uploadUrl" v-on:onClose="fetchData" :extensions="fileType" ref="uploadfile"></base-upload-file>
   </div>
 </template>
 
@@ -59,6 +59,8 @@
     components: { BasePagination, BaseUploadFile },
     data() {
       return {
+        fileType: 'sql',
+        uploadUrl: '',
         list: [],
         listLoading: true,
         total: 0
@@ -66,8 +68,12 @@
     },
     mounted() {
       this.fetchData()
+      this.uploadUrl = process.env.BASE_API + '/api/sysbackup'
     },
     methods: {
+      formatFileSize(size) {
+        return Math.round(size * 100) / 100
+      },
       fetchData() {
         this.listLoading = true
         var params = this.$refs.pageinfo.getPageParam
