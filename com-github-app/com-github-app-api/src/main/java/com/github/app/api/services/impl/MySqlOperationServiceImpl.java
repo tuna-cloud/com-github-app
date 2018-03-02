@@ -6,6 +6,7 @@ import com.github.app.utils.ServerEnvConstant;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.apache.commons.exec.*;
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
@@ -14,8 +15,7 @@ import org.springframework.util.ObjectUtils;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.*;
 
 @Component
 public class MySqlOperationServiceImpl implements SystemOperationService {
@@ -133,11 +133,11 @@ public class MySqlOperationServiceImpl implements SystemOperationService {
 
         File dir = new File(path);
 
-        File[] files = dir.listFiles();
-        Arrays.sort(files, new CompratorByLastModified());
+        LinkedList<File> files = (LinkedList<File>) FileUtils.listFiles(dir, null, true);
+        Collections.sort(files, new CompratorByLastModified());
 
-        for(int i = offset; i < files.length && i < offset + rows; i++) {
-            File file = files[i];
+        for(int i = offset; i < files.size() && i < offset + rows; i++) {
+            File file = files.get(i);
             JsonObject jsonObject = new JsonObject();
             jsonObject.put("name", file.getName());
             jsonObject.put("size", file.length());
@@ -146,7 +146,7 @@ public class MySqlOperationServiceImpl implements SystemOperationService {
             jsonArray.add(jsonObject);
         }
 
-        return new JsonObject().put("list", jsonArray).put("total", files.length);
+        return new JsonObject().put("list", jsonArray).put("total", files.size());
     }
 
     @Override
