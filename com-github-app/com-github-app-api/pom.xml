@@ -35,6 +35,11 @@
             <version>${vertx.version}</version>
         </dependency>
         <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-mail-client</artifactId>
+            <version>${vertx.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>4.3.5.RELEASE</version>
