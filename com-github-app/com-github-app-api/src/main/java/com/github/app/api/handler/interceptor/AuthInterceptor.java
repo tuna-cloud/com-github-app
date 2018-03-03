@@ -82,6 +82,7 @@ public class AuthInterceptor implements UriHandler {
 					 */
 					if (!ObjectUtils.isEmpty(routingContext.session().get(SessionConstant.SESSION_ACCOUNT))) {
 						routingContext.session().put(SessionConstant.SESSION_ACCOUNT, account);
+						routingContext.session().put(SessionConstant.SESSION_ROLE_NAME, acc.getRole().getName());
 						routingContext.session().put(SessionConstant.SESSION_FIRST_ACTIVE_TIME, System.currentTimeMillis());
 						routingContext.session().put(SessionConstant.SESSION_IP_ADDRESS, routingContext.request().remoteAddress().toString());
 					}

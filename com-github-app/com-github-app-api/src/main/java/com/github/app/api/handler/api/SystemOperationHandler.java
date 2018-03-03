@@ -39,11 +39,11 @@ public class SystemOperationHandler implements UriHandler {
 
 	@Override
 	public void registePopedom(List<Popedom> list) {
-		list.add(new Popedom.Builder().name("*查询备份").code("/[a-zA-Z]+/sysbackup/" + HttpMethod.GET.name()).build());
-		list.add(new Popedom.Builder().name("*上传备份").code("/[a-zA-Z]+/sysbackup/" + HttpMethod.POST.name()).build());
-		list.add(new Popedom.Builder().name("*系统备份").code("/[a-zA-Z]+/sysbackup/" + HttpMethod.PUT.name()).build());
-		list.add(new Popedom.Builder().name("*删除备份").code("/[a-zA-Z]+/sysbackup/" + HttpMethod.DELETE.name()).build());
-		list.add(new Popedom.Builder().name("*系统恢复").code("/[a-zA-Z]+/sysrestore/" + HttpMethod.PUT.name()).build());
+		list.add(new Popedom.Builder().name("查询备份").remark("查询系统中的数据库备份文件").code("/.+/sysbackup/" + HttpMethod.GET.name()).build());
+		list.add(new Popedom.Builder().name("上传备份").remark("从本地电脑上传备份文件到服务器").code("/.+/sysbackup/" + HttpMethod.POST.name()).build());
+		list.add(new Popedom.Builder().name("系统备份").remark("执行一次服务器数据库备份").code("/.+/sysbackup/" + HttpMethod.PUT.name()).build());
+		list.add(new Popedom.Builder().name("删除备份").remark("删除系统中的某一个数据库备份文件").code("/.+/sysbackup/" + HttpMethod.DELETE.name()).build());
+		list.add(new Popedom.Builder().name("系统恢复").remark("恢复某一个备份文件到数据库中").code("/.+/sysrestore/" + HttpMethod.PUT.name()).build());
 	}
 
 	public void uploadFile(RoutingContext routingContext) {

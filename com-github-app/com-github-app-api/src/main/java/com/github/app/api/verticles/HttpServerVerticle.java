@@ -26,6 +26,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.github.app.api.utils.SessionConstant.SESSION_STORE_MAP;
 import static org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_SINGLETON;
 
 @Component
@@ -105,7 +106,7 @@ public class HttpServerVerticle extends AbstractVerticle implements ApplicationC
                 .allowedHeader("Content-Type"));
 
         CookieHandler cookieHandler = CookieHandler.create();
-        SessionHandler sessionHandler = SessionHandler.create(LocalSessionStore.create(vertx, "application.session.map", 30*60*1000));
+        SessionHandler sessionHandler = SessionHandler.create(LocalSessionStore.create(vertx, SESSION_STORE_MAP, 30*60*1000));
 
         rootRouter.route().pathRegex("^(?!/static).*").handler(cookieHandler);
         rootRouter.route().pathRegex("^(?!/static).*").handler(sessionHandler);

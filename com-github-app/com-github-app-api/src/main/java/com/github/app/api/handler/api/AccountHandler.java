@@ -7,12 +7,16 @@ import com.github.app.api.handler.UriHandler;
 import com.github.app.api.services.AccountService;
 import com.github.app.api.services.RolePodomService;
 import com.github.app.api.utils.RequestUtils;
+import com.github.app.api.utils.SessionConstant;
 import com.github.app.utils.MD5Utils;
 import io.vertx.core.MultiMap;
 import io.vertx.core.http.HttpMethod;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.core.shareddata.LocalMap;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+import io.vertx.ext.web.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
@@ -39,25 +43,29 @@ public class AccountHandler implements UriHandler {
 		router.get().path("/account/current/login").produces(CONTENT_TYPE).blockingHandler(this::currentLogin, false);
 		router.put().path("/account/resetpwd/:accountId").produces(CONTENT_TYPE).blockingHandler(this::resetPassword, false);
 		router.put().path("/account/editpwd").produces(CONTENT_TYPE).blockingHandler(this::editPassword, false);
+		router.put().path("/account/logout").produces(CONTENT_TYPE).blockingHandler(this::logOut, false);
+		router.get().path("/account/session").produces(CONTENT_TYPE).blockingHandler(this::listSession, false);
 	}
 
 	@Override
 	public void registePopedom(List<Popedom> list) {
-		list.add(new Popedom.Builder().name("*帐号添加").code("/[a-zA-Z]+/account/" + HttpMethod.POST.name()).build());
-		list.add(new Popedom.Builder().name("*账号删除").code("/[a-zA-Z]+/account/[0-9]+/" + HttpMethod.DELETE.name()).build());
-		list.add(new Popedom.Builder().name("*账号信息修改").code("/[a-zA-Z]+/account/" + HttpMethod.PUT.name()).build());
-		list.add(new Popedom.Builder().name("*账号停用启用").code("/[a-zA-Z]+/account/enable/" + HttpMethod.PUT.name()).build());
-		list.add(new Popedom.Builder().name("*查询单个账号").code("/[a-zA-Z]+/account/[0-9]+/" + HttpMethod.GET.name()).build());
-		list.add(new Popedom.Builder().name("*查询所有账号").code("/[a-zA-Z]+/account/" + HttpMethod.GET.name()).build());
-		list.add(new Popedom.Builder().name("*当前登录账号").code("/[a-zA-Z]+/account/current/login/" + HttpMethod.GET.name()).build());
-		list.add(new Popedom.Builder().name("*重置帐号密码").code("/[a-zA-Z]+/account/resetpwd/[0-9]+/" + HttpMethod.PUT.name()).build());
-		list.add(new Popedom.Builder().name("*修改账号密码").code("/[a-zA-Z]+/account/editpwd/" + HttpMethod.PUT.name()).build());
+		list.add(new Popedom.Builder().name("帐号添加").code("/.+/account/" + HttpMethod.POST.name()).remark("管理员的功能，可以添加各种角色的帐号").build());
+		list.add(new Popedom.Builder().name("账号删除").code("/.+/account/.+/" + HttpMethod.DELETE.name()).remark("管理员的功能，可以删除系统中的所有帐号").build());
+		list.add(new Popedom.Builder().name("账号修改").code("/.+/account/" + HttpMethod.PUT.name()).remark("基本功能，修改帐号的基本信息，如姓名、电话、邮箱等").build());
+		list.add(new Popedom.Builder().name("账号停启用").code("/.+/account/enable/" + HttpMethod.PUT.name()).remark("管理员的功能，可以停用或者启用某个帐号").build());
+		list.add(new Popedom.Builder().name("帐号查询单个").code("/.+/account/.+/" + HttpMethod.GET.name()).remark("管理员的功能，查询特定帐号的信息").build());
+		list.add(new Popedom.Builder().name("帐号查询所有").code("/.+/account/" + HttpMethod.GET.name()).remark("管理员的功能，查询系统中的所有帐号信息").build());
+		list.add(new Popedom.Builder().name("当前登录账号").code("/.+/account/current/login/" + HttpMethod.GET.name()).remark("基本功能，查询当前登录帐号的基本信息").build());
+		list.add(new Popedom.Builder().name("帐号密码重置").code("/.+/account/resetpwd/.+/" + HttpMethod.PUT.name()).remark("管理员的功能，某个帐号密码忘记后，可以通过此接口对密码进行重置").build());
+		list.add(new Popedom.Builder().name("修改帐号密码").code("/.+/account/editpwd/" + HttpMethod.PUT.name()).remark("基本功能，自助修改自己帐号的密码").build());
+		list.add(new Popedom.Builder().name("退出帐号登录").code("/.+/account/logout/" + HttpMethod.PUT.name()).remark("基本功能，清除服务器session信息，并退出登录").build());
+		list.add(new Popedom.Builder().name("在线用户").code("/.+/account/session/" + HttpMethod.GET.name()).remark("查询系统当前活跃用户").build());
 	}
 
 	public void enable(RoutingContext routingContext) {
 		Account account = routingContext.getBodyAsJson().mapTo(Account.class);
 
-		if(account.getAccountId() == 1) {
+		if (account.getAccountId() == 1) {
 			responseFailure(routingContext, "超级管理员帐号不允许禁用");
 			return;
 		}
@@ -85,6 +93,7 @@ public class AccountHandler implements UriHandler {
 
 	/**
 	 * 不允许修改账号密码状态角色信息
+	 * 
 	 * @param routingContext
 	 */
 	public void update(RoutingContext routingContext) {
@@ -98,6 +107,17 @@ public class AccountHandler implements UriHandler {
 		if (ObjectUtils.isEmpty(account.getRoleId())) {
 			responseFailure(routingContext, "角色不能为空");
 			return;
+		}
+
+		Account loginAccount = accountService.getAccountByAccountOrMobileOrEmail(routingContext.get("account"), null, null);
+		/**
+		 * 如果当前登录的不是超级管理员帐号，不允许创建超级帐号
+		 */
+		if (loginAccount.getRoleId() != 1) {
+			if (!loginAccount.getAccount().equalsIgnoreCase(account.getAccount())) {
+				// 除超级管理员，不允许其他角色修改除自己帐号外的其他帐号信息
+				responseFailure(routingContext, "不允许修改其他帐号信息");
+			}
 		}
 
 		Account dbAccount = accountService.getAccountByAccountOrMobileOrEmail(account.getAccount(), null, null);
@@ -120,7 +140,7 @@ public class AccountHandler implements UriHandler {
 			return;
 		}
 
-		if(accountId.equalsIgnoreCase("1")) {
+		if (accountId.equalsIgnoreCase("1")) {
 			responseFailure(routingContext, "超级管理员帐号不允许删除");
 			return;
 		}
@@ -186,17 +206,17 @@ public class AccountHandler implements UriHandler {
 	public void editPassword(RoutingContext routingContext) {
 		JsonObject jsonObject = routingContext.getBodyAsJson();
 
-		if(!jsonObject.containsKey("oldPwd")) {
+		if (!jsonObject.containsKey("oldPwd")) {
 			responseFailure(routingContext, "oldPwd参数缺失");
 			return;
 		}
 
-		if(!jsonObject.containsKey("newPwd")) {
+		if (!jsonObject.containsKey("newPwd")) {
 			responseFailure(routingContext, "newPwd参数缺失");
 			return;
 		}
 
-		if(!jsonObject.containsKey("newPwdCheck")) {
+		if (!jsonObject.containsKey("newPwdCheck")) {
 			responseFailure(routingContext, "newPwdCheck参数缺失");
 			return;
 		}
@@ -222,5 +242,54 @@ public class AccountHandler implements UriHandler {
 		account.setPassword(jsonObject.getString("newPwd"));
 		accountService.saveOrUpdate(account);
 		responseSuccess(routingContext);
+	}
+
+	public void logOut(RoutingContext routingContext) {
+		routingContext.vertx().sharedData().getLocalMap(SessionConstant.SESSION_STORE_MAP).remove(routingContext.session().id());
+		responseSuccess(routingContext);
+	}
+
+	public void listSession(RoutingContext routingContext) {
+		MultiMap params = routingContext.queryParams();
+		Integer offset = RequestUtils.getInteger(params, "offset");
+		Integer rows =  RequestUtils.getInteger(params, "rows");
+
+		if (ObjectUtils.isEmpty(offset)) {
+			offset = 0;
+		}
+		if (ObjectUtils.isEmpty(rows)) {
+			rows = 20;
+		}
+
+		List<Session> list = new ArrayList<>();
+		LocalMap<String, Session> localMap = routingContext.vertx().sharedData().getLocalMap(SessionConstant.SESSION_STORE_MAP);
+		localMap.forEach((k, v) -> {
+			list.add(v);
+		});
+
+		list.sort(new Comparator<Session>() {
+			@Override
+			public int compare(Session o1, Session o2) {
+				return (int) (o1.lastAccessed() - o2.lastAccessed());
+			}
+		});
+
+		JsonArray jsonArray = new JsonArray();
+
+		for (int i = offset; i < offset.intValue() + rows.intValue() && i < list.size(); i++) {
+			JsonObject item = new JsonObject();
+			item.put("account", (String) list.get(i).get(SessionConstant.SESSION_ACCOUNT));
+			item.put("roleName", (String) list.get(i).get(SessionConstant.SESSION_ROLE_NAME));
+			item.put("firstActiveTime", (Long) list.get(i).get(SessionConstant.SESSION_FIRST_ACTIVE_TIME));
+			item.put("lastActiveTime", list.get(i).lastAccessed());
+			item.put("remoteIpAddress", (String) list.get(i).get(SessionConstant.SESSION_IP_ADDRESS));
+			jsonArray.add(item);
+		}
+
+		Map map = new HashMap();
+		map.put("total", list.size());
+		map.put("list", jsonArray);
+
+		responseSuccess(routingContext, map);
 	}
 }

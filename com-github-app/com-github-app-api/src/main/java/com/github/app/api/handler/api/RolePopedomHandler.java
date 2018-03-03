@@ -41,15 +41,15 @@ public class RolePopedomHandler implements UriHandler {
 
     @Override
     public void registePopedom(List<Popedom> list) {
-        list.add(new Popedom.Builder().name("*增加角色").code("/[a-zA-Z]+/role/" + HttpMethod.POST.name()).build());
-        list.add(new Popedom.Builder().name("*删除角色").code("/[a-zA-Z]+/role/[0-9]+/" + HttpMethod.DELETE.name()).build());
-        list.add(new Popedom.Builder().name("*更新角色").code("/[a-zA-Z]+/role/" + HttpMethod.PUT.name()).build());
-        list.add(new Popedom.Builder().name("*查询角色").code("/[a-zA-Z]+/role/[0-9]+/" + HttpMethod.GET.name()).build());
-        list.add(new Popedom.Builder().name("*查询所有角色").code("/[a-zA-Z]+/role/" + HttpMethod.GET.name()).build());
-        list.add(new Popedom.Builder().name("*权限修改").code("/[a-zA-Z]+/role/popedom/" + HttpMethod.PUT.name()).build());
-        list.add(new Popedom.Builder().name("*权限查询").code("/[a-zA-Z]+/role/popedom/[0-9]+/" + HttpMethod.GET.name()).build());
-        list.add(new Popedom.Builder().name("*界面权限查询").code("/[a-zA-Z]+/role/popedom/vue/[0-9]+/" + HttpMethod.GET.name()).build());
-        list.add(new Popedom.Builder().name("*接口权限查询").code("/[a-zA-Z]+/role/popedom/api/[0-9]+/" + HttpMethod.GET.name()).build());
+        list.add(new Popedom.Builder().name("增加角色").remark("管理员功能，创建系统角色").code("/.+/role/" + HttpMethod.POST.name()).build());
+        list.add(new Popedom.Builder().name("删除角色").remark("管理员功能，删除系统角色").code("/.+/role/.+/" + HttpMethod.DELETE.name()).build());
+        list.add(new Popedom.Builder().name("更新角色").remark("管理员功能，更新系统角色信息").code("/.+/role/" + HttpMethod.PUT.name()).build());
+        list.add(new Popedom.Builder().name("查询角色").remark("查询系统的单个角色信息").code("/.+/role/.+/" + HttpMethod.GET.name()).build());
+        list.add(new Popedom.Builder().name("查询所有角色").remark("查询系统的所有角色信息").code("/.+/role/" + HttpMethod.GET.name()).build());
+        list.add(new Popedom.Builder().name("权限修改").remark("管理员功能，分配每个系统角色的操作权限").code("/.+/role/popedom/" + HttpMethod.PUT.name()).build());
+        list.add(new Popedom.Builder().name("权限查询").remark("管理员功能，查询每个角色拥有的操作权限集合").code("/.+/role/popedom/.+/" + HttpMethod.GET.name()).build());
+        list.add(new Popedom.Builder().name("界面权限查询").remark("基本功能，查询角色拥有的前端界面集合(可见)").code("/.+/role/popedom/vue/.+/" + HttpMethod.GET.name()).build());
+        list.add(new Popedom.Builder().name("接口权限查询").remark("管理员功能，查询角色拥有的后台接口权限").code("/.+/role/popedom/api/.+/" + HttpMethod.GET.name()).build());
     }
 
     public void saveOrUpdate(RoutingContext routingContext) {
