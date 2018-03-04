@@ -24,5 +24,7 @@ public interface AccountService {
 
     int deleteByAccountId(Integer accountId);
 
+    boolean isRoleHasAccount(Integer roleId);
+
     void truncate();
 }

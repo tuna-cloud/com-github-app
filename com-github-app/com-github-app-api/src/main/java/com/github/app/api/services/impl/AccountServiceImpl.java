@@ -151,6 +151,17 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    public boolean isRoleHasAccount(Integer roleId) {
+        AccountExample accountExample = new AccountExample();
+        accountExample.createCriteria().andRoleIdEqualTo(roleId);
+        long count = accountMapper.countByExample(accountExample);
+        if (count > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public void truncate() {
         accountMapper.truncate();
     }

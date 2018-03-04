@@ -5,6 +5,7 @@ import com.github.app.api.dao.domain.Popedom;
 import com.github.app.api.dao.domain.Role;
 import com.github.app.api.dao.domain.RolePopedom;
 import com.github.app.api.handler.UriHandler;
+import com.github.app.api.services.AccountService;
 import com.github.app.api.services.RolePodomService;
 import com.github.app.api.utils.RequestUtils;
 import com.github.app.utils.JacksonUtils;
@@ -25,6 +26,8 @@ public class RolePopedomHandler implements UriHandler {
 
     @Autowired
     private RolePodomService rolePodomService;
+    @Autowired
+    private AccountService accountService;
 
     @Override
     public void registeUriHandler(Router router) {
@@ -47,7 +50,7 @@ public class RolePopedomHandler implements UriHandler {
         list.add(new Popedom.Builder().name("查询角色").remark("查询系统的单个角色信息").code("/.+/role/.+/" + HttpMethod.GET.name()).build());
         list.add(new Popedom.Builder().name("查询所有角色").remark("查询系统的所有角色信息").code("/.+/role/" + HttpMethod.GET.name()).build());
         list.add(new Popedom.Builder().name("权限修改").remark("管理员功能，分配每个系统角色的操作权限").code("/.+/role/popedom/" + HttpMethod.PUT.name()).build());
-        list.add(new Popedom.Builder().name("权限查询").remark("管理员功能，查询每个角色拥有的操作权限集合").code("/.+/role/popedom/.+/" + HttpMethod.GET.name()).build());
+        list.add(new Popedom.Builder().name("角色权限查询").remark("管理员功能，查询每个角色拥有的操作权限集合").code("/.+/role/popedom/.+/" + HttpMethod.GET.name()).build());
         list.add(new Popedom.Builder().name("界面权限查询").remark("基本功能，查询角色拥有的前端界面集合(可见)").code("/.+/role/popedom/vue/.+/" + HttpMethod.GET.name()).build());
         list.add(new Popedom.Builder().name("接口权限查询").remark("管理员功能，查询角色拥有的后台接口权限").code("/.+/role/popedom/api/.+/" + HttpMethod.GET.name()).build());
     }
@@ -67,6 +70,16 @@ public class RolePopedomHandler implements UriHandler {
         String roleId = routingContext.pathParam("roleId");
         if (StringUtils.isEmpty(roleId)) {
             responseFailure(routingContext, "roleId must be supply");
+            return;
+        }
+
+        if (roleId.equalsIgnoreCase("1")) {
+            responseFailure(routingContext, "超级管理员角色不允许删除");
+            return;
+        }
+
+        if (accountService.isRoleHasAccount(Integer.valueOf(roleId))) {
+            responseFailure(routingContext, "该角色拥有账号，不允许删除");
             return;
         }
 
@@ -103,8 +116,17 @@ public class RolePopedomHandler implements UriHandler {
 
         List<RolePopedom> list = JacksonUtils.json2Object(json, new TypeReference<List<RolePopedom>>(){});
 
+        if(list.get(0).getRoleId() == 1) {
+            responseFailure(routingContext, "超级管理员权限不允许编辑");
+            return;
+        }
+
         rolePodomService.deleteRolePopedomById(list.get(0).getRoleId(), null);
-        rolePodomService.addRolePopedoms(list);
+
+        if(list.size() != 1 && list.get(0).getPopedomId() != -1) {
+            rolePodomService.addRolePopedoms(list);
+        }
+
         responseSuccess(routingContext);
     }
 
@@ -116,7 +138,10 @@ public class RolePopedomHandler implements UriHandler {
         }
 
         List<Popedom> list = rolePodomService.findPopedomByRoleId(Integer.valueOf(roleId));
-        responseSuccess(routingContext, list);
+        Map map = new HashMap();
+        map.put("rolePopedoms", list);
+        map.put("popedoms", rolePodomService.findAllPopedom());
+        responseSuccess(routingContext, map);
     }
 
     public void getRolePopedomVue(RoutingContext routingContext) {
