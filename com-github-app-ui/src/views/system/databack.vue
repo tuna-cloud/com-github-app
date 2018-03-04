@@ -98,7 +98,9 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+          this.listLoading = true
           restoreDatabase(row.name).then(response => {
+            this.listLoading = false
             Message({
               message: '数据恢复成功',
               type: 'success',
@@ -109,7 +111,9 @@
         })
       },
       backup() {
+        this.listLoading = true
         backupDatabase().then(rep => {
+          this.listLoading = false
           Message({
             message: '备份文件成功',
             type: 'success',
