@@ -52,7 +52,7 @@ const user = {
           console.log(response.data)
           commit('SET_ROLES', data.account.role.name)
           commit('SET_NAME', data.account.name)
-          commit('SET_AVATAR', data.account.photoUrl)
+          commit('SET_AVATAR', process.env.BASE_API + data.account.photoUrl)
           commit('SET_CODES', data.list)
           resolve(response)
         }).catch(error => {
