@@ -2,14 +2,17 @@ package com.github.app.api.handler.api;
 
 import com.github.app.api.dao.domain.Account;
 import com.github.app.api.dao.domain.Popedom;
-import com.github.app.api.dao.domain.Role;
 import com.github.app.api.handler.UriHandler;
 import com.github.app.api.services.AccountService;
 import com.github.app.api.services.RolePodomService;
 import com.github.app.api.utils.RequestUtils;
 import com.github.app.api.utils.SessionConstant;
 import com.github.app.utils.MD5Utils;
+import com.github.app.utils.ServerEnvConstant;
+import com.sun.image.codec.jpeg.JPEGCodec;
+import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import io.vertx.core.MultiMap;
+import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -22,7 +25,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.util.*;
+import java.util.List;
 
 @Component
 public class AccountHandler implements UriHandler {
@@ -252,7 +260,7 @@ public class AccountHandler implements UriHandler {
 	public void listSession(RoutingContext routingContext) {
 		MultiMap params = routingContext.queryParams();
 		Integer offset = RequestUtils.getInteger(params, "offset");
-		Integer rows =  RequestUtils.getInteger(params, "rows");
+		Integer rows = RequestUtils.getInteger(params, "rows");
 
 		if (ObjectUtils.isEmpty(offset)) {
 			offset = 0;
@@ -292,4 +300,5 @@ public class AccountHandler implements UriHandler {
 
 		responseSuccess(routingContext, map);
 	}
+
 }
