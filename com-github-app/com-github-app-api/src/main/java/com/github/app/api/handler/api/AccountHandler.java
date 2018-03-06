@@ -8,11 +8,7 @@ import com.github.app.api.services.RolePodomService;
 import com.github.app.api.utils.RequestUtils;
 import com.github.app.api.utils.SessionConstant;
 import com.github.app.utils.MD5Utils;
-import com.github.app.utils.ServerEnvConstant;
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import io.vertx.core.MultiMap;
-import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -25,10 +21,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.*;
 import java.util.*;
 import java.util.List;
 
