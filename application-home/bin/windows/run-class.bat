@@ -53,7 +53,7 @@ IF ["%JMX_PORT%"] NEQ [""] (
 
 rem Generic jvm settings you want to add
 IF ["%KAFKA_OPTS%"] EQU [""] (
-	set KAFKA_OPTS=
+	set KAFKA_OPTS=-Duser.timezone=Asia/Shanghai
 )
 
 rem Which java to use

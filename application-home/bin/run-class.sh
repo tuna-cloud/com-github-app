@@ -57,7 +57,7 @@ fi
 
 # Generic jvm settings you want to add
 if [ -z "$KAFKA_OPTS" ]; then
-  KAFKA_OPTS=""
+  KAFKA_OPTS="-Duser.timezone=Asia/Shanghai"
 fi
 
 # Which java to use
