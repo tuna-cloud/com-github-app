@@ -1,13 +1,20 @@
 package com.github.app.api.handler.open;
 
+import java.io.ByteArrayOutputStream;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
+
 import com.github.app.api.dao.domain.Account;
 import com.github.app.api.handler.UriHandler;
 import com.github.app.api.services.AccountService;
 import com.github.app.api.services.LogService;
 import com.github.app.api.utils.CaptchaFactory;
-import com.github.app.api.utils.SessionConstant;
 import com.github.cage.Cage;
 import com.github.cage.GCage;
+
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.KeyStoreOptions;
@@ -16,12 +23,6 @@ import io.vertx.ext.auth.jwt.JWTAuthOptions;
 import io.vertx.ext.auth.jwt.JWTOptions;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
-
-import java.io.ByteArrayOutputStream;
 
 @Component
 public class JWTIssueHandler implements UriHandler {
