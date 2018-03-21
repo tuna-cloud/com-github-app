@@ -19,7 +19,7 @@
     </modules>
 
     <properties>
-        <vertx.version>3.5.0</vertx.version>
+        <vertx.version>3.5.1</vertx.version>
     </properties>
 
 

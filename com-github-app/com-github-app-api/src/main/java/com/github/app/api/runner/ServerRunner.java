@@ -50,9 +50,6 @@ public class ServerRunner implements Runner {
 
 			Vertx vertx = Vertx.vertx();
 
-//			ApplicationContext context = new AnnotationConfigApplicationContext(SpringApplication.class);
-
-
 			vertx.deployVerticle(HttpServerVerticle.class, deploymentOptions, ar -> {
 				if (ar.succeeded()) {
 					logger.info(" http verticle deploy success");
