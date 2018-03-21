@@ -1,22 +1,19 @@
 package com.github.app.api.runner;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.github.app.api.config.SpringApplication;
 import com.github.app.api.utils.ConfigLoader;
 import com.github.app.api.verticles.HttpServerVerticle;
-import com.github.app.api.verticles.SpringVerticleFactory;
 import com.github.app.utils.Runner;
+
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.spi.VerticleFactory;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 public class ServerRunner implements Runner {
 	private Logger logger = LogManager.getLogger(ServerRunner.class);
@@ -53,12 +50,10 @@ public class ServerRunner implements Runner {
 
 			Vertx vertx = Vertx.vertx();
 
-			ApplicationContext context = new AnnotationConfigApplicationContext(SpringApplication.class);
+//			ApplicationContext context = new AnnotationConfigApplicationContext(SpringApplication.class);
 
-			VerticleFactory verticleFactory = context.getBean(SpringVerticleFactory.class);
-			vertx.registerVerticleFactory(verticleFactory);
 
-			vertx.deployVerticle(verticleFactory.prefix() + ":" + HttpServerVerticle.class.getName(), deploymentOptions, ar -> {
+			vertx.deployVerticle(HttpServerVerticle.class, deploymentOptions, ar -> {
 				if (ar.succeeded()) {
 					logger.info(" http verticle deploy success");
 				} else {

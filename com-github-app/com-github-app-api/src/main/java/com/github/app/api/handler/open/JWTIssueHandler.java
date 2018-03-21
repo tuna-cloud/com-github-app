@@ -110,7 +110,7 @@ public class JWTIssueHandler implements UriHandler {
         if (!ObjectUtils.isEmpty(acc)) {
             JWTAuth provider = JWTAuth.create(routingContext.vertx(), config);
             String token = provider.generateToken(new JsonObject().put("account", account),
-                    new JWTOptions().setExpiresInMinutes(60 * 3L));
+                    new JWTOptions().setExpiresInMinutes(60 * 3));
             logService.addLog(account, "登录成功", "[Y]-->token:" + token + "");
             responseSuccess(routingContext, "", token);
         } else {
