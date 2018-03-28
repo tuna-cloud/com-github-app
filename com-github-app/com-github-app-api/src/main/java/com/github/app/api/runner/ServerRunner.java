@@ -1,5 +1,7 @@
 package com.github.app.api.runner;
 
+import io.vertx.core.VertxOptions;
+import io.vertx.ext.dropwizard.DropwizardMetricsOptions;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -48,7 +50,8 @@ public class ServerRunner implements Runner {
 			DeploymentOptions deploymentOptions = new DeploymentOptions();
 			deploymentOptions.setConfig(config);
 
-			Vertx vertx = Vertx.vertx();
+			Vertx vertx = Vertx.vertx(new VertxOptions().setMetricsOptions(
+					new DropwizardMetricsOptions().setEnabled(true).setJmxEnabled(true)));
 
 			vertx.deployVerticle(HttpServerVerticle.class, deploymentOptions, ar -> {
 				if (ar.succeeded()) {
