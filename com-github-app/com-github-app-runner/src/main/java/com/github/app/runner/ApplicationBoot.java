@@ -4,6 +4,7 @@ import com.github.app.api.services.SystemOperationService;
 import com.github.app.api.services.impl.MySqlOperationServiceImpl;
 import com.github.app.api.utils.ConfigLoader;
 import com.github.app.api.verticles.HttpServerVerticle;
+import com.github.app.utils.JacksonUtils;
 import com.github.app.utils.ServerEnvConstant;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
@@ -15,6 +16,7 @@ import io.vertx.core.cli.Option;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.dropwizard.DropwizardMetricsOptions;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 
 import java.io.File;
@@ -24,6 +26,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class ApplicationBoot {
+    private static Logger logger = LogManager.getLogger(ApplicationBoot.class);
+
     private static CLI cli;
 
     static {
@@ -49,30 +53,33 @@ public class ApplicationBoot {
         return Optional.ofNullable(commandLine);
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
 
         Optional<CommandLine> commandLine = cli(args);
         if (commandLine.isPresent()) {
             String name = commandLine.get().getRawValueForOption(commandLine.get().cli().getOption("name"));
 
-            BootType bootType = BootType.valueOf(name.toUpperCase());
+            BootType bootType = null;
+            try {
+                bootType = BootType.valueOf(name.toUpperCase());
+            } catch (Exception e) {
+                logger.error("Current application name is: {}, Available name :{}", name, JacksonUtils.serialize(BootType.values()));
+                System.exit(-1);
+            }
 
             if (bootType != null) {
                 switch (bootType) {
                     case RESTORE: {
                         String file = commandLine.get().getRawValueForOption(commandLine.get().cli().getOption("file"));
-                        SystemOperationService service = new MySqlOperationServiceImpl();
-                        service.restore(ConfigLoader.getServerCfg(), file);
+                        new MySqlOperationServiceImpl().restore(ConfigLoader.getServerCfg(), file);
                         break;
                     }
                     case INSTALL: {
-                        SystemOperationService service = new MySqlOperationServiceImpl();
-                        service.install(ConfigLoader.getServerCfg());
+                        new MySqlOperationServiceImpl().install(ConfigLoader.getServerCfg());
                         break;
                     }
                     case BACKUP: {
-                        SystemOperationService service = new MySqlOperationServiceImpl();
-                        service.backup(ConfigLoader.getServerCfg());
+                        new MySqlOperationServiceImpl().backup(ConfigLoader.getServerCfg());
                         break;
                     }
                     case SERVER: {
@@ -83,14 +90,14 @@ public class ApplicationBoot {
                             if (ar.succeeded()) {
                             } else {
                                 vertx.close();
-                                System.exit(-3);
+                                System.exit(-2);
                             }
                         });
                         break;
                     }
                     default: {
                         printCmdUsage();
-                        System.exit(-4);
+                        System.exit(-1);
                     }
                 }
             }
