@@ -19,5 +19,9 @@
   },
   "vertx" : {
     "cacheDirBase" : "${APPLICATION_HOME}/data/cache"
+  },
+  "mybatis" : {
+	"enable" : true,
+	"slowTimeInMs" : 3000
   }
 }
