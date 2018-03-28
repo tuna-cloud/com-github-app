@@ -25,7 +25,7 @@ if [ "x$KAFKA_HEAP_OPTS" = "x" ]; then
     export KAFKA_HEAP_OPTS="-Xmx1G -Xms1G"
 fi
 
-EXTRA_ARGS="-name server -loggc"
+EXTRA_ARGS="-name SERVER -loggc"
 
 COMMAND=$1
 case $COMMAND in
