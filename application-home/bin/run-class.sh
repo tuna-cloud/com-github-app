@@ -29,7 +29,7 @@ shopt -u nullglob
 
 # JMX settings
 if [ -z "$KAFKA_JMX_OPTS" ]; then
-  KAFKA_JMX_OPTS="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false  -Dcom.sun.management.jmxremote.ssl=false "
+  KAFKA_JMX_OPTS="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false  -Dcom.sun.management.jmxremote.ssl=false -Dvertx.metrics.options.jmxEnabled=true"
 fi
 
 # JMX port to use
