@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 public final class JacksonUtils {
-    // ObjectMapper 只提供json到对象的互相转换，因此线程安全
     private static final ObjectMapper objectMapper;
 
     static {
@@ -32,12 +31,12 @@ public final class JacksonUtils {
      * @return entity
      * @throws NullPointerException
      */
-    public static <T> T json2Object(String jsonStr, Class<T> valueType) {
+    public static <T> T deserialize(String jsonStr, Class<T> valueType) {
 
         try {
             return objectMapper.readValue(jsonStr, valueType);
         } catch (Exception e) {
-            throw new RuntimeException("Jackson.json2Object error.", e);
+            throw new RuntimeException("Jackson.deserialize error.", e);
         }
     }
 
@@ -49,12 +48,12 @@ public final class JacksonUtils {
      * @return
      * @throws Exception
      */
-    public static <T> T json2Object(String jsonStr, TypeReference<T> reference) {
+    public static <T> T deserialize(String jsonStr, TypeReference<T> reference) {
 
         try {
             return objectMapper.readValue(jsonStr, reference);
         } catch (Exception e) {
-            throw new RuntimeException("Jackson.json2Object error.", e);
+            throw new RuntimeException("Jackson.deserialize error.", e);
         }
     }
 
@@ -65,11 +64,11 @@ public final class JacksonUtils {
      * @return
      * @throws Exception
      */
-    public static <T> T json2Object(byte[] json, Class<T> valueType) {
+    public static <T> T deserialize(byte[] json, Class<T> valueType) {
         try {
             return objectMapper.readValue(json, valueType);
         } catch (Exception e) {
-            throw new RuntimeException("Jackson.json2Object error.", e);
+            throw new RuntimeException("Jackson.deserialize error.", e);
         }
     }
 
@@ -80,11 +79,24 @@ public final class JacksonUtils {
      * @return jsonStr
      * @throws NullPointerException
      */
-    public static String object2JsonStr(Object obj) {
+    public static String serialize(Object obj) {
         try {
             return objectMapper.writeValueAsString(obj);
         } catch (Exception e) {
-            throw new RuntimeException("Jackson.object2JsonStr error.", e);
+            throw new RuntimeException("Jackson.serialize error.", e);
+        }
+    }
+
+    /**
+     *
+     * @param obj
+     * @return
+     */
+    public static String serializePretty(Object obj) {
+        try {
+            return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException("Jackson.serialize error.", e);
         }
     }
 
@@ -93,11 +105,11 @@ public final class JacksonUtils {
      * @return
      * @throws Exception
      */
-    public static byte[] object2JsonBuf(Object obj) {
+    public static byte[] serialize2buf(Object obj) {
         try {
             return objectMapper.writeValueAsBytes(obj);
         } catch (Exception e) {
-            throw new RuntimeException("Jackson.object2JsonStr error.", e);
+            throw new RuntimeException("Jackson.serialize error.", e);
         }
     }
 }

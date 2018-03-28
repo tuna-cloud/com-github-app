@@ -1,29 +1,29 @@
 package com.github.app.deploy;
 
-import com.github.app.utils.Runner;
-import com.github.app.utils.ServerEnvConstant;
-import com.sun.tools.attach.VirtualMachine;
-import org.apache.commons.exec.*;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.StringReader;
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HotDeployRunner implements Runner {
+import org.apache.commons.exec.*;
 
-    @Override
+import com.github.app.utils.ServerEnvConstant;
+import com.sun.tools.attach.VirtualMachine;
+
+public class HotDeployRunner {
+
     public String name() {
         return "deploy";
     }
 
-    @Override
     public void usage(StringBuilder builder) {
         builder.append("\t-name deploy\n");
         builder.append("\t\tdeploy the jar and class dynamic,is developing ... \n");
     }
 
-    @Override
     public void start(String[] args) {
         try {
             Thread.sleep(3000);

@@ -114,7 +114,7 @@ public class RolePopedomHandler implements UriHandler {
     public void saveRolePopedom(RoutingContext routingContext) {
         String json = routingContext.getBodyAsString();
 
-        List<RolePopedom> list = JacksonUtils.json2Object(json, new TypeReference<List<RolePopedom>>(){});
+        List<RolePopedom> list = JacksonUtils.deserialize(json, new TypeReference<List<RolePopedom>>(){});
 
         if(list.get(0).getRoleId() == 1) {
             responseFailure(routingContext, "超级管理员权限不允许编辑");

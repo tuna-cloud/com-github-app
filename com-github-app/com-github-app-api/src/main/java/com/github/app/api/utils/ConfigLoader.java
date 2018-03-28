@@ -12,7 +12,7 @@ public class ConfigLoader {
     private static Logger logger = LogManager.getLogger(ConfigLoader.class);
 
     public static JsonObject getServerCfg() {
-        String path = ServerEnvConstant.getAppServerCfgFile();
+        String path = ServerEnvConstant.getAppServerCfgFilePath();
         try {
             String confFileContent = FileUtils.readFileToString(new File(path), "UTF-8");
             String rep = System.getenv(ServerEnvConstant.APP_HOME);

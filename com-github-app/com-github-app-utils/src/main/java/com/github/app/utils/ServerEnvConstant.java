@@ -22,7 +22,7 @@ public class ServerEnvConstant {
 	/**
 	 * @return
 	 */
-	public static String getAppServerCfgFile() {
+	public static String getAppServerCfgFilePath() {
 		String path = System.getenv(APP_SERVER_CFG_FILE);
 		if (path == null || path.length() < 1) {
 			path = System.getenv(APP_HOME) + File.separator + "config" + File.separator + "server.json";
@@ -30,12 +30,4 @@ public class ServerEnvConstant {
 		return path;
 	}
 
-	/**
-	 * 验证码存储位置
-	 * 
-	 * @return
-	 */
-	public static String getAppCaptchaTmpPath() {
-		return System.getenv(APP_HOME) + File.separator + "web" + File.separator + "tmp";
-	}
 }

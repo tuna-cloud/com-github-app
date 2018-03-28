@@ -6,6 +6,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.github.app.api.utils.ConfigLoader;
+import io.vertx.core.json.Json;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContext;
@@ -30,114 +36,117 @@ import io.vertx.ext.web.handler.*;
 import io.vertx.ext.web.sstore.LocalSessionStore;
 
 public class HttpServerVerticle extends AbstractVerticle {
-	private Logger logger = LogManager.getLogger(HttpServerVerticle.class);
+    private Logger logger = LogManager.getLogger(HttpServerVerticle.class);
 
-	private ApplicationContext applicationContext;
-	private HttpServer server;
-	private Router router;
+    private ApplicationContext applicationContext;
+    private HttpServer server;
+    private Router router;
 
-	@Override
-	public void start(Future<Void> startFuture) throws Exception {
-		applicationContext = new AnnotationConfigApplicationContext(SpringApplication.class);
+    @Override
+    public void start(Future<Void> startFuture) {
 
-		JsonObject jsonObject = config();
+        Json.mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true).configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true).configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true).configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false).configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false).configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
-		JsonObject httpsOption = jsonObject.getJsonObject("https.option");
+        applicationContext = new AnnotationConfigApplicationContext(SpringApplication.class);
 
-		HttpServerOptions options = new HttpServerOptions().setSsl(false);
-		if (httpsOption.getBoolean("enable")) {
-			options.setSsl(true);
-			options.setKeyCertOptions(new JksOptions().setPath(httpsOption.getJsonObject("keyCert").getString("path")).setPassword(httpsOption.getJsonObject("keyCert").getString("password")));
-		} else {
-			options.setSsl(false);
-		}
+        JsonObject jsonObject = ConfigLoader.getServerCfg();
 
-		server = vertx.createHttpServer(options);
+        JsonObject httpsOption = jsonObject.getJsonObject("https.option");
 
-		router = Router.router(vertx);
+        HttpServerOptions options = new HttpServerOptions().setSsl(false);
+        if (httpsOption.getBoolean("enable")) {
+            options.setSsl(true);
+            options.setKeyCertOptions(new JksOptions().setPath(httpsOption.getJsonObject("keyCert").getString("path")).setPassword(httpsOption.getJsonObject("keyCert").getString("password")));
+        } else {
+            options.setSsl(false);
+        }
+
+        server = vertx.createHttpServer(options);
+
+        router = Router.router(vertx);
 
         setupRouter(router);
 
-		server.requestHandler(router::accept).listen(jsonObject.getInteger("api.bind.port", 8080), ar -> {
-			if (ar.succeeded()) {
-				logger.info("api server start successfully, bind port: " + server.actualPort());
-				startFuture.complete();
-			} else {
-				logger.error("api server start failed, reason:" + ar.cause().getLocalizedMessage());
-				startFuture.fail(ar.cause());
-			}
-		});
-	}
+        server.requestHandler(router::accept).listen(jsonObject.getInteger("api.bind.port", 8080), ar -> {
+            if (ar.succeeded()) {
+                logger.info("api server start successfully, bind port: " + server.actualPort());
+                startFuture.complete();
+            } else {
+                logger.error("api server start failed, reason:" + ar.cause().getLocalizedMessage());
+                startFuture.fail(ar.cause());
+            }
+        });
+    }
 
-	@Override
-	public void stop(Future<Void> stopFuture) throws Exception {
-	    router.clear();
-		server.close(future -> {
-			if (future.succeeded()) {
-				stopFuture.complete();
-			}
-		});
-	}
+    @Override
+    public void stop(Future<Void> stopFuture) throws Exception {
+        router.clear();
+        server.close(future -> {
+            if (future.succeeded()) {
+                stopFuture.complete();
+            }
+        });
+    }
 
-	private void setupRouter(Router rootRouter) {
-		rootRouter.route().handler(CorsHandler.create(".*").allowedMethod(HttpMethod.GET).allowedMethod(HttpMethod.POST).allowedMethod(HttpMethod.DELETE).allowedMethod(HttpMethod.PUT).allowedMethod(HttpMethod.OPTIONS).allowCredentials(true).allowedHeader("X-Token").allowedHeader("Cookie").allowedHeader("Accept").allowedHeader("Accept-Encoding").allowedHeader("Accept-Language").allowedHeader("Connection").allowedHeader("Host").allowedHeader("Referer").allowedHeader("Origin").allowedHeader("Content-Type"));
+    private void setupRouter(Router rootRouter) {
+        rootRouter.route().handler(CorsHandler.create(".*").allowedMethod(HttpMethod.GET).allowedMethod(HttpMethod.POST).allowedMethod(HttpMethod.DELETE).allowedMethod(HttpMethod.PUT).allowedMethod(HttpMethod.OPTIONS).allowCredentials(true).allowedHeader("X-Token").allowedHeader("Cookie").allowedHeader("Accept").allowedHeader("Accept-Encoding").allowedHeader("Accept-Language").allowedHeader("Connection").allowedHeader("Host").allowedHeader("Referer").allowedHeader("Origin").allowedHeader("Content-Type"));
 
-		CookieHandler cookieHandler = CookieHandler.create();
-		SessionHandler sessionHandler = SessionHandler.create(LocalSessionStore.create(vertx, SESSION_STORE_MAP, 30 * 60 * 1000));
+        CookieHandler cookieHandler = CookieHandler.create();
+        SessionHandler sessionHandler = SessionHandler.create(LocalSessionStore.create(vertx, SESSION_STORE_MAP, 30 * 60 * 1000));
 
-		rootRouter.route().pathRegex("^(?!/static).*").handler(cookieHandler);
-		rootRouter.route().pathRegex("^(?!/static).*").handler(sessionHandler);
+        rootRouter.route().pathRegex("^(?!/static).*").handler(cookieHandler);
+        rootRouter.route().pathRegex("^(?!/static).*").handler(sessionHandler);
 
-		rootRouter.route().handler(LoggerHandler.create());
-		rootRouter.route().handler(TimeoutHandler.create(8000));
-		rootRouter.route().handler(ResponseTimeHandler.create());
-		rootRouter.route().handler(ResponseContentTypeHandler.create());
-		rootRouter.route().handler(BodyHandler.create());
+        rootRouter.route().handler(LoggerHandler.create());
+        rootRouter.route().handler(TimeoutHandler.create(8000));
+        rootRouter.route().handler(ResponseTimeHandler.create());
+        rootRouter.route().handler(ResponseContentTypeHandler.create());
+        rootRouter.route().handler(BodyHandler.create());
 
-		loadHandlers(rootRouter, "com.github.app.api.handler.common");
-		rootRouter.route("/static/*").blockingHandler(StaticHandler.create().setAllowRootFileSystemAccess(true).setWebRoot(System.getenv(ServerEnvConstant.APP_HOME) + File.separator + "web"), false);
+        loadHandlers(rootRouter, "com.github.app.api.handler.common");
+        rootRouter.route("/static/*").blockingHandler(StaticHandler.create().setAllowRootFileSystemAccess(true).setWebRoot(System.getenv(ServerEnvConstant.APP_HOME) + File.separator + "web"), false);
 
-		/**
-		 * apiRouter will validate the token in the global interceptor
-		 */
-		Router apiRouter = Router.router(vertx);
-		loadHandlers(apiRouter, "com.github.app.api.handler.interceptor");
-		loadHandlers(apiRouter, "com.github.app.api.handler.api");
-		rootRouter.mountSubRouter("/api", apiRouter);
+        /**
+         * apiRouter will validate the token in the global interceptor
+         */
+        Router apiRouter = Router.router(vertx);
+        loadHandlers(apiRouter, "com.github.app.api.handler.interceptor");
+        loadHandlers(apiRouter, "com.github.app.api.handler.api");
+        rootRouter.mountSubRouter("/api", apiRouter);
 
-		/**
-		 * openRouter is fully opened api, have no interceptor to validate token and other user info
-		 */
-		Router openRouter = Router.router(vertx);
-		loadHandlers(openRouter, "com.github.app.api.handler.open");
-		rootRouter.mountSubRouter("/open", openRouter);
-	}
+        /**
+         * openRouter is fully opened api, have no interceptor to validate token and other user info
+         */
+        Router openRouter = Router.router(vertx);
+        loadHandlers(openRouter, "com.github.app.api.handler.open");
+        rootRouter.mountSubRouter("/open", openRouter);
+    }
 
-	private void loadHandlers(Router router, String packageName) {
-		List<Class<?>> uriHandlers = ClassUtil.getClasses(packageName);
-		List<Popedom> popedoms = new ArrayList<>();
-		for (Class<?> cls : uriHandlers) {
-			try {
-				Object bean = applicationContext.getBean(cls);
-				if (bean instanceof UriHandler) {
-					UriHandler uriHandler = (UriHandler) bean;
-					uriHandler.registeUriHandler(router);
-					uriHandler.registePopedom(popedoms);
-				}
-			} catch (Exception e) {
-				logger.warn(e.getLocalizedMessage());
-			}
-		}
+    private void loadHandlers(Router router, String packageName) {
+        List<Class<?>> uriHandlers = ClassUtil.getClasses(packageName);
+        List<Popedom> popedoms = new ArrayList<>();
+        for (Class<?> cls : uriHandlers) {
+            try {
+                Object bean = applicationContext.getBean(cls);
+                if (bean instanceof UriHandler) {
+                    UriHandler uriHandler = (UriHandler) bean;
+                    uriHandler.registeUriHandler(router);
+                    uriHandler.registePopedom(popedoms);
+                }
+            } catch (Exception e) {
+                logger.warn(e.getLocalizedMessage());
+            }
+        }
 
-		PopedomContext.getInstance().addPopedoms(popedoms);
-	}
+        PopedomContext.getInstance().addPopedoms(popedoms);
+    }
 
-	/**
-	 * 动态挂载handler
-	 *
-	 * @param uriHandler
-	 */
-	public void addRoute(UriHandler uriHandler) {
-		uriHandler.registeUriHandler(router);
-	}
+    /**
+     * 动态挂载handler
+     *
+     * @param uriHandler
+     */
+    public void addRoute(UriHandler uriHandler) {
+        uriHandler.registeUriHandler(router);
+    }
 }
