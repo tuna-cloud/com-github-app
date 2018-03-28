@@ -1,6 +1,8 @@
 package com.github.app.api.plugin;
 
-import com.github.app.utils.JacksonUtils;
+import java.util.Arrays;
+import java.util.Properties;
+
 import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;
@@ -10,9 +12,6 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.Arrays;
-import java.util.Properties;
 
 @Intercepts(value = {
 		@Signature(type = Executor.class, method = "update", args = { MappedStatement.class, Object.class }),
