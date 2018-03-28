@@ -1,5 +1,6 @@
 package com.github.app.api.config;
 
+import com.github.app.api.plugin.SqlMonitor;
 import com.github.app.api.utils.ConfigLoader;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import io.vertx.core.json.JsonObject;
@@ -53,6 +54,11 @@ public class SpringApplication {
         org.apache.ibatis.session.Configuration configuration = new org.apache.ibatis.session.Configuration();
         configuration.setLogImpl(Log4j2Impl.class);
         configuration.setSafeRowBoundsEnabled(true);
+        JsonObject config = ConfigLoader.getServerCfg().getJsonObject("mybatis");
+        if (config != null && config.getBoolean("enable") == true) {
+            // add sql monitor plugin
+            configuration.addInterceptor(new SqlMonitor(config.getLong("slowTimeInMs", 3000L)));
+        }
 
         bean.setConfiguration(configuration);
 
