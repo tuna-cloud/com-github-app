@@ -49,7 +49,7 @@ public class HttpServerVerticle extends AbstractVerticle {
 
         applicationContext = new AnnotationConfigApplicationContext(SpringApplication.class);
 
-        JsonObject jsonObject = ConfigLoader.getServerCfg();
+        JsonObject jsonObject = config();
 
         JsonObject httpsOption = jsonObject.getJsonObject("https.option");
 

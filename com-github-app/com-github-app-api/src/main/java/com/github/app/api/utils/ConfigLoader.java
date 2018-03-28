@@ -10,19 +10,25 @@ import java.io.File;
 
 public class ConfigLoader {
     private static Logger logger = LogManager.getLogger(ConfigLoader.class);
+    private static JsonObject sysConfig;
 
     public static JsonObject getServerCfg() {
+        if (sysConfig != null) {
+            return sysConfig;
+        }
+
         String path = ServerEnvConstant.getAppServerCfgFilePath();
         try {
             String confFileContent = FileUtils.readFileToString(new File(path), "UTF-8");
             String rep = System.getenv(ServerEnvConstant.APP_HOME);
-            if(System.getProperty("os.name").toLowerCase().startsWith("win")) {
+            if (System.getProperty("os.name").toLowerCase().startsWith("win")) {
                 rep = rep.replace("\\", File.separator + File.separator + File.separator + File.separator);
             }
             confFileContent = confFileContent.replaceAll("\\$\\{" + ServerEnvConstant.APP_HOME + "}", rep);
             logger.info("server.json:" + confFileContent);
-            return new JsonObject(confFileContent);
-        }  catch (Exception e) {
+            sysConfig = new JsonObject(confFileContent);
+            return sysConfig;
+        } catch (Exception e) {
             logger.error("server.json file missing", e);
         }
         System.exit(-1);

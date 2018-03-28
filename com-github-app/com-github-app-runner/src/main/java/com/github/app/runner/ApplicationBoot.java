@@ -77,6 +77,7 @@ public class ApplicationBoot {
                     }
                     case SERVER: {
                         DeploymentOptions deploymentOptions = new DeploymentOptions();
+                        deploymentOptions.setConfig(ConfigLoader.getServerCfg());
                         Vertx vertx = Vertx.vertx(new VertxOptions().setMetricsOptions(new DropwizardMetricsOptions().setJmxEnabled(true)));
                         vertx.deployVerticle(HttpServerVerticle.class, deploymentOptions, ar -> {
                             if (ar.succeeded()) {
