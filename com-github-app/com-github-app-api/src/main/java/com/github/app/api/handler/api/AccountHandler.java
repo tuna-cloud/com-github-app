@@ -267,12 +267,7 @@ public class AccountHandler implements UriHandler {
 			list.add(v);
 		});
 
-		list.sort(new Comparator<Session>() {
-			@Override
-			public int compare(Session o1, Session o2) {
-				return (int) (o1.lastAccessed() - o2.lastAccessed());
-			}
-		});
+		list.sort((o1, o2) -> (int) (o1.lastAccessed() - o2.lastAccessed()));
 
 		JsonArray jsonArray = new JsonArray();
 

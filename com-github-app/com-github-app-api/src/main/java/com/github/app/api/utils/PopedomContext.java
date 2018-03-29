@@ -37,4 +37,8 @@ public class PopedomContext {
     public Popedom match(RoutingContext routingContext) {
         return match(routingContext.normalisedPath() + "/" + routingContext.request().method().name());
     }
+
+    public List<Popedom> getPopedoms() {
+        return popedoms;
+    }
 }
