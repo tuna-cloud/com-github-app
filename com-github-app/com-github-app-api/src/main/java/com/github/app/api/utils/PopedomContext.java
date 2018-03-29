@@ -1,6 +1,7 @@
 package com.github.app.api.utils;
 
 import com.github.app.api.dao.domain.Popedom;
+import io.vertx.ext.web.RoutingContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +25,16 @@ public class PopedomContext {
         this.popedoms.addAll(popedoms);
     }
 
-    public Popedom match(String uri) {
+    private Popedom match(String uri) {
         for (Popedom popedom : popedoms) {
             if(Pattern.matches(popedom.getCode(), uri)) {
                 return popedom;
             }
         }
         return null;
+    }
+
+    public Popedom match(RoutingContext routingContext) {
+        return match(routingContext.normalisedPath() + "/" + routingContext.request().method().name());
     }
 }

@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.github.app.api.plugin.ApiMetricTimeMeterHandler;
 import com.github.app.api.utils.ConfigLoader;
 import io.vertx.core.json.Json;
 import org.apache.logging.log4j.LogManager;
@@ -100,6 +101,7 @@ public class HttpServerVerticle extends AbstractVerticle {
         rootRouter.route().handler(LoggerHandler.create());
         rootRouter.route().handler(TimeoutHandler.create(8000));
         rootRouter.route().handler(ResponseTimeHandler.create());
+        rootRouter.route().handler(ApiMetricTimeMeterHandler.create());
         rootRouter.route().handler(ResponseContentTypeHandler.create());
         rootRouter.route().handler(BodyHandler.create());
 
