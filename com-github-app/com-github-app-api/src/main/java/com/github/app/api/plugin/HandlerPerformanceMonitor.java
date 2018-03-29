@@ -10,6 +10,7 @@ import io.vertx.ext.dropwizard.reporters.JmxReporter;
 import io.vertx.ext.web.RoutingContext;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -28,7 +29,7 @@ public class HandlerPerformanceMonitor {
         }
     }
 
-    public static JsonArray listMetric(int rows, int offset, String sort) {
+    public static JsonArray listMetric(int rows, int offset, String sort, boolean isDesc) {
         List<JsonObject> list = new ArrayList<>();
         for (Popedom popedom : PopedomContext.getInstance().getPopedoms()) {
             JsonObject jsonObject = JsonObject.mapFrom(popedom);
@@ -51,7 +52,11 @@ public class HandlerPerformanceMonitor {
             list.add(jsonObject);
         }
 
-        list.sort((o1, o2) -> Double.compare(o2.getDouble(sort), o1.getDouble(sort)));
+        if (isDesc) {
+            list.sort((o1, o2) -> Double.compare(o2.getDouble(sort), o1.getDouble(sort)));
+        } else {
+            list.sort(Comparator.comparingDouble(o -> o.getDouble(sort)));
+        }
 
         JsonArray jsonArray = new JsonArray();
 
