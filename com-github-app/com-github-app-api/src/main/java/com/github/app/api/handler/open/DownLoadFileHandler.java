@@ -37,23 +37,23 @@ public class DownLoadFileHandler implements UriHandler {
      */
     public void downloadFile(RoutingContext routingContext) {
         if (!ObjectUtils.isEmpty(routingContext.session().get(SessionConstant.SESSION_ACCOUNT))) {
-            responseFailure(routingContext, "not login, can't download this file");
+            responseOperationFailed(routingContext, "not login, can't download this file");
             return;
         }
 
         List<String> list = routingContext.queryParam("fileName");
         if(list == null || list.size() < 1) {
-            responseFailure(routingContext, "paremeter missing");
+            responseOperationFailed(routingContext, "paremeter missing");
             return;
         }
         List<String> list1 = routingContext.queryParam("code");
         if(list1 == null || list1.size() < 1) {
-            responseFailure(routingContext, "operation not permited");
+            responseOperationFailed(routingContext, "operation not permited");
             return;
         }
 
         if (!MD5Utils.validateMd5WithSalt(list.get(0), list1.get(0))) {
-            responseFailure(routingContext, "sign is error");
+            responseOperationFailed(routingContext, "sign is error");
             return;
         }
 
@@ -103,7 +103,7 @@ public class DownLoadFileHandler implements UriHandler {
             os.close();
             routingContext.response().end(buffer);
         } catch (Exception e) {
-            responseFailure(routingContext, e);
+            responseOperationFailed(routingContext, e);
         }
     }
 }

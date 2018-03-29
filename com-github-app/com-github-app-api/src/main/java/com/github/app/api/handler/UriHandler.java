@@ -1,8 +1,7 @@
 package com.github.app.api.handler;
 
 import com.github.app.api.dao.domain.Popedom;
-import io.vertx.core.buffer.Buffer;
-import io.vertx.core.json.JsonObject;
+import com.github.app.utils.JacksonUtils;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import org.apache.logging.log4j.LogManager;
@@ -10,9 +9,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * json format
@@ -44,7 +41,7 @@ public interface UriHandler {
      */
     int CODE_JWT_TOKEN_MISSING = -3;
     /**
-     * This user have logined
+     * This user have login
      */
     int CODE_USER_HAVE_LOGINED = -4;
     /**
@@ -95,43 +92,46 @@ public interface UriHandler {
      * @param data
      */
     default void response(RoutingContext routingContext, Integer code, String msg, Object data) {
-        Map map = new HashMap();
-        map.put("code", code);
-        if (msg != null) {
-            map.put("msg", msg);
+        JsonResponse response = new JsonResponse(code, msg, data);
+
+        if (logger.isInfoEnabled()) {
+            logger.info("\n{}:{} \nheader:{}\n params:{}\n body:{}\n response:{}\n\n",
+                    routingContext.request().method().name(),
+                    routingContext.request().absoluteURI(),
+                    JacksonUtils.serializePretty(routingContext.request().headers().entries()),
+                    JacksonUtils.serializePretty(routingContext.request().params().entries()),
+                    routingContext.getBodyAsString(),
+                    JacksonUtils.serializePretty(response));
         }
-        if (data != null) {
-            map.put("data", data);
-        }
-        Buffer buffer = JsonObject.mapFrom(map).toBuffer();
-        logger.info(routingContext.request().path() + "-->" + buffer.toString());
-        routingContext.response().end(buffer);
+        routingContext.response().end(JacksonUtils.serialize(response));
     }
 
     /**
+     * 权限认证失败
+     *
      * @param routingContext
      * @param msg
      */
-    default void responseFailure(RoutingContext routingContext, String msg) {
-        response(routingContext, CODE_API_OPERATION_FAILED, msg);
-    }
-
-    /**
-     * @param routingContext
-     * @param msg
-     */
-    default void responseOperationAuthFailure(RoutingContext routingContext, String msg) {
+    default void responseOperationAuthFailed(RoutingContext routingContext, String msg) {
         response(routingContext, CODE_API_AUTHENTICATION_FAILED, msg);
     }
 
     /**
      * @param routingContext
+     * @param msg
      */
-    default void responseFailure(RoutingContext routingContext) {
+    default void responseOperationFailed(RoutingContext routingContext, String msg) {
+        response(routingContext, CODE_API_OPERATION_FAILED, msg);
+    }
+
+    /**
+     * @param routingContext
+     */
+    default void responseOperationFailed(RoutingContext routingContext) {
         if (routingContext.failed()) {
-            responseFailure(routingContext, routingContext.failure());
+            responseOperationFailed(routingContext, routingContext.failure());
         } else {
-            responseFailure(routingContext, "unknow server error");
+            responseOperationFailed(routingContext, "unknow server error");
         }
     }
 
@@ -139,27 +139,26 @@ public interface UriHandler {
      * @param routingContext
      * @param e
      */
-    default void responseFailure(RoutingContext routingContext, Exception e) {
-        responseFailure(routingContext, e);
+    default void responseOperationFailed(RoutingContext routingContext, Exception e) {
+        responseOperationFailed(routingContext, e.getCause());
     }
 
     /**
      * @param routingContext
      * @param throwable
      */
-    default void responseFailure(RoutingContext routingContext, Throwable throwable) {
-        throwable.printStackTrace();
+    default void responseOperationFailed(RoutingContext routingContext, Throwable throwable) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         throwable.printStackTrace(new PrintStream(baos));
         String exception = baos.toString();
-        responseFailure(routingContext, exception);
+        responseOperationFailed(routingContext, exception);
     }
 
     /**
      * @param routingContext
      */
     default void responseSuccess(RoutingContext routingContext) {
-        response(routingContext, CODE_SUCCESS, "success");
+        responseSuccess(routingContext, "success");
     }
 
     /**
@@ -167,7 +166,7 @@ public interface UriHandler {
      * @param msg
      */
     default void responseSuccess(RoutingContext routingContext, String msg) {
-        response(routingContext, CODE_SUCCESS, msg);
+        responseSuccess(routingContext, msg, null);
     }
 
     /**
@@ -175,7 +174,7 @@ public interface UriHandler {
      * @param data
      */
     default void responseSuccess(RoutingContext routingContext, Object data) {
-        response(routingContext, CODE_SUCCESS, null, data);
+        responseSuccess(routingContext, null, data);
     }
 
     /**

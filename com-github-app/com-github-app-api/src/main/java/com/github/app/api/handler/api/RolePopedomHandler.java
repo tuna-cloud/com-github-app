@@ -58,7 +58,7 @@ public class RolePopedomHandler implements UriHandler {
     public void saveOrUpdate(RoutingContext routingContext) {
         Role role = routingContext.getBodyAsJson().mapTo(Role.class);
         if (StringUtils.isEmpty(role.getName())) {
-            responseFailure(routingContext, "name must be filled");
+            responseOperationFailed(routingContext, "name must be filled");
             return;
         }
 
@@ -69,17 +69,17 @@ public class RolePopedomHandler implements UriHandler {
     public void delete(RoutingContext routingContext) {
         String roleId = routingContext.pathParam("roleId");
         if (StringUtils.isEmpty(roleId)) {
-            responseFailure(routingContext, "roleId must be supply");
+            responseOperationFailed(routingContext, "roleId must be supply");
             return;
         }
 
         if (roleId.equalsIgnoreCase("1")) {
-            responseFailure(routingContext, "超级管理员角色不允许删除");
+            responseOperationFailed(routingContext, "超级管理员角色不允许删除");
             return;
         }
 
         if (accountService.isRoleHasAccount(Integer.valueOf(roleId))) {
-            responseFailure(routingContext, "该角色拥有账号，不允许删除");
+            responseOperationFailed(routingContext, "该角色拥有账号，不允许删除");
             return;
         }
 
@@ -90,7 +90,7 @@ public class RolePopedomHandler implements UriHandler {
     public void queryOne(RoutingContext routingContext) {
         String roleId = routingContext.pathParam("roleId");
         if (StringUtils.isEmpty(roleId)) {
-            responseFailure(routingContext, "roleId must be supply");
+            responseOperationFailed(routingContext, "roleId must be supply");
             return;
         }
 
@@ -117,7 +117,7 @@ public class RolePopedomHandler implements UriHandler {
         List<RolePopedom> list = JacksonUtils.deserialize(json, new TypeReference<List<RolePopedom>>(){});
 
         if(list.get(0).getRoleId() == 1) {
-            responseFailure(routingContext, "超级管理员权限不允许编辑");
+            responseOperationFailed(routingContext, "超级管理员权限不允许编辑");
             return;
         }
 
@@ -133,7 +133,7 @@ public class RolePopedomHandler implements UriHandler {
     public void getRolePopedom(RoutingContext routingContext) {
         String roleId = routingContext.pathParam("roleId");
         if (StringUtils.isEmpty(roleId)) {
-            responseFailure(routingContext, "roleId must be supply");
+            responseOperationFailed(routingContext, "roleId must be supply");
             return;
         }
 
@@ -147,7 +147,7 @@ public class RolePopedomHandler implements UriHandler {
     public void getRolePopedomVue(RoutingContext routingContext) {
         String roleId = routingContext.pathParam("roleId");
         if (StringUtils.isEmpty(roleId)) {
-            responseFailure(routingContext, "roleId must be supply");
+            responseOperationFailed(routingContext, "roleId must be supply");
             return;
         }
 
@@ -158,7 +158,7 @@ public class RolePopedomHandler implements UriHandler {
     public void getRolePopedomApi(RoutingContext routingContext) {
         String roleId = routingContext.pathParam("roleId");
         if (StringUtils.isEmpty(roleId)) {
-            responseFailure(routingContext, "roleId must be supply");
+            responseOperationFailed(routingContext, "roleId must be supply");
             return;
         }
 

@@ -1,13 +1,14 @@
 package com.github.app.api.handler.common;
 
+import com.github.app.api.handler.JsonResponse;
 import com.github.app.api.handler.UriHandler;
+import com.github.app.utils.JacksonUtils;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import org.springframework.stereotype.Component;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.Writer;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 
 @Component
 public class FailureHandler implements UriHandler {
@@ -18,23 +19,26 @@ public class FailureHandler implements UriHandler {
     }
 
     public void failure(RoutingContext routingContext) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
         if (routingContext.failure() != null) {
-            responseFailure(routingContext);
-        } else {
-            responseFailure(routingContext," error happen unknew");
+            routingContext.failure().printStackTrace(new PrintStream(baos));
         }
-    }
 
-    /**
-     * 获取详细的异常链信息--精准定位异常位置
-     *
-     * @param aThrowable
-     * @return
-     */
-    private static String getStackTrace(Throwable aThrowable) {
-        Writer result = new StringWriter();
-        PrintWriter printWriter = new PrintWriter(result);
-        aThrowable.printStackTrace(printWriter);
-        return result.toString();
+        String exception = baos.toString();
+        JsonResponse response = new JsonResponse(CODE_API_OPERATION_FAILED, exception);
+
+        /**
+         * 捕获handler的异常，打印错误日志
+         */
+
+        logger.error("\n{}:{} \nheader:{}\n params:{}\n body:{}\n response:{}\n\n",
+                routingContext.request().method().name(),
+                routingContext.request().absoluteURI(),
+                JacksonUtils.serializePretty(routingContext.request().headers().entries()),
+                JacksonUtils.serializePretty(routingContext.request().params()),
+                routingContext.getBodyAsString(),
+                JacksonUtils.serializePretty(response));
+
+        routingContext.response().end(JacksonUtils.serialize(response));
     }
 }

@@ -66,7 +66,7 @@ public class AccountHandler implements UriHandler {
 		Account account = routingContext.getBodyAsJson().mapTo(Account.class);
 
 		if (account.getAccountId() == 1) {
-			responseFailure(routingContext, "超级管理员帐号不允许禁用");
+			responseOperationFailed(routingContext, "超级管理员帐号不允许禁用");
 			return;
 		}
 
@@ -78,12 +78,12 @@ public class AccountHandler implements UriHandler {
 		Account account = routingContext.getBodyAsJson().mapTo(Account.class);
 
 		if (StringUtils.isEmpty(account.getAccount())) {
-			responseFailure(routingContext, "帐号不能为空");
+			responseOperationFailed(routingContext, "帐号不能为空");
 			return;
 		}
 
 		if (ObjectUtils.isEmpty(account.getRoleId())) {
-			responseFailure(routingContext, "角色不能为空");
+			responseOperationFailed(routingContext, "角色不能为空");
 			return;
 		}
 
@@ -100,12 +100,12 @@ public class AccountHandler implements UriHandler {
 		Account account = routingContext.getBodyAsJson().mapTo(Account.class);
 
 		if (StringUtils.isEmpty(account.getAccount())) {
-			responseFailure(routingContext, "帐号不能为空");
+			responseOperationFailed(routingContext, "帐号不能为空");
 			return;
 		}
 
 		if (ObjectUtils.isEmpty(account.getRoleId())) {
-			responseFailure(routingContext, "角色不能为空");
+			responseOperationFailed(routingContext, "角色不能为空");
 			return;
 		}
 
@@ -116,7 +116,7 @@ public class AccountHandler implements UriHandler {
 		if (loginAccount.getRoleId() != 1) {
 			if (!loginAccount.getAccount().equalsIgnoreCase(account.getAccount())) {
 				// 除超级管理员，不允许其他角色修改除自己帐号外的其他帐号信息
-				responseFailure(routingContext, "不允许修改其他帐号信息");
+				responseOperationFailed(routingContext, "不允许修改其他帐号信息");
 			}
 		}
 
@@ -136,12 +136,12 @@ public class AccountHandler implements UriHandler {
 	public void delete(RoutingContext routingContext) {
 		String accountId = routingContext.pathParam("accountId");
 		if (StringUtils.isEmpty(accountId)) {
-			responseFailure(routingContext, "accountId参数缺失");
+			responseOperationFailed(routingContext, "accountId参数缺失");
 			return;
 		}
 
 		if (accountId.equalsIgnoreCase("1")) {
-			responseFailure(routingContext, "超级管理员帐号不允许删除");
+			responseOperationFailed(routingContext, "超级管理员帐号不允许删除");
 			return;
 		}
 
@@ -165,7 +165,7 @@ public class AccountHandler implements UriHandler {
 	public void queryOne(RoutingContext routingContext) {
 		String accountId = routingContext.pathParam("accountId");
 		if (StringUtils.isEmpty(accountId)) {
-			responseFailure(routingContext, "accountId参数缺失");
+			responseOperationFailed(routingContext, "accountId参数缺失");
 			return;
 		}
 		Account account = accountService.getAccountByAccountId(Integer.valueOf(accountId));
@@ -175,7 +175,7 @@ public class AccountHandler implements UriHandler {
 	public void currentLogin(RoutingContext routingContext) {
 		String acc = routingContext.get("account");
 		if (StringUtils.isEmpty(acc)) {
-			responseFailure(routingContext, "未登录");
+			responseOperationFailed(routingContext, "未登录");
 			return;
 		}
 
@@ -196,7 +196,7 @@ public class AccountHandler implements UriHandler {
 	public void resetPassword(RoutingContext routingContext) {
 		String accountId = routingContext.pathParam("accountId");
 		if (StringUtils.isEmpty(accountId)) {
-			responseFailure(routingContext, "accountId参数缺失");
+			responseOperationFailed(routingContext, "accountId参数缺失");
 			return;
 		}
 		accountService.resetPassword(Integer.valueOf(accountId));
@@ -207,35 +207,35 @@ public class AccountHandler implements UriHandler {
 		JsonObject jsonObject = routingContext.getBodyAsJson();
 
 		if (!jsonObject.containsKey("oldPwd")) {
-			responseFailure(routingContext, "oldPwd参数缺失");
+			responseOperationFailed(routingContext, "oldPwd参数缺失");
 			return;
 		}
 
 		if (!jsonObject.containsKey("newPwd")) {
-			responseFailure(routingContext, "newPwd参数缺失");
+			responseOperationFailed(routingContext, "newPwd参数缺失");
 			return;
 		}
 
 		if (!jsonObject.containsKey("newPwdCheck")) {
-			responseFailure(routingContext, "newPwdCheck参数缺失");
+			responseOperationFailed(routingContext, "newPwdCheck参数缺失");
 			return;
 		}
 
 		String acc = routingContext.get("account");
 		if (StringUtils.isEmpty(acc)) {
-			responseFailure(routingContext, "未登录");
+			responseOperationFailed(routingContext, "未登录");
 			return;
 		}
 
 		Account account = accountService.getAccountByAccountOrMobileOrEmail(acc, null, null);
 
 		if (!MD5Utils.validateMd5WithSalt(jsonObject.getString("oldPwd"), account.getPassword())) {
-			responseFailure(routingContext, "原始密码输入有误");
+			responseOperationFailed(routingContext, "原始密码输入有误");
 			return;
 		}
 
 		if (!jsonObject.getString("newPwd").equals(jsonObject.getString("newPwdCheck"))) {
-			responseFailure(routingContext, "新密码两次输入不一致");
+			responseOperationFailed(routingContext, "新密码两次输入不一致");
 			return;
 		}
 

@@ -18,7 +18,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -83,7 +82,7 @@ public class SystemOperationHandler implements UriHandler {
 	public void del(RoutingContext routingContext) {
 		List<String> list = routingContext.queryParam("fileName");
 		if (list == null || list.size() < 1) {
-			responseFailure(routingContext, "必须选择一个文件");
+			responseOperationFailed(routingContext, "必须选择一个文件");
 			return;
 		}
 
@@ -94,7 +93,7 @@ public class SystemOperationHandler implements UriHandler {
 	public void restore(RoutingContext routingContext) {
 		List<String> list = routingContext.queryParam("fileName");
 		if (list == null || list.size() < 1) {
-			responseFailure(routingContext, "必须选择一个文件");
+			responseOperationFailed(routingContext, "必须选择一个文件");
 			return;
 		}
 
@@ -107,7 +106,7 @@ public class SystemOperationHandler implements UriHandler {
 	public void download(RoutingContext routingContext) {
 		List<String> list = routingContext.queryParam("fileName");
 		if (list == null || list.size() < 1) {
-			responseFailure(routingContext, "必须选择一个文件");
+			responseOperationFailed(routingContext, "必须选择一个文件");
 			return;
 		}
 

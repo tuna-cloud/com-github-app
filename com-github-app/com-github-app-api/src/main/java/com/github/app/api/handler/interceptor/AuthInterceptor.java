@@ -94,7 +94,7 @@ public class AuthInterceptor implements UriHandler {
 				}
 			});
 		} catch (Exception e) {
-			responseFailure(routingContext, e);
+			responseOperationFailed(routingContext, e);
 		}
 	}
 
@@ -126,7 +126,7 @@ public class AuthInterceptor implements UriHandler {
 			routingContext.next();
 		} else {
 			logService.addLog(account, popedom.getName(), "[N]" + remark);
-			responseOperationAuthFailure(routingContext, "你没有权限进行此操作");
+			responseOperationAuthFailed(routingContext, "你没有权限进行此操作");
 		}
 	}
 

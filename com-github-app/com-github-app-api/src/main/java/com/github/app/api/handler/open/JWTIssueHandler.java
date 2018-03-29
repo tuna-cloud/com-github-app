@@ -65,7 +65,7 @@ public class JWTIssueHandler implements UriHandler {
             routingContext.session().put(CAPTCHA_CODE, captchaCode);
             routingContext.response().end(buffer);
         } catch (Exception e) {
-            responseFailure(routingContext, e);
+            responseOperationFailed(routingContext, e);
         }
     }
 
@@ -78,22 +78,22 @@ public class JWTIssueHandler implements UriHandler {
         String validateCode = jsonObject.getString("validateCode");
 
         if (StringUtils.isEmpty(validateCode)) {
-            responseFailure(routingContext, "验证码必须填写");
+            responseOperationFailed(routingContext, "验证码必须填写");
             return;
         }
 
         if (StringUtils.isEmpty(account)) {
-            responseFailure(routingContext, "帐号必须填写");
+            responseOperationFailed(routingContext, "帐号必须填写");
             return;
         }
 
         if (StringUtils.isEmpty(password)) {
-            responseFailure(routingContext, "密码必须填写");
+            responseOperationFailed(routingContext, "密码必须填写");
             return;
         }
 
         if (!validateCode.equalsIgnoreCase(routingContext.session().get(CAPTCHA_CODE))) {
-            responseFailure(routingContext, "验证码输入有误");
+            responseOperationFailed(routingContext, "验证码输入有误");
             return;
         }
 
@@ -116,7 +116,7 @@ public class JWTIssueHandler implements UriHandler {
             responseSuccess(routingContext, "", token);
         } else {
             logService.addLog(account, "登录失败", String.format("帐号:%s,密码:%s,IP:", account, password, routingContext.request().remoteAddress().toString()));
-            responseFailure(routingContext, "账号密码错误或账号已关闭");
+            responseOperationFailed(routingContext, "账号密码错误或账号已关闭");
         }
     }
 }
