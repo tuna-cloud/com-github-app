@@ -52,7 +52,9 @@ export const constantRouterMap = [
       { path: 'account/edit', name: '账号信息', code: 'vueaccountinfo', component: () => import('@/views/system/editaccount') },
       { path: 'role/list', name: '角色管理', code: 'vuerolemgr', component: () => import('@/views/system/role') },
       { path: 'sysBackup', name: '数据备份', code: 'vuedbback', component: () => import('@/views/system/databack') },
-      { path: 'log/list', name: '日志管理', code: 'vuelogmgr', component: () => import('@/views/system/log') }
+      { path: 'log/list', name: '日志管理', code: 'vuelogmgr', component: () => import('@/views/system/log') },
+      { path: 'account/onlinestat', name: '在线用户', code: 'vueonlineaccount', component: () => import('@/views/system/log') },
+      { path: 'system/performance', name: '性能监控', code: 'vueperformance', component: () => import('@/views/system/performance') }
     ]
   },
   {
