@@ -18,4 +18,11 @@ public class RequestUtils {
         }
         return null;
     }
+
+    public static Boolean getBoolean(MultiMap map, String key) {
+        if (!StringUtils.isEmpty(map.get(key))) {
+            return Boolean.valueOf(map.get(key));
+        }
+        return null;
+    }
 }

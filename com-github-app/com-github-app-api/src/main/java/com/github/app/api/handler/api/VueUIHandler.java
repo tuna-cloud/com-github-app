@@ -28,5 +28,6 @@ public class VueUIHandler implements UriHandler {
         list.add(Popedom.builder().name("vue[角色管理]").remark("网页权限，角色管理页面").code("vuerolemgr").build());
         list.add(Popedom.builder().name("vue[数据备份]").remark("网页权限，数据备份页面").code("vuedbback").build());
         list.add(Popedom.builder().name("vue[日志管理]").remark("网页权限，日志管理页面").code("vuelogmgr").build());
+        list.add(Popedom.builder().name("vue[性能统计]").remark("网页权限，性能统计页面").code("vueperformance").build());
     }
 }
