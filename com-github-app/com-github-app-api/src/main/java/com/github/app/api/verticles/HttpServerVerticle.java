@@ -50,33 +50,41 @@ public class HttpServerVerticle extends AbstractVerticle {
 
         Json.mapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true).configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true).configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true).configure(SerializationFeature.WRITE_NULL_MAP_VALUES, false).configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false).configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false).setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
-        applicationContext = new AnnotationConfigApplicationContext(SpringApplication.class);
+        vertx.executeBlocking(future-> {
+            applicationContext = new AnnotationConfigApplicationContext(SpringApplication.class);
 
-        JsonObject jsonObject = config();
+            JsonObject jsonObject = config();
 
-        JsonObject httpsOption = jsonObject.getJsonObject("https.option");
+            JsonObject httpsOption = jsonObject.getJsonObject("https.option");
 
-        HttpServerOptions options = new HttpServerOptions().setSsl(false);
-        if (httpsOption.getBoolean("enable")) {
-            options.setSsl(true);
-            options.setKeyCertOptions(new JksOptions().setPath(httpsOption.getJsonObject("keyCert").getString("path")).setPassword(httpsOption.getJsonObject("keyCert").getString("password")));
-        } else {
-            options.setSsl(false);
-        }
+            HttpServerOptions options = new HttpServerOptions().setSsl(false);
+            if (httpsOption.getBoolean("enable")) {
+                options.setSsl(true);
+                options.setKeyCertOptions(new JksOptions().setPath(httpsOption.getJsonObject("keyCert").getString("path")).setPassword(httpsOption.getJsonObject("keyCert").getString("password")));
+            } else {
+                options.setSsl(false);
+            }
 
-        server = vertx.createHttpServer(options);
+            server = vertx.createHttpServer(options);
 
-        router = Router.router(vertx);
+            router = Router.router(vertx);
 
-        setupRouter(router);
+            setupRouter(router);
 
-        server.requestHandler(router::accept).listen(jsonObject.getInteger("api.bind.port", 8080), ar -> {
-            if (ar.succeeded()) {
-                logger.info("api server start successfully, bind port: " + server.actualPort());
+            server.requestHandler(router::accept).listen(jsonObject.getInteger("api.bind.port", 8080), ar -> {
+                if (ar.succeeded()) {
+                    logger.info("api server start successfully, bind port: " + server.actualPort());
+                    future.complete();
+                } else {
+                    logger.error("api server start failed, reason:" + ar.cause().getLocalizedMessage());
+                    future.fail(ar.cause());
+                }
+            });
+        }, result -> {
+            if (result.succeeded()) {
                 startFuture.complete();
             } else {
-                logger.error("api server start failed, reason:" + ar.cause().getLocalizedMessage());
-                startFuture.fail(ar.cause());
+                startFuture.fail(result.cause());
             }
         });
     }
