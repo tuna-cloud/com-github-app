@@ -110,10 +110,10 @@ public class HttpServerVerticle extends AbstractVerticle {
 
         rootRouter.route().handler(LoggerHandler.create());
         rootRouter.route().handler(TimeoutHandler.create(8000));
-        rootRouter.route().handler(ResponseTimeHandler.create());
-        rootRouter.route().handler(ApiMetricTimeMeterHandler.create());
-        rootRouter.route().handler(ResponseContentTypeHandler.create());
-        rootRouter.route().handler(BodyHandler.create());
+        rootRouter.route().pathRegex("^(?!/static).*").handler(ResponseTimeHandler.create());
+        rootRouter.route().pathRegex("^(?!/static).*").handler(ApiMetricTimeMeterHandler.create());
+        rootRouter.route().pathRegex("^(?!/static).*").handler(ResponseContentTypeHandler.create());
+        rootRouter.route().pathRegex("^(?!/static).*").handler(BodyHandler.create());
 
         loadHandlers(rootRouter, "com.github.app.api.handler.common");
         rootRouter.route("/static/*").blockingHandler(StaticHandler.create().setAllowRootFileSystemAccess(true).setWebRoot(System.getenv(ServerEnvConstant.APP_HOME) + File.separator + "web"), false);
