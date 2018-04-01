@@ -25,6 +25,10 @@ public class PopedomContext {
         this.popedoms.addAll(popedoms);
     }
 
+    public void addPopedom(Popedom popedom) {
+        this.popedoms.add(popedom);
+    }
+
     private Popedom match(String uri) {
         for (Popedom popedom : popedoms) {
             if(Pattern.matches(popedom.getCode(), uri)) {

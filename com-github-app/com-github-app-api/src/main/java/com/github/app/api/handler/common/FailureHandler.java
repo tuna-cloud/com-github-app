@@ -21,6 +21,7 @@ public class FailureHandler implements UriHandler {
     public void failure(RoutingContext routingContext) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         if (routingContext.failure() != null) {
+            routingContext.failure().printStackTrace();
             routingContext.failure().printStackTrace(new PrintStream(baos));
         }
 

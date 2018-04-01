@@ -12,7 +12,9 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.github.app.api.plugin.ApiMetricTimeMeterHandler;
 import com.github.app.api.utils.ConfigLoader;
+
 import io.vertx.core.json.Json;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContext;
@@ -145,8 +147,6 @@ public class HttpServerVerticle extends AbstractVerticle {
 
     /**
      * 动态挂载handler
-     *
-     * @param uriHandler
      */
     public void addRoute(UriHandler uriHandler) {
         uriHandler.registeUriHandler(router);

@@ -2,7 +2,9 @@ package com.github.app.api.handler.api;
 
 import com.github.app.api.dao.domain.Popedom;
 import com.github.app.api.handler.UriHandler;
+
 import io.vertx.ext.web.Router;
+
 import org.springframework.stereotype.Component;
 
 import java.util.List;
