@@ -29,4 +29,3 @@ rem del %APPLICATION_HOME%\plugins\*.jar
 rem copy new jar to destanation folder
 rem copy %APPLICATION_HOME%\..\com-github-app\distribution\target\distribution-1.0.0-bin\libs\*.jar %APPLICATION_HOME%\libs
 rem copy %APPLICATION_HOME%\..\com-github-app\com-github-app-runner\target\com-github-app-runner*.jar %APPLICATION_HOME%\libs
-rem copy %APPLICATION_HOME%\..\com-github-app\com-github-app-agent\target\com-github-app-agent*.jar %APPLICATION_HOME%\plugins\java-agent.jar
