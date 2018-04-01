@@ -13,3 +13,13 @@ export function roundNumber(value, precision) {
   }
   return Math.round(value * t) / t
 }
+
+/**
+ * 将数字前边补充0，至长度为length
+ * @param num
+ * @param length
+ * @returns {string}
+ */
+export function prefixInteger(num, length) {
+  return (Array(length).join('0') + num).slice(-length)
+}

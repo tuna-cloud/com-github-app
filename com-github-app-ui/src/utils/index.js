@@ -1,7 +1,9 @@
 /**
- * Created by jiachenpan on 16/11/18.
+ * 格式化时间成字符串
+ * @param time 格式化的时间，可以是日期对象或者格林尼治时间(单位 s)
+ * @param cFormat
+ * @returns {*}
  */
-
 export function parseTime(time, cFormat) {
   if (arguments.length === 0) {
     return null
@@ -55,17 +57,6 @@ export function formatTime(time, option) {
   } else {
     return d.getMonth() + 1 + '月' + d.getDate() + '日' + d.getHours() + '时' + d.getMinutes() + '分'
   }
-}
-
-export function formatTimeUs(time) {
-  var d = new Date(time / 1000)
-  var date = (d.getFullYear()) + '-' +
-    (d.getMonth() + 1) + '-' +
-    (d.getDate()) + ' ' +
-    (d.getHours()) + ':' +
-    (d.getMinutes()) + ':' +
-    (d.getSeconds())
-  return date
 }
 
 export function isItemInArray(array, item) {

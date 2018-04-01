@@ -62,7 +62,7 @@
 <script>
   import { getList } from '@/api/log'
   import { deleteAllLog } from '@/api/log'
-  import { formatTimeUs } from '@/utils/index'
+  import { formatUs2String } from '@/utils/timeutils'
   import BasePagination from '../base/BasePagination'
   import { MessageBox } from 'element-ui'
 
@@ -124,7 +124,7 @@
         })
       },
       formattimeStr(cellValue) {
-        return formatTimeUs(cellValue)
+        return formatUs2String(cellValue)
       },
       deleteLog() {
         MessageBox.confirm('确认要清除全部日志？', '提示', {

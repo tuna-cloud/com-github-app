@@ -47,3 +47,15 @@ export function updateAccount(account) {
     data: account
   })
 }
+
+/**
+ * 查询在线用户
+ * @param params
+ */
+export function getSessionList(params) {
+  return request({
+    url: '/api/account/online/session',
+    method: 'get',
+    params: params
+  })
+}

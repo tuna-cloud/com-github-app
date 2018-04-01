@@ -28,7 +28,7 @@
       </el-table-column>
       <el-table-column label="时间" align="center">
         <template slot-scope="scope">
-          {{formattimeStr(scope.row.createTime*1000)}}
+          {{formattimeStr(scope.row.createTime)}}
         </template>
       </el-table-column>
       <el-table-column label="操作" width="160" align="center">
@@ -50,7 +50,7 @@
   import { backupDatabase } from '@/api/sysdatabackup'
   import { restoreDatabase } from '@/api/sysdatabackup'
   import { deleteSqlFile } from '@/api/sysdatabackup'
-  import { formatTimeUs } from '@/utils/index'
+  import { formatMs2String } from '@/utils/timeutils'
   import BasePagination from '../base/BasePagination'
   import BaseUploadFile from '../base/BaseUploadFile'
   import { Message, MessageBox } from 'element-ui'
@@ -87,7 +87,7 @@
         this.$refs.uploadfile.beginUpload()
       },
       formattimeStr(cellValue) {
-        return formatTimeUs(cellValue)
+        return formatMs2String(cellValue)
       },
       download(row) {
         window.open(process.env.BASE_API + '/open/download?fileName=' + row.name + '&code=' + row.code)
