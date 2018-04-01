@@ -13,11 +13,9 @@
         <moduleSet>
             <useAllReactorProjects>true</useAllReactorProjects>
             <includes>
-                <include>*:*api</include>
                 <include>*:*runner</include>
+                <include>*:*api</include>
                 <include>*:*utils</include>
-                <include>*:*agent</include>
-                <include>*:*deploy</include>
             </includes>
             <binaries>
                 <outputDirectory>classes</outputDirectory>

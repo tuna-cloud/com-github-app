@@ -5,6 +5,7 @@ import com.github.app.api.utils.RequestUtils;
 import com.github.app.api.utils.SessionConstant;
 import com.github.app.utils.MD5Utils;
 import com.github.app.utils.ServerEnvConstant;
+
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import org.springframework.stereotype.Component;
@@ -16,8 +17,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
+
 import io.vertx.core.MultiMap;
 import io.vertx.core.buffer.Buffer;
 import org.springframework.util.StringUtils;
@@ -93,14 +93,13 @@ public class DownLoadFileHandler implements UriHandler {
             BufferedImage tag = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
             tag.getGraphics().drawImage(bi, 0, 0, width, height, null);
             ByteArrayOutputStream os = new ByteArrayOutputStream();
-            JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(os);
-            encoder.encode(tag);
             ImageIO.write(tag, "jpeg", os);
 
             Buffer buffer = Buffer.buffer();
             buffer.appendBytes(os.toByteArray());
             in.close();
             os.close();
+
             routingContext.response().end(buffer);
         } catch (Exception e) {
             responseOperationFailed(routingContext, e);

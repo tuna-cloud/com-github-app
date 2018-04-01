@@ -12,15 +12,12 @@
         <module>com-github-app-utils</module>
         <module>com-github-app-api</module>
         <module>com-github-app-runner</module>
-        <module>com-github-app-agent</module>
-        <module>com-github-app-deploy</module>
         <module>distribution</module>
     </modules>
 
     <properties>
         <vertx.version>3.5.1</vertx.version>
     </properties>
-
 
     <build>
         <pluginManagement>
@@ -29,7 +26,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.3</version>
+                    <version>3.5</version>
                     <configuration>
                         <source>1.8</source>
                         <target>1.8</target>

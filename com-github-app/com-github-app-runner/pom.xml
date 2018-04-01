@@ -19,11 +19,6 @@
             <artifactId>com-github-app-api</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.github.app.deploy</groupId>
-            <artifactId>com-github-app-deploy</artifactId>
-            <version>${project.version}</version>
-        </dependency>
     </dependencies>
 
     <!--
