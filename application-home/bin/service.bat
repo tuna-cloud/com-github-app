@@ -93,7 +93,7 @@ set "EXECUTABLE=%CATALINA_HOME%\bin\%SVREXE%.exe"
 
 rem Set default Service name
 set SERVICE_NAME=vertx
-set DISPLAYNAME=xushy web server 1.0 %SERVICE_NAME%
+set DISPLAYNAME=vertx web server 1.0 %SERVICE_NAME%
 
 rem Java 9 no longer supports the java.endorsed.dirs
 rem system property. Only try to use it if
@@ -116,7 +116,7 @@ if "x%1x" == "xx" goto checkServiceCmd
 if "x%1x" == "x/userx" goto runAsUser
 if "x%1x" == "x--userx" goto runAsUser
 set SERVICE_NAME=%1
-set DISPLAYNAME=xushy web server 1.0 %1
+set DISPLAYNAME=vertx web server 1.0 %1
 shift
 if "x%1x" == "xx" goto checkServiceCmd
 goto checkUser
@@ -179,11 +179,31 @@ rem set "CLASSPATH=%CATALINA_HOME%\bin\bootstrap.jar;%CATALINA_BASE%\bin\tomcat-
 rem if not "%CATALINA_HOME%" == "%CATALINA_BASE%" set "CLASSPATH=%CLASSPATH%;%CATALINA_HOME%\bin\tomcat-juli.jar"
 
 if "%SERVICE_STARTUP_MODE%" == "" set SERVICE_STARTUP_MODE=manual
-if "%JvmMs%" == "" set JvmMs=128
-if "%JvmMx%" == "" set JvmMx=256
+if "%JvmMs%" == "" set JvmMs=256
+if "%JvmMx%" == "" set JvmMx=1024
+
+rem JMX settings
+set "JMX_PORT=2099"
+rem JMX settings
+IF ["%KAFKA_JMX_OPTS%"] EQU [""] (
+	set KAFKA_JMX_OPTS=-Dcom.sun.management.jmxremote;-Dcom.sun.management.jmxremote.authenticate=false;-Dcom.sun.management.jmxremote.ssl=false;
+)
+
+rem JMX port to use
+IF ["%JMX_PORT%"] NEQ [""] (
+	set KAFKA_JMX_OPTS=%KAFKA_JMX_OPTS%-Dcom.sun.management.jmxremote.port=%JMX_PORT%;
+)
+rem Generic jvm settings you want to add
+IF ["%KAFKA_OPTS%"] EQU [""] (
+	set KAFKA_OPTS=-Duser.timezone=Asia/Shanghai;
+)
+rem JVM performance options
+IF ["%KAFKA_JVM_PERFORMANCE_OPTS%"] EQU [""] (
+	set KAFKA_JVM_PERFORMANCE_OPTS=-XX:+UseG1GC;-XX:MaxGCPauseMillis=20;-XX:InitiatingHeapOccupancyPercent=35;-XX:+DisableExplicitGC;-Djava.awt.headless=true;
+)
 
 "%EXECUTABLE%" //IS//%SERVICE_NAME% ^
-    --Description "xushy web Server 1.0 - https://github.com/ioprotocol/com-github-app" ^
+    --Description "vertx web Server 1.0 - https://github.com/ioprotocol/com-github-app" ^
     --DisplayName "%DISPLAYNAME%" ^
     --Install "%EXECUTABLE%" ^
     --LogPath "%CATALINA_BASE%\logs" ^
@@ -202,7 +222,7 @@ if "%JvmMx%" == "" set JvmMx=256
     --StartParams "%CATALINA_BASE%" ^
     --StopParams stop ^
 	--Environment "APPLICATION_HOME=%CATALINA_BASE%;" ^
-    --JvmOptions "%JvmArgs%" ^
+    --JvmOptions "%KAFKA_JVM_PERFORMANCE_OPTS%%KAFKA_JMX_OPTS%%KAFKA_OPTS%;" ^
     --JvmOptions9 "--add-opens=java.base/java.lang=ALL-UNNAMED#--add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED" ^
     --Startup "%SERVICE_STARTUP_MODE%" ^
     --JvmMs "%JvmMs%" ^

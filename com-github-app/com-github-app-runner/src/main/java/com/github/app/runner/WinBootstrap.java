@@ -65,8 +65,30 @@ public class WinBootstrap {
      */
     public static void stop(String[] args) {
         vertx.undeploy(verticleId, ar -> {
-            vertx.close();
-            isStop.set(true);
+            if (ar.succeeded()) {
+                System.out.println("undeploy http verticle successfully");
+                vertx.close(res -> {
+                    if (res.succeeded()) {
+                        System.out.println("stop vertx server successfully");
+                    } else {
+                        res.cause().printStackTrace();
+                        System.out.println("stop vertx server failed");
+                    }
+                    isStop.set(true);
+                });
+            } else {
+                ar.cause().printStackTrace();
+                System.out.println("undeploy http verticle failed");
+                vertx.close(res -> {
+                    if (res.succeeded()) {
+                        System.out.println("stop vertx server successfully");
+                    } else {
+                        res.cause().printStackTrace();
+                        System.out.println("stop vertx server failed");
+                    }
+                    isStop.set(true);
+                });
+            }
         });
     }
 

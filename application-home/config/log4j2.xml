@@ -5,7 +5,7 @@
 
 		<!-- 日志备份目录 -->
 		<Property name="BACKUP_HOME">${env:APPLICATION_HOME}/logs/backup</Property>
-		<Property name="SERVER_NAME">app-server</Property>
+		<Property name="SERVER_NAME">vertx</Property>
 		<Property name="EVERY_MAX_FILE_NUM">5000</Property><!-- 日志文件最大个数 -->
 		<Property name="EVERY_FILE_SIZE">10M</Property><!-- 日志切割的最小单位 -->
 		<Property name="DATA_FILE_SIZE">100M</Property><!-- 数据日志切割的最小单位 -->
