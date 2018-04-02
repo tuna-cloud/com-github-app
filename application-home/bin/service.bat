@@ -193,14 +193,21 @@ rem JMX port to use
 IF ["%JMX_PORT%"] NEQ [""] (
 	set KAFKA_JMX_OPTS=%KAFKA_JMX_OPTS%-Dcom.sun.management.jmxremote.port=%JMX_PORT%;
 )
+
 rem Generic jvm settings you want to add
 IF ["%KAFKA_OPTS%"] EQU [""] (
 	set KAFKA_OPTS=-Duser.timezone=Asia/Shanghai;
 )
+
 rem JVM performance options
 IF ["%KAFKA_JVM_PERFORMANCE_OPTS%"] EQU [""] (
 	set KAFKA_JVM_PERFORMANCE_OPTS=-XX:+UseG1GC;-XX:MaxGCPauseMillis=20;-XX:InitiatingHeapOccupancyPercent=35;-XX:+DisableExplicitGC;-Djava.awt.headless=true;
 )
+
+rem GC options
+set GC_FILE_SUFFIX="-gc.log"
+set GC_LOG_FILE_NAME=%SERVICE_NAME%%GC_FILE_SUFFIX%
+set KAFKA_GC_LOG_OPTS=-Xloggc:%CATALINA_BASE%\logs\%GC_LOG_FILE_NAME%;-verbose:gc;-XX:+PrintGCDetails;-XX:+PrintGCDateStamps;-XX:+PrintGCTimeStamps;
 
 "%EXECUTABLE%" //IS//%SERVICE_NAME% ^
     --Description "vertx web Server 1.0 - https://github.com/ioprotocol/com-github-app" ^
@@ -222,7 +229,7 @@ IF ["%KAFKA_JVM_PERFORMANCE_OPTS%"] EQU [""] (
     --StartParams "%CATALINA_BASE%" ^
     --StopParams stop ^
 	--Environment "APPLICATION_HOME=%CATALINA_BASE%;" ^
-    --JvmOptions "%KAFKA_JVM_PERFORMANCE_OPTS%%KAFKA_JMX_OPTS%%KAFKA_OPTS%;" ^
+    --JvmOptions "%KAFKA_JVM_PERFORMANCE_OPTS%%KAFKA_JMX_OPTS%%KAFKA_OPTS%%KAFKA_GC_LOG_OPTS%" ^
     --JvmOptions9 "--add-opens=java.base/java.lang=ALL-UNNAMED#--add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED" ^
     --Startup "%SERVICE_STARTUP_MODE%" ^
     --JvmMs "%JvmMs%" ^
