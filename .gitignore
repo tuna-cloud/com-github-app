@@ -11,3 +11,4 @@ node_modules
 application-home/libs/*.jar
 application-home/plugins/*.jar
 application-home/data/cache/*
+application-home/web/*
