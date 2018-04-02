@@ -19,7 +19,7 @@
 		</Console>
 		
 		<!-- 只显示info级别的信息 -->
-		<RollingFile name="depFrameworkInfo" append="true" fileName="${LOG_HOME}/${SERVER_NAME}_depFrameworkInfo.log" filePattern="${BACKUP_HOME}/${SERVER_NAME}_depFrameworkInfo.%d{yyyy-MM-dd}_%i.log.gz">
+		<RollingFile name="depInfo" append="true" fileName="${LOG_HOME}/${SERVER_NAME}_depInfo.log" filePattern="${BACKUP_HOME}/${SERVER_NAME}_depInfo.%d{yyyy-MM-dd}_%i.log.gz">
 			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%logger{1} %C{1}.%M] - %msg%n" />
 			<Policies>
 				<SizeBasedTriggeringPolicy size="${EVERY_FILE_SIZE}" />
@@ -33,7 +33,7 @@
 		</RollingFile>
 
 		<!-- 只显示error级别的信息 -->
-		<RollingFile name="depFrameworkError" append="true" fileName="${LOG_HOME}/${SERVER_NAME}_depFrameworkError.log" filePattern="${BACKUP_HOME}/${SERVER_NAME}_depFrameworkError.%d{yyyy-MM-dd}_error_%i.log.gz">
+		<RollingFile name="depError" append="true" fileName="${LOG_HOME}/${SERVER_NAME}_depError.log" filePattern="${BACKUP_HOME}/${SERVER_NAME}_depError.%d{yyyy-MM-dd}_error_%i.log.gz">
 			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%logger{1} %C{1}.%M] - %msg%xEx%n" />
 			<Policies>
 				<SizeBasedTriggeringPolicy size="${EVERY_FILE_SIZE}" />
@@ -84,8 +84,8 @@
 
 		<AsyncRoot level="${OUTPUT_LOG_LEVEL}">
 			<appender-ref ref="console" />
-			<Appender-ref ref="depFrameworkInfo" />
-			<Appender-ref ref="depFrameworkError" />
+			<Appender-ref ref="depInfo" />
+			<Appender-ref ref="depError" />
 		</AsyncRoot>
 	</Loggers>
 </Configuration>
