@@ -57,7 +57,7 @@ public class DownLoadFileHandler implements UriHandler {
             return;
         }
 
-        String sqlFileName = System.getenv(ServerEnvConstant.APP_HOME)
+        String sqlFileName = ServerEnvConstant.getAppServerHome()
                 + File.separator + "data"
                 + File.separator + "backup"
                 + File.separator + list.get(0);
@@ -80,7 +80,7 @@ public class DownLoadFileHandler implements UriHandler {
             if (StringUtils.isEmpty(imgName) || imgName.equalsIgnoreCase("undefined")) {
                 imgName = File.separator + "default_header.jpg";
             }
-            BufferedInputStream in = new BufferedInputStream(new FileInputStream(System.getenv(ServerEnvConstant.APP_HOME) + File.separator + "web" + imgName));
+            BufferedInputStream in = new BufferedInputStream(new FileInputStream(ServerEnvConstant.getAppServerHome() + File.separator + "web" + imgName));
             Image bi = ImageIO.read(in);
             Integer height = RequestUtils.getInteger(params, "height");
             Integer width = RequestUtils.getInteger(params, "width");

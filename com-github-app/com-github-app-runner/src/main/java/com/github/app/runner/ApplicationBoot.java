@@ -1,6 +1,5 @@
 package com.github.app.runner;
 
-import com.github.app.api.services.SystemOperationService;
 import com.github.app.api.services.impl.MySqlOperationServiceImpl;
 import com.github.app.api.utils.ConfigLoader;
 import com.github.app.api.verticles.HttpServerVerticle;
@@ -15,15 +14,14 @@ import io.vertx.core.cli.CommandLine;
 import io.vertx.core.cli.Option;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.dropwizard.DropwizardMetricsOptions;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.LoggerContext;
-
 import java.io.File;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.LoggerContext;
 
 public class ApplicationBoot {
     private static Logger logger = LogManager.getLogger(ApplicationBoot.class);
@@ -33,10 +31,10 @@ public class ApplicationBoot {
     static {
         setup();
         cli = CLI.create("ApplicationBooter").setSummary("An application runner instance")
-                .addOption(new Option().setLongName("name").setShortName("name")
-                        .setDescription("the application name which want bo boot").setRequired(true))
-                .addOption(new Option().setLongName("file").setShortName("file")
-                        .setDescription("the sql file which you want to restore").setRequired(false));
+            .addOption(new Option().setLongName("name").setShortName("name")
+                .setDescription("the application name which want bo boot").setRequired(true))
+            .addOption(new Option().setLongName("file").setShortName("file")
+                .setDescription("the sql file which you want to restore").setRequired(false));
 
     }
 
@@ -57,20 +55,23 @@ public class ApplicationBoot {
 
         Optional<CommandLine> commandLine = cli(args);
         if (commandLine.isPresent()) {
-            String name = commandLine.get().getRawValueForOption(commandLine.get().cli().getOption("name"));
+            String name =
+                commandLine.get().getRawValueForOption(commandLine.get().cli().getOption("name"));
 
             BootType bootType = null;
             try {
                 bootType = BootType.valueOf(name.toUpperCase());
             } catch (Exception e) {
-                logger.error("Current application name is: {}, Available name :{}", name, JacksonUtils.serialize(BootType.values()));
+                logger.error("Current application name is: {}, Available name :{}", name,
+                    JacksonUtils.serialize(BootType.values()));
                 System.exit(-1);
             }
 
             if (bootType != null) {
                 switch (bootType) {
                     case RESTORE: {
-                        String file = commandLine.get().getRawValueForOption(commandLine.get().cli().getOption("file"));
+                        String file = commandLine.get()
+                            .getRawValueForOption(commandLine.get().cli().getOption("file"));
                         new MySqlOperationServiceImpl().restore(ConfigLoader.getServerCfg(), file);
                         break;
                     }
@@ -85,7 +86,8 @@ public class ApplicationBoot {
                     case SERVER: {
                         DeploymentOptions deploymentOptions = new DeploymentOptions();
                         deploymentOptions.setConfig(ConfigLoader.getServerCfg());
-                        Vertx vertx = Vertx.vertx(new VertxOptions().setMetricsOptions(new DropwizardMetricsOptions().setJmxEnabled(true)));
+                        Vertx vertx = Vertx.vertx(new VertxOptions()
+                            .setMetricsOptions(new DropwizardMetricsOptions().setJmxEnabled(true)));
                         vertx.deployVerticle(HttpServerVerticle.class, deploymentOptions, ar -> {
                             if (ar.succeeded()) {
                             } else {
@@ -120,7 +122,8 @@ public class ApplicationBoot {
         /**
          * set vert.x log impl
          */
-        System.setProperty("vertx.logger-delegate-factory-class-name", "io.vertx.core.logging.Log4j2LogDelegateFactory");
+        System.setProperty("vertx.logger-delegate-factory-class-name",
+            "io.vertx.core.logging.Log4j2LogDelegateFactory");
 
         /**
          * set vertx cache base directory

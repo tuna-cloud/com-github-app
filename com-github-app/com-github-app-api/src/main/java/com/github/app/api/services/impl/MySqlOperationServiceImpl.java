@@ -32,7 +32,7 @@ public class MySqlOperationServiceImpl implements SystemOperationService {
         String port = parsePort(url);
         String databaseName = parseDatabaseName(url);
 
-        String sqlFile = System.getenv(ServerEnvConstant.APP_HOME)
+        String sqlFile = ServerEnvConstant.getAppServerHome()
                 + File.separator + "data"
                 + File.separator + databaseName + ".sql";
 
@@ -56,7 +56,7 @@ public class MySqlOperationServiceImpl implements SystemOperationService {
         String port = parsePort(url);
         String databaseName = parseDatabaseName(url);
 
-        String outputFileName = System.getenv(ServerEnvConstant.APP_HOME)
+        String outputFileName = ServerEnvConstant.getAppServerHome()
                 + File.separator + "data"
                 + File.separator + "backup"
                 + File.separator + "" + LocalDateTime.now()
@@ -102,7 +102,7 @@ public class MySqlOperationServiceImpl implements SystemOperationService {
         String port = parsePort(url);
         String databaseName = parseDatabaseName(url);
 
-        String sqlFileName = System.getenv(ServerEnvConstant.APP_HOME)
+        String sqlFileName = ServerEnvConstant.getAppServerHome()
                 + File.separator + "data"
                 + File.separator + "backup"
                 + File.separator + fileName;
@@ -129,7 +129,7 @@ public class MySqlOperationServiceImpl implements SystemOperationService {
 
         JsonArray jsonArray = new JsonArray();
 
-        String path = System.getenv(ServerEnvConstant.APP_HOME) + File.separator + "data" + File.separator + "backup";
+        String path = ServerEnvConstant.getAppServerHome() + File.separator + "data" + File.separator + "backup";
 
         File dir = new File(path);
 
@@ -151,7 +151,7 @@ public class MySqlOperationServiceImpl implements SystemOperationService {
 
     @Override
     public void deleteSqlFile(String fileName) {
-        String path = System.getenv(ServerEnvConstant.APP_HOME) + File.separator + "data" + File.separator + "backup";
+        String path = ServerEnvConstant.getAppServerHome() + File.separator + "data" + File.separator + "backup";
         File file = new File(path + File.separator + fileName);
         if (file.exists()) {
             file.delete();

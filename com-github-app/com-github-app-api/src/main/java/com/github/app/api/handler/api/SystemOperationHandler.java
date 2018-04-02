@@ -46,7 +46,7 @@ public class SystemOperationHandler implements UriHandler {
 	}
 
 	public void uploadFile(RoutingContext routingContext) {
-		String backupHome = System.getenv(ServerEnvConstant.APP_HOME) + File.separator + "data" + File.separator + "backup";
+		String backupHome = ServerEnvConstant.getAppServerHome() + File.separator + "data" + File.separator + "backup";
 
 		Set<FileUpload> set = routingContext.fileUploads();
 		set.forEach(fileUpload -> {
@@ -110,7 +110,7 @@ public class SystemOperationHandler implements UriHandler {
 			return;
 		}
 
-		String sqlFileName = System.getenv(ServerEnvConstant.APP_HOME) + File.separator + "data" + File.separator + "backup" + File.separator + list.get(0);
+		String sqlFileName = ServerEnvConstant.getAppServerHome() + File.separator + "data" + File.separator + "backup" + File.separator + list.get(0);
 
 		routingContext.response().headers().add("content-disposition", "attachment;filename=" + list.get(0));
 		routingContext.response().sendFile(sqlFileName);

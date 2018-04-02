@@ -116,7 +116,10 @@ public class HttpServerVerticle extends AbstractVerticle {
         rootRouter.route().pathRegex("^(?!/static).*").handler(BodyHandler.create());
 
         loadHandlers(rootRouter, "com.github.app.api.handler.common");
-        rootRouter.route("/static/*").blockingHandler(StaticHandler.create().setAllowRootFileSystemAccess(true).setWebRoot(System.getenv(ServerEnvConstant.APP_HOME) + File.separator + "web"), false);
+        rootRouter.route("/static/*").blockingHandler(StaticHandler.create()
+            .setAllowRootFileSystemAccess(true)
+            .setDefaultContentEncoding("UTF-8")
+            .setWebRoot(ServerEnvConstant.getAppServerHome() + File.separator + "web"), false);
 
         /**
          * apiRouter will validate the token in the global interceptor
