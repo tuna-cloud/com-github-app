@@ -6,9 +6,9 @@ import java.io.File;
  * 用户可以通过指定环境变量或系统属性，来改变程序的配置
  */
 public class ServerEnvConstant {
-    public static final String APP_HOME = "APPLICATION_HOME";
-    public static final String APP_LOG4J2_CFG_FILE = "APPLICATION_LOG4J2_CFG";
-    public static final String APP_SERVER_CFG_FILE = "APPLICATION_SERVER_CFG";
+    public static final String APP_HOME = "vertx.home";
+    public static final String APP_LOG4J2_CFG_FILE = "vertx.log4j2.config";
+    public static final String APP_SERVER_CFG_FILE = "vertx.server.config";
 
     /**
      * 获取log4j配置文件位置

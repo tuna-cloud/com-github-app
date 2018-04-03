@@ -16,7 +16,7 @@ rem limitations under the License.
 
 rem system env
 rem **************************************
-rem APPLICATION_HOME=
+rem VERTX_HOME=
 rem **************************************
 
 setlocal enabledelayedexpansion
@@ -31,11 +31,12 @@ pushd %~dp0..\..
 set BASE_DIR=%CD%
 popd
 set CLASSPATH=
-rem the com-github-app-api use the evn of APPLICATION_HOME
-IF ["%APPLICATION_HOME%"] EQU [""] (
-	set APPLICATION_HOME=%BASE_DIR%
+rem the com-github-app-api use the evn of VERTX_HOME
+IF ["%VERTX_HOME%"] EQU [""] (
+	set VERTX_HOME=%BASE_DIR%
 )
-echo "env:APPLICATION_HOME:="%APPLICATION_HOME%
+set vertx.home=%VERTX_HOME%
+echo "env:VERTX_HOME:="%VERTX_HOME%
 rem Classpath addition for release
 for %%i in (%BASE_DIR%\libs\*.jar) do (
 	call :concat %%i

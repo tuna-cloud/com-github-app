@@ -3,12 +3,12 @@
   "https.option" : {
     "enable" : false,
     "keyCert" : {
-      "path" : "${APPLICATION_HOME}/config/http-keystore.jks",
+      "path" : "${vertx.home}/config/http-keystore.jks",
       "password" : "123456"
     }
   },
   "jwt.keystore": {
-    "path": "${APPLICATION_HOME}/config/token-keystore.jceks",
+    "path": "${vertx.home}/config/token-keystore.jceks",
     "password": "secret"
   },
   "datasource" : {
@@ -18,7 +18,7 @@
     "password" : "870712"
   },
   "vertx" : {
-    "cacheDirBase" : "${APPLICATION_HOME}/data/cache"
+    "cacheDirBase" : "${vertx.home}/data/cache"
   },
   "mybatis" : {
 	"enable" : true,

@@ -228,7 +228,7 @@ set KAFKA_GC_LOG_OPTS=-Xloggc:%CATALINA_BASE%\logs\%GC_LOG_FILE_NAME%;-verbose:g
 	--StopMethod "stop" ^
     --StartParams "%CATALINA_BASE%" ^
     --StopParams stop ^
-	--Environment "APPLICATION_HOME=%CATALINA_BASE%;" ^
+	--Environment "vertx.home=%CATALINA_BASE%;" ^
     --JvmOptions "%KAFKA_JVM_PERFORMANCE_OPTS%%KAFKA_JMX_OPTS%%KAFKA_OPTS%%KAFKA_GC_LOG_OPTS%" ^
     --JvmOptions9 "--add-opens=java.base/java.lang=ALL-UNNAMED#--add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED" ^
     --Startup "%SERVICE_STARTUP_MODE%" ^

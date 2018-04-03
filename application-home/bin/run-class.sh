@@ -22,6 +22,9 @@ fi
 
 base_dir=$(dirname $0)/..
 
+# set application base home env
+export vertx.home = $base_dir
+
 shopt -s nullglob
 # classpath addition for release
 CLASSPATH=$CLASSPATH:$base_dir/libs/*

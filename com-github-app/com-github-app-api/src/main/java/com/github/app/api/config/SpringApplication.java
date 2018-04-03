@@ -55,7 +55,7 @@ public class SpringApplication {
         configuration.setLogImpl(Log4j2Impl.class);
         configuration.setSafeRowBoundsEnabled(true);
         JsonObject config = ConfigLoader.getServerCfg().getJsonObject("mybatis");
-        if (config != null && config.getBoolean("enable") == true) {
+        if (config != null && config.getBoolean("enable") != null && config.getBoolean("enable") == true) {
             // add sql monitor plugin
             configuration.addInterceptor(new SqlPerformanceMonitor(config.getLong("slowTimeInMs", 3000L)));
         }
