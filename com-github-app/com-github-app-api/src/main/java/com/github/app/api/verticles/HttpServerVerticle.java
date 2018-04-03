@@ -1,42 +1,36 @@
 package com.github.app.api.verticles;
 
-import static com.github.app.api.utils.SessionConstant.SESSION_STORE_MAP;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.github.app.api.plugin.ApiMetricTimeMeterHandler;
-import com.github.app.api.utils.ConfigLoader;
-
-import io.vertx.core.json.Json;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
 import com.github.app.api.config.SpringApplication;
 import com.github.app.api.dao.domain.Popedom;
 import com.github.app.api.handler.UriHandler;
+import com.github.app.api.plugin.ApiMetricTimeMeterHandler;
 import com.github.app.api.utils.PopedomContext;
-import com.github.app.utils.ClassUtil;
 import com.github.app.utils.ServerEnvConstant;
-
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
+import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.net.JksOptions;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.*;
 import io.vertx.ext.web.sstore.LocalSessionStore;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.github.app.api.utils.SessionConstant.SESSION_STORE_MAP;
 
 public class HttpServerVerticle extends AbstractVerticle {
     private Logger logger = LogManager.getLogger(HttpServerVerticle.class);
@@ -138,18 +132,15 @@ public class HttpServerVerticle extends AbstractVerticle {
     }
 
     private void loadHandlers(Router router, String packageName) {
-        List<Class<?>> uriHandlers = ClassUtil.getClasses(packageName);
         List<Popedom> popedoms = new ArrayList<>();
-        for (Class<?> cls : uriHandlers) {
-            try {
-                Object bean = applicationContext.getBean(cls);
-                if (bean instanceof UriHandler) {
-                    UriHandler uriHandler = (UriHandler) bean;
-                    uriHandler.registeUriHandler(router);
-                    uriHandler.registePopedom(popedoms);
-                }
-            } catch (Exception e) {
-                logger.warn(e.getLocalizedMessage());
+
+        String[] beanNames = applicationContext.getBeanNamesForType(UriHandler.class);
+        for (String bean : beanNames) {
+            Object beanObj = applicationContext.getBean(bean);
+            if (beanObj.getClass().getName().contains(packageName)) {
+                UriHandler uriHandler = (UriHandler) beanObj;
+                uriHandler.registeUriHandler(router);
+                uriHandler.registePopedom(popedoms);
             }
         }
 
